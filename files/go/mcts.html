@@ -190,7 +190,7 @@
   function toMoveOf(b) {
     var n = 0;
     b.forEach(function (v) { if (v) n++; });
-    return n % 2 === 0 ? X : O;
+    return n % 2 === 0 ? O : X;
   }
   function empties(b) {
     var e = [];
@@ -690,20 +690,20 @@
     render();
   };
 
-  // X moves first; each preset has equal counts so X is to move.
+  // O moves first; each preset has equal counts so O is to move.
   var PRESETS = {
-    empty: { x: [], o: [] },
-    winOrBlock: { x: ['A3', 'B3'], o: ['A1', 'B1'] },   // X wins at once on C3; O threatens C1
-    mustBlock: { x: ['A3', 'C1'], o: ['B2', 'B3'] },    // O threatens B1
-    edgeMistake: { x: ['A3'], o: ['B3'] }               // O answered a corner on the adjacent edge; X can force a win
+    empty: { o: [], x: [] },
+    winOrBlock: { o: ['A3', 'B3'], x: ['A1', 'B1'] },   // O wins at once on C3; X threatens C1
+    mustBlock: { o: ['A3', 'C1'], x: ['B2', 'B3'] },    // X threatens B1
+    edgeMistake: { o: ['A3'], x: ['B3'] }               // X answered a corner on the adjacent edge; O can force a win
   };
   function loadPreset(name) {
     rootBoard.fill(0);
     history = [];
     var pr = PRESETS[name];
     for (var i = 0; i < Math.max(pr.x.length, pr.o.length); i++) {
-      if (pr.x[i]) { var px = NAME.indexOf(pr.x[i]); rootBoard[px] = X; history.push(px); }
       if (pr.o[i]) { var po = NAME.indexOf(pr.o[i]); rootBoard[po] = O; history.push(po); }
+      if (pr.x[i]) { var px = NAME.indexOf(pr.x[i]); rootBoard[px] = X; history.push(px); }
     }
     resetSearch();
     render();

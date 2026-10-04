@@ -57,6 +57,55 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="https://blog.codylab.com/bower/">使用 Bower 來管理 web 函式庫套件</a>
+      </h1>
+      <p class="meta"><time datetime="2015-11-08T00:00:00+08:00" pubdate>2015 November 08 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p><img alt="bower" src="http://i.imgur.com/GFlma5U.jpg"></p>
+<p><a href="http://bower.io/">Bower</a> 是 frontend 常用來管理 package 的套件。比如說要使用 <code>jquery</code>，就可以透過 bower，來安裝。</p>
+<h1>安裝</h1>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>bower
+</code></pre></div>
+
+<p>註: 如果權限不足的話，記得加上 sudo </p>
+<h1>初始化</h1>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bower<span class="w"> </span>init
+</code></pre></div>
+
+<p>bower 是透過 bower.json 來管理 dependecy，所以一開始要先透過這個指令來新增 bower.json，過程會問一些問題，可以按 enter 直接用預設的即可。</p>
+<h1>搜尋，以 jQuery 為例</h1>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bower<span class="w"> </span>search<span class="w"> </span>jquery
+</code></pre></div>
+
+<p>輸出: </p>
+<div class="highlight"><pre><span></span><code>Search results:
+
+    jQuery https://github.com/jquery/jquery.git
+    jquery https://github.com/jquery/jquery-dist.git
+    jquery.x https://github.com/jljLabs/jquery.x.git
+    jquery.Q https://github.com/jsbuzz/jQuery_Q.git
+</code></pre></div>
+
+<p>列出可以使用的 repository </p>
+<h1>安裝，以 jQuery 為例</h1>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bower<span class="w"> </span>install<span class="w"> </span>jquery
+</code></pre></div>
+
+<p>安裝完之後，目錄會出現 bower_components 來存放 jquery 的檔案:</p>
+<div class="highlight"><pre><span></span><code>.
+└── bower_components
+    └── jquery
+</code></pre></div>
+
+<p>安裝 jquery，並把 jquery 加到 bower …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/bower/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="https://blog.codylab.com/dog-pancreatitis-dodo/">犬胰臟炎治療記錄</a>
       </h1>
       <p class="meta"><time datetime="2015-10-15T00:00:00+08:00" pubdate>2015 October 15 Thu</time></p>
@@ -401,68 +450,6 @@ Snackbar.make(coordinator_layout, "Hi", Snackbar.LENGTH_LONG).show();
     <a rel="full-article" href="https://blog.codylab.com/0056-ground-rules/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="https://blog.codylab.com/vagrant/">Vagrant 筆記</a>
-      </h1>
-      <p class="meta"><time datetime="2015-05-01T00:00:00+08:00" pubdate>2015 May 01 Fri</time></p>
-</header>
-
-  <div class="entry-content"><h2>安裝 Vagrant (以 VritualBox 為例)</h2>
-<ol>
-<li>VirtualBox </li>
-<li>VirtualBox Extension Pack 
-(Oracle_VM_VirtualBox_Extension_Pack-4.3.26-98988.vbox-extpack)</li>
-<li>Vagrant (vagrant_1.7.2.dmg)</li>
-</ol>
-<h2>新增一個 VM</h2>
-<p><strong>官方 Box 列表</strong>要知道有那些 Vagrant box 的話，可以到此<a href="https://atlas.hashicorp.com/boxes/search">瀏覽</a></p>
-<p>新增一個 VM </p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>mkdir<span class="w"> </span>&lt;project_name&gt;
-$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>&lt;project_name&gt;
-$<span class="w"> </span>vagrant<span class="w"> </span>init<span class="w"> </span><span class="o">[</span>box-name<span class="o">]</span>
-</code></pre></div>
-
-<p>例子: 
-    $ vagrant init ubuntu/vivid64 </p>
-<h1>Vagrant Box</h1>
-<p>列出已下載的 vagrant box list:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>box<span class="w"> </span>list
-</code></pre></div>
-
-<p>新增 box 到 Vagrant，以 ubuntu 15.04 為例: </p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>box<span class="w"> </span>add<span class="w"> </span>ubuntu/vivid64
-</code></pre></div>
-
-<p>手機修改 <code>Vagrantfile</code> 指定使用那一個 VM Box </p>
-<div class="highlight"><pre><span></span><code><span class="nv">Vagrant</span>.<span class="nv">configure</span><span class="ss">(</span><span class="s2">"2"</span><span class="ss">)</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="nv">config</span><span class="o">|</span>
-<span class="w">  </span><span class="nv">config</span>.<span class="nv">vm</span>.<span class="nv">box</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ubuntu/vivid64"</span>
-<span class="k">end</span>
-</code></pre></div>
-
-<h1>啟動</h1>
-<p>啟動指定名稱</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>up<span class="w"> </span>&lt;NAME&gt;
-</code></pre></div>
-
-<p>也可以全部啟動: </p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>up
-</code></pre></div>
-
-<h1>登入</h1>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>ssh
-</code></pre></div>
-
-<p>若有多個 VM，就要指定名稱</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>ssh<span class="w"> </span>&lt;NAME&gt;
-</code></pre></div>
-
-<p>Guest …</p></div>
-  <footer>
-    <a rel="full-article" href="https://blog.codylab.com/vagrant/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="https://blog.codylab.com/index5.html">&larr; Older</a>
 
@@ -474,15 +461,15 @@ $<span class="w"> </span>vagrant<span class="w"> </span>init<span class="w"> </s
     <h1>Tags</h1>
     <ul class="tagcloud">
       <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/ai.html">AI</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/algorithm.html">Algorithm</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/go.html">Go</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
@@ -508,6 +495,9 @@ $<span class="w"> </span>vagrant<span class="w"> </span>init<span class="w"> </s
           <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
       </li>
       <li class="post">
+          <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
+      </li>
+      <li class="post">
           <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
       </li>
       <li class="post">
@@ -515,9 +505,6 @@ $<span class="w"> </span>vagrant<span class="w"> </span>init<span class="w"> </s
       </li>
       <li class="post">
           <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
-      </li>
-      <li class="post">
-          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
       </li>
     </ul>
   </section>

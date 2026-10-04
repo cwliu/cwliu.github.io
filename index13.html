@@ -57,6 +57,53 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="https://blog.codylab.com/python-print-usage/">Python 多種 Print 函式的用法</a>
+      </h1>
+      <p class="meta"><time datetime="2012-03-16T00:00:00+08:00" pubdate>2012 March 16 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>最簡單的用法：把想Print的內容放在 print 後面</p>
+<div class="highlight"><pre><span></span><code>print 'Hello'
+</code></pre></div>
+
+<p>輸出結果</p>
+<div class="highlight"><pre><span></span><code>Hello
+</code></pre></div>
+
+<p>另一個方便的用法，可以把不同資料型態的變數不經過轉型就直接一起print出來：</p>
+<div class="highlight"><pre><span></span><code>print 'Hello',2012
+</code></pre></div>
+
+<p>也就是可以省下把其它變數都轉成string的麻煩</p>
+<p>輸出結果</p>
+<div class="highlight"><pre><span></span><code>Hello 2012
+</code></pre></div>
+
+<p>想把多個 print 合併在同一行輸出，而不要一個print就斷行一次，就在最後面加上一個逗號: </p>
+<div class="highlight"><pre><span></span><code>print 'Execution Result:',
+print runSomeThing()
+</code></pre></div>
+
+<p>輸出結果：</p>
+<div class="highlight"><pre><span></span><code>Execution Result: PASS
+</code></pre></div>
+
+<p>另外低階的sys.stdout.write在特定需求也可以使用，比如說我想輸出兩個字串，但是中間不要像 print 函式一樣加一個空白的話，就可以使用這個方法：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"Hello"</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"2012"</span><span class="p">)</span>
+</code></pre></div>
+
+<p>輸出結果：</p>
+<div class="highlight"><pre><span></span><code>Hello2012
+</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/python-print-usage/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="https://blog.codylab.com/notepad_tab_to_space/">Notepad++ 縮排從Tab改成4個Space</a>
       </h1>
       <p class="meta"><time datetime="2012-03-15T00:00:00+08:00" pubdate>2012 March 15 Thu</time></p>
@@ -131,15 +178,15 @@
     <h1>Tags</h1>
     <ul class="tagcloud">
       <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/ai.html">AI</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/algorithm.html">Algorithm</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/go.html">Go</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
@@ -165,6 +212,9 @@
           <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
       </li>
       <li class="post">
+          <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
+      </li>
+      <li class="post">
           <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
       </li>
       <li class="post">
@@ -172,9 +222,6 @@
       </li>
       <li class="post">
           <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
-      </li>
-      <li class="post">
-          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
       </li>
     </ul>
   </section>

@@ -57,6 +57,56 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="https://blog.codylab.com/style-theme/">使用 Style 或 Theme 修改 Android 元件的外觀</a>
+      </h1>
+      <p class="meta"><time datetime="2016-02-19T00:00:00+08:00" pubdate>2016 February 19 Fri</time></p>
+</header>
+
+  <div class="entry-content"><h2>前言</h2>
+<p>在 Android 中有 <em>style</em> 跟 <em>theme</em> 兩種不同方式來設定元件的外觀</p>
+<h2>Style</h2>
+<p>在 <code>res/values/styles.xml</code> 新增一個 style 標籤，讓View的背景顯示為深藍色:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;resources&gt;</span>
+<span class="w">    </span>...
+<span class="w">    </span><span class="nt">&lt;style</span><span class="w"> </span><span class="na">name=</span><span class="s">"BeatBoxButton"</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;item</span><span class="w"> </span><span class="na">name=</span><span class="s">"android:background"</span><span class="nt">&gt;</span>@color/dark_blue<span class="nt">&lt;/item&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/style&gt;</span>
+<span class="nt">&lt;/resources&gt;</span>
+</code></pre></div>
+
+<p>使用方式則是在想套用這個 stytle 的 view 物件上加上 style 屬性:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="n">Button</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="n">style</span><span class="o">=</span><span class="ss">"@style/BeatBoxButton.Bold"</span><span class="o">/&gt;</span>
+</code></pre></div>
+
+<p>這麼做的好處就是當應用程式如果有很多 button，若是要換別的顏色的話，就只要更新 style 就好了。</p>
+<h3>Style inheritance</h3>
+<p>另外 style 跟 class 一樣有繼承的使用方式</p>
+<p>方法一:</p>
+<p>加上 parent 的屬性:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;style</span><span class="w"> </span><span class="na">name=</span><span class="s">"MyButtonStrong"</span><span class="w"> </span><span class="na">parent=</span><span class="s">"MyBoxButton"</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;item</span><span class="w"> </span><span class="na">name=</span><span class="s">"android:textStyle"</span><span class="nt">&gt;</span>bold<span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;/style&gt;</span>
+</code></pre></div>
+
+<p>方法二:</p>
+<p>在 Parent 的名稱後面直接加上 <code>.</code>，例如: "MyButton.Bold"</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;style</span><span class="w"> </span><span class="na">name=</span><span class="s">MyBoxButton.Bold"</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;item</span><span class="w"> </span><span class="na">name=</span><span class="s">"android:textStyle"</span><span class="nt">&gt;</span>bold<span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;/style&gt;</span>
+</code></pre></div>
+
+<p>兩這種方法都可以達到 style inheritance 的效果</p>
+<h2>Theme</h2>
+<p>針對整體性的 style，如果 app 有 …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/style-theme/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="https://blog.codylab.com/hax-memory-excced/">解決開啟 android emulator 記憶體用量不足的問題</a>
       </h1>
       <p class="meta"><time datetime="2016-02-18T00:00:00+08:00" pubdate>2016 February 18 Thu</time></p>
@@ -392,55 +442,6 @@ $<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </s
     <a rel="full-article" href="https://blog.codylab.com/imgur-imgbed/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="https://blog.codylab.com/bower/">使用 Bower 來管理 web 函式庫套件</a>
-      </h1>
-      <p class="meta"><time datetime="2015-11-08T00:00:00+08:00" pubdate>2015 November 08 Sun</time></p>
-</header>
-
-  <div class="entry-content"><p><img alt="bower" src="http://i.imgur.com/GFlma5U.jpg"></p>
-<p><a href="http://bower.io/">Bower</a> 是 frontend 常用來管理 package 的套件。比如說要使用 <code>jquery</code>，就可以透過 bower，來安裝。</p>
-<h1>安裝</h1>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>bower
-</code></pre></div>
-
-<p>註: 如果權限不足的話，記得加上 sudo </p>
-<h1>初始化</h1>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bower<span class="w"> </span>init
-</code></pre></div>
-
-<p>bower 是透過 bower.json 來管理 dependecy，所以一開始要先透過這個指令來新增 bower.json，過程會問一些問題，可以按 enter 直接用預設的即可。</p>
-<h1>搜尋，以 jQuery 為例</h1>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bower<span class="w"> </span>search<span class="w"> </span>jquery
-</code></pre></div>
-
-<p>輸出: </p>
-<div class="highlight"><pre><span></span><code>Search results:
-
-    jQuery https://github.com/jquery/jquery.git
-    jquery https://github.com/jquery/jquery-dist.git
-    jquery.x https://github.com/jljLabs/jquery.x.git
-    jquery.Q https://github.com/jsbuzz/jQuery_Q.git
-</code></pre></div>
-
-<p>列出可以使用的 repository </p>
-<h1>安裝，以 jQuery 為例</h1>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>bower<span class="w"> </span>install<span class="w"> </span>jquery
-</code></pre></div>
-
-<p>安裝完之後，目錄會出現 bower_components 來存放 jquery 的檔案:</p>
-<div class="highlight"><pre><span></span><code>.
-└── bower_components
-    └── jquery
-</code></pre></div>
-
-<p>安裝 jquery，並把 jquery 加到 bower …</p></div>
-  <footer>
-    <a rel="full-article" href="https://blog.codylab.com/bower/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="https://blog.codylab.com/index4.html">&larr; Older</a>
 
@@ -452,15 +453,15 @@ $<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </s
     <h1>Tags</h1>
     <ul class="tagcloud">
       <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/ai.html">AI</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/algorithm.html">Algorithm</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/go.html">Go</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
@@ -486,6 +487,9 @@ $<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </s
           <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
       </li>
       <li class="post">
+          <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
+      </li>
+      <li class="post">
           <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
       </li>
       <li class="post">
@@ -493,9 +497,6 @@ $<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </s
       </li>
       <li class="post">
           <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
-      </li>
-      <li class="post">
-          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
       </li>
     </ul>
   </section>

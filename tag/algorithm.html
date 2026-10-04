@@ -84,6 +84,34 @@
     <a rel="full-article" href="https://blog.codylab.com/bouzy-5-21/">Read On &crarr;</a>
   </footer>
   		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
+      </h1>
+      <p class="meta"><time datetime="2026-10-04T00:00:00+08:00" pubdate>2026 October 04 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p><a href="https://blog.codylab.com/bouzy-5-21/">上一篇</a>的 5/21 是在回答「看著一盤棋，要怎麼判斷形勢」。這個問題對圍棋程式非常關鍵：西洋棋程式用 Alpha-Beta 搜尋，搜到一定深度後就靠評估函數打分數；但圍棋的形勢太難用規則寫清楚，5/21 這類方法再怎麼調也不夠準，加上每一步有上百種下法，傳統搜尋在圍棋上一直做不起來。</p>
+<p>蒙地卡羅樹搜尋（Monte Carlo Tree Search，MCTS）換了一個思路：<strong>看不出局面好壞，那就把棋下完很多次，統計勝率</strong>。終局要判斷誰贏很容易，數子就好。2006 年 Coulom<sup>[1]</sup>和 Kocsis、Szepesvári<sup>[2]</sup>先後提出這套方法之後，圍棋程式在幾年內從業餘入門進步到業餘高段；後來的 AlphaGo<sup>[3]</sup>也是以 MCTS 為骨架，再把神經網路放進去。</p>
+<h2>互動演示</h2>
+<p>為了把整棵搜尋樹畫出來，下面用<strong>井字棋</strong>示範，演算法和圍棋版完全一樣，只是規模小到看得清楚。O 先手。</p>
+<p>按「下一步」可以一次走一個階段，看一次模擬裡發生了什麼；看懂之後按「+100」或「+1000」快轉，觀察樹的形狀怎麼變。點樹上的節點，右下角會列出它每個子節點的 UCT 是怎麼算出來的。也可以自己在棋盤上下子，從任何局面開始搜尋。</p>
+<iframe src="https://blog.codylab.com/files/go/mcts.html" title="MCTS 互動演示" width="100%" height="900" style="border:0;display:block" loading="lazy" onload="this.style.height = this.contentDocument.documentElement.offsetHeight + 'px'"></iframe>
+
+<h2>演算法</h2>
+<p>MCTS 會從目前的局面（根節點）出發，重複做很多次「模擬」。每個節點記錄兩個數字：</p>
+<ul>
+<li><strong>N</strong>：這個節點被走過幾次</li>
+<li><strong>W</strong>：其中<strong>下這一手的一方</strong>贏了幾次（和局算 0.5）</li>
+</ul>
+<p>所以 W ÷ N 就是這一手的勝率。每次模擬分成四個階段：</p>
+<h3>1. Selection（選擇）</h3>
+<p>從根往下走。如果一個節點的所有著手都已經在樹裡了，就用 …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/mcts/">Read On &crarr;</a>
+  </footer>
+  		</article>
 <div class="pagination">
 
   <br />
@@ -93,15 +121,15 @@
     <h1>Tags</h1>
     <ul class="tagcloud">
       <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/ai.html">AI</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/algorithm.html">Algorithm</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/go.html">Go</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
@@ -125,6 +153,9 @@
     <ul id="recent_posts">
       <li class="post">
           <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
       </li>
     </ul>
   </section>

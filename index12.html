@@ -57,6 +57,33 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="https://blog.codylab.com/rdss-travel-notes/">研發替代役申請出國旅遊</a>
+      </h1>
+      <p class="meta"><time datetime="2012-07-05T00:00:00+08:00" pubdate>2012 July 05 Thu</time></p>
+</header>
+
+  <div class="entry-content"><p>研發替代役在第三階段之後，一年可申請出國旅遊一次。我剛從北京-香港回來，在此小記一下。每年的1/1日重新計算，照規定可出國天數8天，但因為「出境日數」為<strong>出境翌日</strong>開始計算，所以實際可以出國天數為9天。出國的規定每年可能都不一樣，最新規定請參照<a href="http://www.nca.gov.tw/">內政部役政署</a>。</p>
+<h2>1. 申請護照(以護照過期而親辦為例)</h2>
+<p>位置：外交部領事事務局，台北市濟南路一段二之二號，中午不休息。
+費用：正常件 1600</p>
+<p>所需文件：
+1.二吋照片兩張(<a href="http://www.boca.gov.tw/ct.asp?xItem=1875&amp;ctNode=732&amp;mp=1">需合乎護照規定</a>)
+2.身份證正反影本
+3.研替身份證正反影本(背面要寫上用人單位資訊), 需要把研替影本貼在申請表後面
+4.過期舊護照，剪角後會歸還</p>
+<h2>2.請公司HR向研發替代役專案辦公室提出出境申請</h2>
+<p>盡早申請，需要告知欲前往的國家、班機、跟日期等基本資訊。這個可以先申請，護照可以之後再補。HR會把你的護照送回內政部，並會蓋上一個章核準出國。HR會給你一張公文:</p>
+<p><img alt="img" src="http://i.imgur.com/MI9NQjT.jpg">
+這張公文出境時可以隨身帶著，必要時可以提出證明</p>
+<h2>3.申請台胞證</h2>
+<p>我是找<a href="http://www.sttvisa.com/">簽證通</a>，價格還算實惠。加簽300，新辦含加簽1400。</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/rdss-travel-notes/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="https://blog.codylab.com/daily-improvement-testing/">軟體測試人的每日體操</a>
       </h1>
       <p class="meta"><time datetime="2012-06-14T00:00:00+08:00" pubdate>2012 June 14 Thu</time></p>
@@ -318,53 +345,6 @@ WindowsError: [Error 6] The handle is invalid
     <a rel="full-article" href="https://blog.codylab.com/python-handle-is-invalid/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="https://blog.codylab.com/python-print-usage/">Python 多種 Print 函式的用法</a>
-      </h1>
-      <p class="meta"><time datetime="2012-03-16T00:00:00+08:00" pubdate>2012 March 16 Fri</time></p>
-</header>
-
-  <div class="entry-content"><p>最簡單的用法：把想Print的內容放在 print 後面</p>
-<div class="highlight"><pre><span></span><code>print 'Hello'
-</code></pre></div>
-
-<p>輸出結果</p>
-<div class="highlight"><pre><span></span><code>Hello
-</code></pre></div>
-
-<p>另一個方便的用法，可以把不同資料型態的變數不經過轉型就直接一起print出來：</p>
-<div class="highlight"><pre><span></span><code>print 'Hello',2012
-</code></pre></div>
-
-<p>也就是可以省下把其它變數都轉成string的麻煩</p>
-<p>輸出結果</p>
-<div class="highlight"><pre><span></span><code>Hello 2012
-</code></pre></div>
-
-<p>想把多個 print 合併在同一行輸出，而不要一個print就斷行一次，就在最後面加上一個逗號: </p>
-<div class="highlight"><pre><span></span><code>print 'Execution Result:',
-print runSomeThing()
-</code></pre></div>
-
-<p>輸出結果：</p>
-<div class="highlight"><pre><span></span><code>Execution Result: PASS
-</code></pre></div>
-
-<p>另外低階的sys.stdout.write在特定需求也可以使用，比如說我想輸出兩個字串，但是中間不要像 print 函式一樣加一個空白的話，就可以使用這個方法：</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"Hello"</span><span class="p">)</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"2012"</span><span class="p">)</span>
-</code></pre></div>
-
-<p>輸出結果：</p>
-<div class="highlight"><pre><span></span><code>Hello2012
-</code></pre></div></div>
-  <footer>
-    <a rel="full-article" href="https://blog.codylab.com/python-print-usage/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="https://blog.codylab.com/index13.html">&larr; Older</a>
 
@@ -376,15 +356,15 @@ print runSomeThing()
     <h1>Tags</h1>
     <ul class="tagcloud">
       <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/ai.html">AI</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/algorithm.html">Algorithm</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/go.html">Go</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
@@ -410,6 +390,9 @@ print runSomeThing()
           <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
       </li>
       <li class="post">
+          <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
+      </li>
+      <li class="post">
           <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
       </li>
       <li class="post">
@@ -417,9 +400,6 @@ print runSomeThing()
       </li>
       <li class="post">
           <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
-      </li>
-      <li class="post">
-          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
       </li>
     </ul>
   </section>

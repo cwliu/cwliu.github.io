@@ -57,6 +57,65 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="https://blog.codylab.com/bug-report/">如何寫 Bug Report</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
+</header>
+
+  <div class="entry-content"><p>一個好的 Bug Report 應該要提供明確的資訊，可以讓 Developer 快速重視問題，減少分析問題的成本。而管理階層的人從報告可了解問題的嚴重性，進而決定解決這個Bug時間表。</p>
+<h2>Bug Report 應該要有的欄位</h2>
+<ol>
+<li>標題 <br>
+說明要明確，直指問題核心，說明問題發生的模組    </li>
+</ol>
+<p><strong>不好的標題</strong>: 照片無法上傳 <br>
+<strong>比較好的標題</strong>: 當照片尺寸大於10MB，手機無法使用自動上傳照片</p>
+<ol>
+<li>
+<p>問題重現步驟(Steps to reproduce)  <br>
+除了要找出可以重視問題的Steps之外，還要盡量縮小(narrow down)步驟，找出重現問題的關鍵步驟。通常最後一步會寫"預期的結果"(expected result)，實際發生的結果有什麼不同。   </p>
+<ol>
+<li>安裝 APP</li>
+<li>使用 Google 帳號登入</li>
+<li>點選登入按鈕 <br>
+預期結果: 登入成功，進入活動列表  <br>
+實際結果: 登入失敗，出現伺服器連接錯誤    </li>
+</ol>
+</li>
+<li>
+<p>嚴重性  <br>
+<em>Blocker</em>: 產生無法使用，要<em>立即</em>解決，像是產品無法安裝 <br>
+<em>Criticl</em>: 嚴重的問題，需要儘早解決 <br>
+<em>Major</em>: 重要的問題，需要在產品上線前解決 <br>
+<em>Minor</em>: 次要的問題，不一定要解決，有列入已知問題(kownn Issue)的空間 <br>
+<em>Trival</em>: 不直接影響使用者使用，像是打錯字，等等   </p>
+</li>
+<li>
+<p>問題發生的版本號   </p>
+</li>
+<li>
+<p>發生的頻率 <br>
+每次/常常/偶爾/很少</p>
+</li>
+<li>
+<p>附件: 錯誤畫面的截圖，相關Log檔案以及任何可以幫助分析問題的檔案</p>
+</li>
+</ol>
+<h3>一些原則</h3>
+<ol>
+<li>如果測試一次發現多個問題，不要把多個 bug 寫在同一筆issue裡，分開一筆一筆記錄，這樣才可以獨立被解決跟驗證(Verify)</li>
+<li>確認這個 bug 是否已經記錄過了？ 不要重覆發。</li>
+</ol>
+<h3>Bug Workflow</h3>
+<p>這是一張在網路上找到一個比較簡單的 bug workflow </p>
+<p><img alt="img" src="https://lh6.googleusercontent.com/-UHiozVdot50/U_MLiVr5MQI/AAAAAAAFNNM/0v8oFN4oTqg/w1280-h1124-no/flow-chart-new.gif"></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/bug-report/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="https://blog.codylab.com/cmd-blkid/">取得硬碟資訊 blkid</a>
       </h1>
       <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
@@ -343,67 +402,6 @@ sudo apt-get install libopencv-*
     <a rel="full-article" href="https://blog.codylab.com/thinkpad-x220/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="https://blog.codylab.com/tmux/">Tmux Notes</a>
-      </h1>
-      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
-</header>
-
-  <div class="entry-content"><p>Default pefix key <code>&lt;Prefix&gt;</code> is Ctrl+b</p>
-<h1>Installation</h1>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>tmux
-</code></pre></div>
-
-<h1>config</h1>
-<div class="highlight"><pre><span></span><code>~/.tmux.conf
-</code></pre></div>
-
-<p>Reload</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>tmux<span class="w"> </span>source-file<span class="w"> </span>~/.tmux.conf
-</code></pre></div>
-
-<h1>Attach</h1>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>tmux<span class="w"> </span>attach
-</code></pre></div>
-
-<h1>視窗(Windows)</h1>
-<ul>
-<li>新增一個視窗<code>&lt;Prefix&gt;c</code></li>
-<li>下一個視窗<code>&lt;Prefix&gt;n</code></li>
-<li>上一個視窗<code>&lt;Prefix&gt;p</code></li>
-<li>選單 <code>&lt;Prefix&gt;w</code></li>
-<li>關視窗<code>&lt;Prefix&gt;x</code></li>
-</ul>
-<h1>Panes</h1>
-<ul>
-<li>水平分割 <code>&lt;Prefix&gt;%</code></li>
-<li>垂直分割 <code>&lt;Prefix&gt;"</code></li>
-<li>Resize <code>&lt;Prefix&gt;&lt;Meta-Up[Down][Left][Right]&gt;</code></li>
-<li>Close <code>&lt;Prefix&gt;x</code></li>
-</ul>
-<h1>視窗(Windows)</h1>
-<ul>
-<li>新增一個視窗<code>&lt;Prefix&gt;c</code></li>
-<li>下一個視窗<code>&lt;Prefix&gt;n</code></li>
-<li>上一個視窗<code>&lt;Prefix&gt;n</code></li>
-<li>選單 <code>&lt;Prefix&gt;w</code></li>
-<li>關視窗<code>&lt;Prefix&gt;x</code></li>
-<li>重新命名<code>&lt;Prefix&gt;,</code></li>
-</ul>
-<h1>More</h1>
-<ul>
-<li><a href="http://www.dayid.org/os/- notes/tm.html">dayid's screen and tmux cheat sheet</a></li>
-<li><a href="http://www.openbsd.org/cgi-bin/man.cgi?query=tmux&amp;sektion=1">Manual Pages: tmux(1)</a></li>
-<li><a href="https://www.youtube.com/watch?v=wKEGA8oEWXw">▶ tmux Quick Start - YouTube</a>
-http://blog.chh.tw/posts/tmux-terminal-multiplexer/</li>
-<li><a href="http://josephj.com/entry.php?id=373">進化版 screen - tmux</a></li>
-</ul></div>
-  <footer>
-    <a rel="full-article" href="https://blog.codylab.com/tmux/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="https://blog.codylab.com/author/cody-liu8.html">&larr; Older</a>
 
@@ -415,15 +413,15 @@ http://blog.chh.tw/posts/tmux-terminal-multiplexer/</li>
     <h1>Tags</h1>
     <ul class="tagcloud">
       <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/ai.html">AI</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/algorithm.html">Algorithm</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/go.html">Go</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
@@ -449,6 +447,9 @@ http://blog.chh.tw/posts/tmux-terminal-multiplexer/</li>
           <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
       </li>
       <li class="post">
+          <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
+      </li>
+      <li class="post">
           <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
       </li>
       <li class="post">
@@ -456,9 +457,6 @@ http://blog.chh.tw/posts/tmux-terminal-multiplexer/</li>
       </li>
       <li class="post">
           <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
-      </li>
-      <li class="post">
-          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
       </li>
     </ul>
   </section>

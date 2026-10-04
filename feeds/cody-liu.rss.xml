@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Cody Blog - Cody Liu</title><link>https://blog.codylab.com/</link><description></description><lastBuildDate>Sun, 04 Oct 2026 19:41:21 +0800</lastBuildDate><item><title>圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</title><link>https://blog.codylab.com/bouzy-5-21/</link><description>&lt;p&gt;這是「圍棋 AI 學習筆記」系列的第一篇，從一個很老、但很直觀的問題開始：&lt;strong&gt;看著一盤棋，電腦要怎麼判斷哪裡是誰的地？&lt;/strong&gt;&lt;/p&gt;
+<rss version="2.0"><channel><title>Cody Blog - Cody Liu</title><link>https://blog.codylab.com/</link><description></description><lastBuildDate>Sun, 04 Oct 2026 20:35:53 +0800</lastBuildDate><item><title>圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</title><link>https://blog.codylab.com/bouzy-5-21/</link><description>&lt;p&gt;這是「圍棋 AI 學習筆記」系列的第一篇，從一個很老、但很直觀的問題開始：&lt;strong&gt;看著一盤棋，電腦要怎麼判斷哪裡是誰的地？&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;在 AlphaGo 用神經網路直接「看」出形勢之前，早期的圍棋程式多半靠手寫規則來估算勢力範圍。Bruno Bouzy 在 2003 年發表的 5/21 演算法&lt;sup&gt;[1]&lt;/sup&gt;就是其中一個經典做法：借用影像處理的「數學形態學」，把每顆棋子的影響力向外擴散，再把邊緣不穩的部分削掉，剩下來的就是比較確定的地盤。它的膨脹步驟改自 Zobrist 在 1969 年提出的勢力模型&lt;sup&gt;[2]&lt;/sup&gt;，Bouzy 再補上對應的侵蝕步驟；這個方法用在他自己的圍棋程式 Indigo 裡，後來也被 GNU Go 採用。&lt;/p&gt;
 &lt;h2&gt;互動演示&lt;/h2&gt;
 &lt;p&gt;下面的棋盤可以自己擺子，拉動步驟滑桿或按播放，看數值怎麼一步步變化。滑鼠移到格點上，會顯示那一步是怎麼算出來的。&lt;/p&gt;
@@ -16,7 +16,22 @@
 &lt;li&gt;負值那一方對稱處理：如果它 &lt;strong&gt;≤ 0&lt;/strong&gt;，而且四鄰&lt;strong&gt;沒有正值&lt;/strong&gt;，就減去四鄰中負值的個數。&lt;/li&gt;
 &lt;li&gt;四鄰正負都有的點不動，代表雙方勢力在這裡碰頭。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;膨脹讓影響力像水波一樣往外擴散，一次一格。5 次之後，單顆子的影響會涵蓋距離 5 以內的菱形範圍，越靠近棋子數值越大 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Cody Liu</dc:creator><pubDate>Sun, 04 Oct 2026 00:00:00 +0800</pubDate><guid isPermaLink="false">tag:blog.codylab.com,2026-10-04:/bouzy-5-21/</guid><category>Go</category><category>Go</category><category>AI</category><category>Algorithm</category></item><item><title>2017 黃金海岸馬拉松</title><link>https://blog.codylab.com/running-gold-coast-marathon.md/</link><description>&lt;p&gt;&lt;img alt="start" src="http://i.imgur.com/Ax92g95.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;膨脹讓影響力像水波一樣往外擴散，一次一格。5 次之後，單顆子的影響會涵蓋距離 5 以內的菱形範圍，越靠近棋子數值越大 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Cody Liu</dc:creator><pubDate>Sun, 04 Oct 2026 00:00:00 +0800</pubDate><guid isPermaLink="false">tag:blog.codylab.com,2026-10-04:/bouzy-5-21/</guid><category>Go</category><category>Go</category><category>AI</category><category>Algorithm</category></item><item><title>圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</title><link>https://blog.codylab.com/mcts/</link><description>&lt;p&gt;&lt;a href="https://blog.codylab.com/bouzy-5-21/"&gt;上一篇&lt;/a&gt;的 5/21 是在回答「看著一盤棋，要怎麼判斷形勢」。這個問題對圍棋程式非常關鍵：西洋棋程式用 Alpha-Beta 搜尋，搜到一定深度後就靠評估函數打分數；但圍棋的形勢太難用規則寫清楚，5/21 這類方法再怎麼調也不夠準，加上每一步有上百種下法，傳統搜尋在圍棋上一直做不起來。&lt;/p&gt;
+&lt;p&gt;蒙地卡羅樹搜尋（Monte Carlo Tree Search，MCTS）換了一個思路：&lt;strong&gt;看不出局面好壞，那就把棋下完很多次，統計勝率&lt;/strong&gt;。終局要判斷誰贏很容易，數子就好。2006 年 Coulom&lt;sup&gt;[1]&lt;/sup&gt;和 Kocsis、Szepesvári&lt;sup&gt;[2]&lt;/sup&gt;先後提出這套方法之後，圍棋程式在幾年內從業餘入門進步到業餘高段；後來的 AlphaGo&lt;sup&gt;[3]&lt;/sup&gt;也是以 MCTS 為骨架，再把神經網路放進去。&lt;/p&gt;
+&lt;h2&gt;互動演示&lt;/h2&gt;
+&lt;p&gt;為了把整棵搜尋樹畫出來，下面用&lt;strong&gt;井字棋&lt;/strong&gt;示範，演算法和圍棋版完全一樣，只是規模小到看得清楚。O 先手。&lt;/p&gt;
+&lt;p&gt;按「下一步」可以一次走一個階段，看一次模擬裡發生了什麼；看懂之後按「+100」或「+1000」快轉，觀察樹的形狀怎麼變。點樹上的節點，右下角會列出它每個子節點的 UCT 是怎麼算出來的。也可以自己在棋盤上下子，從任何局面開始搜尋。&lt;/p&gt;
+&lt;iframe src="https://blog.codylab.com/files/go/mcts.html" title="MCTS 互動演示" width="100%" height="900" style="border:0;display:block" loading="lazy" onload="this.style.height = this.contentDocument.documentElement.offsetHeight + 'px'"&gt;&lt;/iframe&gt;
+
+&lt;h2&gt;演算法&lt;/h2&gt;
+&lt;p&gt;MCTS 會從目前的局面（根節點）出發，重複做很多次「模擬」。每個節點記錄兩個數字：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;N&lt;/strong&gt;：這個節點被走過幾次&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;W&lt;/strong&gt;：其中&lt;strong&gt;下這一手的一方&lt;/strong&gt;贏了幾次（和局算 0.5）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以 W ÷ N 就是這一手的勝率。每次模擬分成四個階段：&lt;/p&gt;
+&lt;h3&gt;1. Selection（選擇）&lt;/h3&gt;
+&lt;p&gt;從根往下走。如果一個節點的所有著手都已經在樹裡了，就用 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Cody Liu</dc:creator><pubDate>Sun, 04 Oct 2026 00:00:00 +0800</pubDate><guid isPermaLink="false">tag:blog.codylab.com,2026-10-04:/mcts/</guid><category>Go</category><category>Go</category><category>AI</category><category>Algorithm</category></item><item><title>2017 黃金海岸馬拉松</title><link>https://blog.codylab.com/running-gold-coast-marathon.md/</link><description>&lt;p&gt;&lt;img alt="start" src="http://i.imgur.com/Ax92g95.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;2017.7.2 黃金海岸馬拉松是我的第四馬，也是我海外的第二馬。2017年黃金海岸馬拉松全馬人數大約6千人，相比於我的上一場海外馬-東京馬的2萬多人，算是比較小型的賽事，不用人擠人又可以享受 IAAF Road Race 認證金牌規格賽事。這個賽事最大的特色就是全程 42 公里幾乎都是沿著海岸線跑，可以邊跑邊欣賞海岸線的美景。&lt;/p&gt;
 &lt;p&gt;&lt;img alt="gold-coast" src="http://i.imgur.com/1b7MTEY.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;這次比賽前一個月的練習跑量大約是150公里。雖然不多，但我的目標就是希望比2014東京馬5:56記錄進步，然後不要受傷。賽前狀況都還不錯，沒有特別酸痛或是受傷的情況，我也臉書上面宣告我的目標成績為 5:30:

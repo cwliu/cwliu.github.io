@@ -57,6 +57,31 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="https://blog.codylab.com/naganuma-learning-retro/">初級日文學習回顧</a>
+      </h1>
+      <p class="meta"><time datetime="2016-09-29T00:00:00+08:00" pubdate>2016 September 29 Thu</time></p>
+</header>
+
+  <div class="entry-content"><p><img alt="a-1" src="http://i.imgur.com/oBGfZR8.jpg"></p>
+<h2>學一個新的語言</h2>
+<p>今年7月到9月，我到了東京長沼日本語學校學習初級日文。除了上課的200個小時，加上課餘復習，這3個月的時間我至少投入了400小時在日文學習上。</p>
+<p>第一次到外國學語言，也是第一次我在國外住了3個月。語言學校學習的好處就基本上整天都是全日語的環境。因為我們是初級班，大家會的日文很有限，一開始的下課，大家還是都用英文來聊天，但隨著學習到的日文愈來愈多，也就發現大家慢慢可以用日文來溝通了。</p>
+<p>到語言學校學習可以很容易進入說日語的環境。學習新語言的過程其實就是要不斷的模仿、犯錯、修正。而語言學校則是一個安全、比較沒有壓力的環境，例如學到購物的日文時，就可以到學校的咖啡廳練習。在有系統的教學框架下按步就班學習，絕對會自己在學來得有效率。</p>
+<p>不過上語言學校最大的缺點就是很貴。但換個角度想，也是因為自己投入了這些金錢跟時間。代表自己有這個決心來學習一個新的語言。所以我的心態就是既然來了，就好好學習，不要浪費。一個月約2萬5台幣的學費，換算下來每一堂課大約是400台幣的學費。班上的部份同學會在課堂上睡覺、或者是翹課。我是覺得蠻可惜的，也可能是因為花的不是自己的錢，所以比較無所謂吧。最後3個月下來，我每堂課都有出席。</p>
+<p><img alt="record" src="https://i.imgur.com/ANlPLUN.png"></p>
+<p>最後學期成績順利過關(70分及格)</p>
+<p><img alt="成績" src="http://i.imgur.com/EhArh9Y.jpg"></p>
+<h2>到志工會話教室學日文</h2>
+<p><img alt="vulunteer" src="https://i.imgur.com/ILfi70o.png"></p>
+<p>除了語言學校，我也有到日文教室上課。日本各地有<a href="http://www.tnvn.jp/guide/">志工的日本語教室(ボランティア日本語教室)</a>可以參加。基本上都是免費，或是付場地費幾百塊日幣，就可以跟日本人會話交流，練習在語言學校學到的內容，也可以交到除了語言學校以外的朋友。我的小組是一位日本老師，跟一位日本女大學生的助教。學生則是有來自澳洲、印度等地的學生。</p>
+<p><img alt="vulunteer" src="http://i.imgur.com/cYW5Zlf.jpg"></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/naganuma-learning-retro/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="https://blog.codylab.com/naganuma-info/">日本語長沼學校初級班 資訊分享</a>
       </h1>
       <p class="meta"><time datetime="2016-09-23T00:00:00+08:00" pubdate>2016 September 23 Fri</time></p>
@@ -347,56 +372,6 @@ $<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </s
     <a rel="full-article" href="https://blog.codylab.com/liblinphone/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="https://blog.codylab.com/style-theme/">使用 Style 或 Theme 修改 Android 元件的外觀</a>
-      </h1>
-      <p class="meta"><time datetime="2016-02-19T00:00:00+08:00" pubdate>2016 February 19 Fri</time></p>
-</header>
-
-  <div class="entry-content"><h2>前言</h2>
-<p>在 Android 中有 <em>style</em> 跟 <em>theme</em> 兩種不同方式來設定元件的外觀</p>
-<h2>Style</h2>
-<p>在 <code>res/values/styles.xml</code> 新增一個 style 標籤，讓View的背景顯示為深藍色:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;resources&gt;</span>
-<span class="w">    </span>...
-<span class="w">    </span><span class="nt">&lt;style</span><span class="w"> </span><span class="na">name=</span><span class="s">"BeatBoxButton"</span><span class="nt">&gt;</span>
-<span class="w">        </span><span class="nt">&lt;item</span><span class="w"> </span><span class="na">name=</span><span class="s">"android:background"</span><span class="nt">&gt;</span>@color/dark_blue<span class="nt">&lt;/item&gt;</span>
-<span class="w">    </span><span class="nt">&lt;/style&gt;</span>
-<span class="nt">&lt;/resources&gt;</span>
-</code></pre></div>
-
-<p>使用方式則是在想套用這個 stytle 的 view 物件上加上 style 屬性:</p>
-<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="n">Button</span>
-<span class="w">    </span><span class="p">...</span>
-<span class="w">    </span><span class="n">style</span><span class="o">=</span><span class="ss">"@style/BeatBoxButton.Bold"</span><span class="o">/&gt;</span>
-</code></pre></div>
-
-<p>這麼做的好處就是當應用程式如果有很多 button，若是要換別的顏色的話，就只要更新 style 就好了。</p>
-<h3>Style inheritance</h3>
-<p>另外 style 跟 class 一樣有繼承的使用方式</p>
-<p>方法一:</p>
-<p>加上 parent 的屬性:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;style</span><span class="w"> </span><span class="na">name=</span><span class="s">"MyButtonStrong"</span><span class="w"> </span><span class="na">parent=</span><span class="s">"MyBoxButton"</span><span class="nt">&gt;</span>
-<span class="w">    </span><span class="nt">&lt;item</span><span class="w"> </span><span class="na">name=</span><span class="s">"android:textStyle"</span><span class="nt">&gt;</span>bold<span class="nt">&lt;/item&gt;</span>
-<span class="nt">&lt;/style&gt;</span>
-</code></pre></div>
-
-<p>方法二:</p>
-<p>在 Parent 的名稱後面直接加上 <code>.</code>，例如: "MyButton.Bold"</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;style</span><span class="w"> </span><span class="na">name=</span><span class="s">MyBoxButton.Bold"</span><span class="nt">&gt;</span>
-<span class="w">    </span><span class="nt">&lt;item</span><span class="w"> </span><span class="na">name=</span><span class="s">"android:textStyle"</span><span class="nt">&gt;</span>bold<span class="nt">&lt;/item&gt;</span>
-<span class="nt">&lt;/style&gt;</span>
-</code></pre></div>
-
-<p>兩這種方法都可以達到 style inheritance 的效果</p>
-<h2>Theme</h2>
-<p>針對整體性的 style，如果 app 有 …</p></div>
-  <footer>
-    <a rel="full-article" href="https://blog.codylab.com/style-theme/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="https://blog.codylab.com/author/cody-liu3.html">&larr; Older</a>
 
@@ -408,15 +383,15 @@ $<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </s
     <h1>Tags</h1>
     <ul class="tagcloud">
       <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/ai.html">AI</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/algorithm.html">Algorithm</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/go.html">Go</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
@@ -442,6 +417,9 @@ $<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </s
           <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
       </li>
       <li class="post">
+          <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
+      </li>
+      <li class="post">
           <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
       </li>
       <li class="post">
@@ -449,9 +427,6 @@ $<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </s
       </li>
       <li class="post">
           <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
-      </li>
-      <li class="post">
-          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
       </li>
     </ul>
   </section>

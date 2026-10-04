@@ -57,6 +57,67 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="https://blog.codylab.com/tmux/">Tmux Notes</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
+</header>
+
+  <div class="entry-content"><p>Default pefix key <code>&lt;Prefix&gt;</code> is Ctrl+b</p>
+<h1>Installation</h1>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>tmux
+</code></pre></div>
+
+<h1>config</h1>
+<div class="highlight"><pre><span></span><code>~/.tmux.conf
+</code></pre></div>
+
+<p>Reload</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>tmux<span class="w"> </span>source-file<span class="w"> </span>~/.tmux.conf
+</code></pre></div>
+
+<h1>Attach</h1>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>tmux<span class="w"> </span>attach
+</code></pre></div>
+
+<h1>視窗(Windows)</h1>
+<ul>
+<li>新增一個視窗<code>&lt;Prefix&gt;c</code></li>
+<li>下一個視窗<code>&lt;Prefix&gt;n</code></li>
+<li>上一個視窗<code>&lt;Prefix&gt;p</code></li>
+<li>選單 <code>&lt;Prefix&gt;w</code></li>
+<li>關視窗<code>&lt;Prefix&gt;x</code></li>
+</ul>
+<h1>Panes</h1>
+<ul>
+<li>水平分割 <code>&lt;Prefix&gt;%</code></li>
+<li>垂直分割 <code>&lt;Prefix&gt;"</code></li>
+<li>Resize <code>&lt;Prefix&gt;&lt;Meta-Up[Down][Left][Right]&gt;</code></li>
+<li>Close <code>&lt;Prefix&gt;x</code></li>
+</ul>
+<h1>視窗(Windows)</h1>
+<ul>
+<li>新增一個視窗<code>&lt;Prefix&gt;c</code></li>
+<li>下一個視窗<code>&lt;Prefix&gt;n</code></li>
+<li>上一個視窗<code>&lt;Prefix&gt;n</code></li>
+<li>選單 <code>&lt;Prefix&gt;w</code></li>
+<li>關視窗<code>&lt;Prefix&gt;x</code></li>
+<li>重新命名<code>&lt;Prefix&gt;,</code></li>
+</ul>
+<h1>More</h1>
+<ul>
+<li><a href="http://www.dayid.org/os/- notes/tm.html">dayid's screen and tmux cheat sheet</a></li>
+<li><a href="http://www.openbsd.org/cgi-bin/man.cgi?query=tmux&amp;sektion=1">Manual Pages: tmux(1)</a></li>
+<li><a href="https://www.youtube.com/watch?v=wKEGA8oEWXw">▶ tmux Quick Start - YouTube</a>
+http://blog.chh.tw/posts/tmux-terminal-multiplexer/</li>
+<li><a href="http://josephj.com/entry.php?id=373">進化版 screen - tmux</a></li>
+</ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/tmux/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="https://blog.codylab.com/running-heart-rate-ble/">Using Pafers heart rate monitor on a Android 4.3 phone</a>
       </h1>
       <p class="meta"><time datetime="2013-12-28T00:00:00+08:00" pubdate>2013 December 28 Sat</time></p>
@@ -357,23 +418,6 @@ $<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><sp
     <a rel="full-article" href="https://blog.codylab.com/linux-powersaving-run-script/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="https://blog.codylab.com/thinkpad-bios/">Update ThinkPad BIOS in Linux with a USB disk</a>
-      </h1>
-      <p class="meta"><time datetime="2013-11-30T23:27:26+08:00" pubdate>2013 November 30 Sat</time></p>
-</header>
-
-  <div class="entry-content"><p>In this post, I recorded my ThinkPad x220 BIOS update steps. In Windows, we can use <a href="http://support.lenovo.com/en_US/detail.page?LegacyDocID=MIGR-77150">BIOS Update Utility</a> provided by Lenovo, but it's only available in Windows platformas. For Ubuntu user like me, we can still update BIOS with a USB disk.</p>
-<h3>Download BIOS Update Bootable CD</h3>
-<p>The latest version is 1.39(2013/11), Go to lenovo support site:<a href="http://support.lenovo.com/en_US/downloads/detail.page?&amp;LegacyDocID=MIGR-77151">BIOS Update Bootable CD for Windows 8 (32-bit, 64-bit), 7 (32-bit, 64-bit), Vista (32-bit, 64-bit), XP - ThinkPad X220, X220i, X220 Tablet, X220i Tablet</a>, download 8duj25us.iso(31.6 MB)    </p>
-<h3>Download <code>geteltorito.pl﻿</code> to generate boot image</h3>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>wget<span class="w"> </span><span class="s1">'﻿﻿http://www …</span></code></pre></div></div>
-  <footer>
-    <a rel="full-article" href="https://blog.codylab.com/thinkpad-bios/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="https://blog.codylab.com/index9.html">&larr; Older</a>
 
@@ -385,15 +429,15 @@ $<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><sp
     <h1>Tags</h1>
     <ul class="tagcloud">
       <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/ai.html">AI</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/algorithm.html">Algorithm</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/go.html">Go</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
@@ -419,6 +463,9 @@ $<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><sp
           <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
       </li>
       <li class="post">
+          <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
+      </li>
+      <li class="post">
           <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
       </li>
       <li class="post">
@@ -426,9 +473,6 @@ $<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><sp
       </li>
       <li class="post">
           <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
-      </li>
-      <li class="post">
-          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
       </li>
     </ul>
   </section>

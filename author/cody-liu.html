@@ -87,6 +87,34 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
+      </h1>
+      <p class="meta"><time datetime="2026-10-04T00:00:00+08:00" pubdate>2026 October 04 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p><a href="https://blog.codylab.com/bouzy-5-21/">上一篇</a>的 5/21 是在回答「看著一盤棋，要怎麼判斷形勢」。這個問題對圍棋程式非常關鍵：西洋棋程式用 Alpha-Beta 搜尋，搜到一定深度後就靠評估函數打分數；但圍棋的形勢太難用規則寫清楚，5/21 這類方法再怎麼調也不夠準，加上每一步有上百種下法，傳統搜尋在圍棋上一直做不起來。</p>
+<p>蒙地卡羅樹搜尋（Monte Carlo Tree Search，MCTS）換了一個思路：<strong>看不出局面好壞，那就把棋下完很多次，統計勝率</strong>。終局要判斷誰贏很容易，數子就好。2006 年 Coulom<sup>[1]</sup>和 Kocsis、Szepesvári<sup>[2]</sup>先後提出這套方法之後，圍棋程式在幾年內從業餘入門進步到業餘高段；後來的 AlphaGo<sup>[3]</sup>也是以 MCTS 為骨架，再把神經網路放進去。</p>
+<h2>互動演示</h2>
+<p>為了把整棵搜尋樹畫出來，下面用<strong>井字棋</strong>示範，演算法和圍棋版完全一樣，只是規模小到看得清楚。O 先手。</p>
+<p>按「下一步」可以一次走一個階段，看一次模擬裡發生了什麼；看懂之後按「+100」或「+1000」快轉，觀察樹的形狀怎麼變。點樹上的節點，右下角會列出它每個子節點的 UCT 是怎麼算出來的。也可以自己在棋盤上下子，從任何局面開始搜尋。</p>
+<iframe src="https://blog.codylab.com/files/go/mcts.html" title="MCTS 互動演示" width="100%" height="900" style="border:0;display:block" loading="lazy" onload="this.style.height = this.contentDocument.documentElement.offsetHeight + 'px'"></iframe>
+
+<h2>演算法</h2>
+<p>MCTS 會從目前的局面（根節點）出發，重複做很多次「模擬」。每個節點記錄兩個數字：</p>
+<ul>
+<li><strong>N</strong>：這個節點被走過幾次</li>
+<li><strong>W</strong>：其中<strong>下這一手的一方</strong>贏了幾次（和局算 0.5）</li>
+</ul>
+<p>所以 W ÷ N 就是這一手的勝率。每次模擬分成四個階段：</p>
+<h3>1. Selection（選擇）</h3>
+<p>從根往下走。如果一個節點的所有著手都已經在樹裡了，就用 …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/mcts/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
       </h1>
       <p class="meta"><time datetime="2017-07-05T00:00:00+08:00" pubdate>2017 July 05 Wed</time></p>
@@ -354,31 +382,6 @@ urlBuilder …</code></pre></div></div>
     <a rel="full-article" href="https://blog.codylab.com/android-http-request/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="https://blog.codylab.com/naganuma-learning-retro/">初級日文學習回顧</a>
-      </h1>
-      <p class="meta"><time datetime="2016-09-29T00:00:00+08:00" pubdate>2016 September 29 Thu</time></p>
-</header>
-
-  <div class="entry-content"><p><img alt="a-1" src="http://i.imgur.com/oBGfZR8.jpg"></p>
-<h2>學一個新的語言</h2>
-<p>今年7月到9月，我到了東京長沼日本語學校學習初級日文。除了上課的200個小時，加上課餘復習，這3個月的時間我至少投入了400小時在日文學習上。</p>
-<p>第一次到外國學語言，也是第一次我在國外住了3個月。語言學校學習的好處就基本上整天都是全日語的環境。因為我們是初級班，大家會的日文很有限，一開始的下課，大家還是都用英文來聊天，但隨著學習到的日文愈來愈多，也就發現大家慢慢可以用日文來溝通了。</p>
-<p>到語言學校學習可以很容易進入說日語的環境。學習新語言的過程其實就是要不斷的模仿、犯錯、修正。而語言學校則是一個安全、比較沒有壓力的環境，例如學到購物的日文時，就可以到學校的咖啡廳練習。在有系統的教學框架下按步就班學習，絕對會自己在學來得有效率。</p>
-<p>不過上語言學校最大的缺點就是很貴。但換個角度想，也是因為自己投入了這些金錢跟時間。代表自己有這個決心來學習一個新的語言。所以我的心態就是既然來了，就好好學習，不要浪費。一個月約2萬5台幣的學費，換算下來每一堂課大約是400台幣的學費。班上的部份同學會在課堂上睡覺、或者是翹課。我是覺得蠻可惜的，也可能是因為花的不是自己的錢，所以比較無所謂吧。最後3個月下來，我每堂課都有出席。</p>
-<p><img alt="record" src="https://i.imgur.com/ANlPLUN.png"></p>
-<p>最後學期成績順利過關(70分及格)</p>
-<p><img alt="成績" src="http://i.imgur.com/EhArh9Y.jpg"></p>
-<h2>到志工會話教室學日文</h2>
-<p><img alt="vulunteer" src="https://i.imgur.com/ILfi70o.png"></p>
-<p>除了語言學校，我也有到日文教室上課。日本各地有<a href="http://www.tnvn.jp/guide/">志工的日本語教室(ボランティア日本語教室)</a>可以參加。基本上都是免費，或是付場地費幾百塊日幣，就可以跟日本人會話交流，練習在語言學校學到的內容，也可以交到除了語言學校以外的朋友。我的小組是一位日本老師，跟一位日本女大學生的助教。學生則是有來自澳洲、印度等地的學生。</p>
-<p><img alt="vulunteer" src="http://i.imgur.com/cYW5Zlf.jpg"></p></div>
-  <footer>
-    <a rel="full-article" href="https://blog.codylab.com/naganuma-learning-retro/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="https://blog.codylab.com/author/cody-liu2.html">&larr; Older</a>
 
@@ -389,15 +392,15 @@ urlBuilder …</code></pre></div></div>
     <h1>Tags</h1>
     <ul class="tagcloud">
       <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/ai.html">AI</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/algorithm.html">Algorithm</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
       <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
-      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
       <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/go.html">Go</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
       <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
@@ -423,6 +426,9 @@ urlBuilder …</code></pre></div></div>
           <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
       </li>
       <li class="post">
+          <a href="https://blog.codylab.com/mcts/">圍棋 AI 學習筆記（二）：蒙地卡羅樹搜尋（MCTS）</a>
+      </li>
+      <li class="post">
           <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
       </li>
       <li class="post">
@@ -430,9 +436,6 @@ urlBuilder …</code></pre></div></div>
       </li>
       <li class="post">
           <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
-      </li>
-      <li class="post">
-          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
       </li>
     </ul>
   </section>
