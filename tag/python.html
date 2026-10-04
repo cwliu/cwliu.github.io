@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cody Blog - Python</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/django-south/">使用 south 來做 Django database migration</a>
+      </h1>
+      <p class="meta"><time datetime="2014-08-16T00:00:00+08:00" pubdate>2014 August 16 Sat</time></p>
+</header>
+
+  <div class="entry-content"><p>一般在 Django 底下更動 model 的時侯，必須使用 <code>syncdb</code> 這個指令，把修改的 model 同步到 database 之中，但是有個限制，就是只有新的 model 才會被更新，已經存在的 model 就不會更動，此時就需要<code>south</code>的幫忙。在 django 1.7 之後，這個 library 正式被整進到 django 之中。不過目前我手頭上的專案還是以 1.6 為主，所以還是要筆記一下。</p>
+<h2>初始化 south</h2>
+<p>安裝完 south 之後，第一次先執行 <code>syncdb</code> 把 south 相關的<code>south_migrationhistory</code> 新增到資料庫中。</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>./manage.py<span class="w"> </span>syncdb
+</code></pre></div>
+
+<h2>開始 migration</h2>
+<p>首先要介紹的是  <code>schemamigration &lt;APP_NAME&gt; --initial</code>，這個指令會在 app 資料夾下面產生一個 <code>migrations</code> 資料夾。如果是第一次執行的話，裡面的檔名會是 0001_initial.py 開頭，裡面會記錄如何從無到有，把資料表建立起來。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">forwards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orm</span><span class="p">):</span>
+    <span class="c1"># Adding model 'UserModel'</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span><span class="sa">u</span><span class="s1">'dusers_dmodel'</span><span class="p">,</span> <span class="p">(</span>
+        <span class="p">(</span><span class="sa">u</span><span class="s1">'id'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gf</span><span class="p">(</span><span class="s1">'django.db.models.fields.AutoField'</span><span class="p">)(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+</code></pre></div>
+
+<p>此時可以執行 syncdb 做一下確認</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>python<span class="w"> </span>manage.py<span class="w"> </span>syncdb …</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/django-south/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/python-pyenv-management/">使用 Pyenv 管理多個 Python 版本</a>
+      </h1>
+      <p class="meta"><time datetime="2014-07-08T00:00:00+08:00" pubdate>2014 July 08 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p><a href="https://github.com/yyuu/pyenv">pyenv</a> 是一個 Python 版本管理器，也可以安裝 <a href="https://github.com/yyuu/pyenv-virtualenv">pyenv-virtualenv</a> 達來支援 virtualenv 的功能。</p>
+<h2>安裝 pyenv 和 pyenv-virtualenv</h2>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yyuu/pyenv.git<span class="w"> </span>~/.pyenv
+<span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yyuu/pyenv-virtualenv.git<span class="w"> </span>~/.pyenv/plugins/pyenv-virtualenv
+<span class="gp">$ </span>sudo<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>virtualenv
+</code></pre></div>
+
+<p>In Ubuntu:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>make<span class="w"> </span>build-essential<span class="w"> </span>libssl-dev<span class="w"> </span>zlib1g-dev<span class="w"> </span>libbz2-dev<span class="w"> </span>libreadline-dev<span class="w"> </span>libsqlite3-dev<span class="w"> </span>wget<span class="w"> </span>curl<span class="w"> </span>llvm
+</code></pre></div>
+
+<p>Or, 使用<a href="https://goo.gl/uiUZgk">yyuu/pyenv-installer</a></p>
+<p>把下列加到 ~/.bashrc</p>
+<div class="highlight"><pre><span></span><code><span class="go">export PYENV_ROOT="$HOME/.pyenv"</span>
+<span class="go">export PATH="$PYENV_ROOT/bin:$PATH"</span>
+<span class="go">eval "$(pyenv init -)"</span>
+</code></pre></div>
+
+<h2>安裝其它版本的 Python</h2>
+<p>查看可供安裝的 python 版本</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>pyenv<span class="w"> </span>install<span class="w"> </span>-l
+<span class="go">...</span>
+<span class="go">3.4.0</span>
+<span class="go">3.4.1</span>
+<span class="go">3.4-dev</span>
+<span class="go">...</span>
+</code></pre></div>
+
+<p>如果想要裝 3.4.1 的話，就使用<code>pyenv install</code></p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>pyenv<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.4.1 …</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/python-pyenv-management/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/python-creationflags/">在Python中如何Async的方式呼叫外部程式</a>
+      </h1>
+      <p class="meta"><time datetime="2012-07-20T00:00:00+08:00" pubdate>2012 July 20 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>最近有個需求：使用Python呼叫外部程式，外部程式屬於背景程式類型。也就是我希望python程式結束時不需要等待外部程式結束。Google了一下，找到Stack Overview的<a href="http://stackoverflow.com/questions/3516007/run-process-and-dont-wait">解答</a>，關鍵就是在 subprocess.popen() 使用 creationflags 這個參數，這個方法只有在Windows試驗過，其它的平台就不確定了。比如說我想呼叫notepad：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="n">DETACHED_PROCESS</span> <span class="o">=</span> <span class="mh">0x00000008</span>
+<span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s2">"notepad"</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">close_fds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">creationflags</span><span class="o">=</span><span class="n">DETACHED_PROCESS</span><span class="p">)</span>
+</code></pre></div>
+
+<p>這樣這支python程式就會自行結束，而不會等notepad了。</p>
+<h3>Reference :</h3>
+<ul>
+<li><a href="http://stackoverflow.com/questions/905189/why-does-sys-exit-not-exit-when-called-inside-a-thread-in-python">http://stackoverflow.com/questions/905189/why-does-sys-exit-not-exit-when-called-inside-a-thread-in-python</a></li>
+<li><a href="http://stackoverflow.com/questions/3516007/run-process-and-dont-wait">python - Run Process and Don't Wait - Stack Overflow</a></li>
+</ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/python-creationflags/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/python-class-private-module-private-different/">[Python] Class Private 跟 Module Private 的差別</a>
+      </h1>
+      <p class="meta"><time datetime="2012-03-31T00:00:00+08:00" pubdate>2012 March 31 Sat</time></p>
+</header>
+
+  <div class="entry-content"><p>在Python中雖然有Private variable，但是不像一般程式語言一樣具有強制的效力，如果外界執意要使用還是可以呼叫的到。在<a href="http://stackoverflow.com/questions/1547145/defining-private-module-functions-in-python">這篇</a>StackOverflow有很清楚的解釋其中的差別。</p>
+<ul>
+<li>
+<p><strong>Module private</strong> 是指是以一個下底線 <strong>_</strong> 開頭的變數，例如<strong> _number 或 _getNumber() </strong></p>
+</li>
+<li>
+<p><strong>Class Private </strong>基本上是以二個下底線 __ 開頭，而且不超過一個下底線 _ 結尾的的變數名稱，例如 <strong>__number 或 __getNumber()</strong>，但是<strong><strong>init</strong> </strong>就不是 class private，但這種兩個下底線開頭和結尾叫<a href="http://farmdev.com/src/secrets/magicmethod/index.html"> Magic methods</a>有其特別的用途，但這個不在本文討論範圍。</p>
+</li>
+</ul>
+<h3><strong>Module Private</strong></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># moduleA.py</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_foo</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">'hi'</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">moduleA</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+    <span class="nb">print</span> <span class="n">_foo</span><span class="p">()</span>
+</code></pre></div>
+
+<p>以此例子來說，我們在 moduleA.py裡面定義了一個 Module private _foo()，因為Python有個規定是在Import的時侯會略過所有以underscore開頭的成員，所以_foo()會被忽略，在執行 print _foo() 的時侯就會發生 Exception：</p>
+<div class="highlight"><pre><span></span><code>Traceback (most recent call last):
+File "D:\priavte\__init__.py", line 4, in &lt;module&gt;
+NameError: name '_foo' is not defined
+</code></pre></div>
+
+<p>但是如果執意要用還是可以透過Import __foo，得到想要的結果</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">moduleA</span><span class="w">  </span><span class="kn">import</span> <span class="n">_foo</span>
+<span class="nb">print</span> <span class="n">_foo</span><span class="p">()</span>
+</code></pre></div>
+
+<h3>Class Private</h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="n">Foo</span>():
+    <span class="n">__aoo …</span></code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/python-class-private-module-private-different/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/python-print-usage/">Python 多種 Print 函式的用法</a>
+      </h1>
+      <p class="meta"><time datetime="2012-03-16T00:00:00+08:00" pubdate>2012 March 16 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>最簡單的用法：把想Print的內容放在 print 後面</p>
+<div class="highlight"><pre><span></span><code>print 'Hello'
+</code></pre></div>
+
+<p>輸出結果</p>
+<div class="highlight"><pre><span></span><code>Hello
+</code></pre></div>
+
+<p>另一個方便的用法，可以把不同資料型態的變數不經過轉型就直接一起print出來：</p>
+<div class="highlight"><pre><span></span><code>print 'Hello',2012
+</code></pre></div>
+
+<p>也就是可以省下把其它變數都轉成string的麻煩</p>
+<p>輸出結果</p>
+<div class="highlight"><pre><span></span><code>Hello 2012
+</code></pre></div>
+
+<p>想把多個 print 合併在同一行輸出，而不要一個print就斷行一次，就在最後面加上一個逗號: </p>
+<div class="highlight"><pre><span></span><code>print 'Execution Result:',
+print runSomeThing()
+</code></pre></div>
+
+<p>輸出結果：</p>
+<div class="highlight"><pre><span></span><code>Execution Result: PASS
+</code></pre></div>
+
+<p>另外低階的sys.stdout.write在特定需求也可以使用，比如說我想輸出兩個字串，但是中間不要像 print 函式一樣加一個空白的話，就可以使用這個方法：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"Hello"</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"2012"</span><span class="p">)</span>
+</code></pre></div>
+
+<p>輸出結果：</p>
+<div class="highlight"><pre><span></span><code>Hello2012
+</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/python-print-usage/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/django-south/">使用 south 來做 Django database migration</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/python-pyenv-management/">使用 Pyenv 管理多個 Python 版本</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/python-creationflags/">在Python中如何Async的方式呼叫外部程式</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/python-class-private-module-private-different/">[Python] Class Private 跟 Module Private 的差別</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/python-print-usage/">Python 多種 Print 函式的用法</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

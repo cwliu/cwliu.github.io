@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cody Blog - Testing</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/angryip/">Angry IP Scaner</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
+</header>
+
+  <div class="entry-content"><p><a href="http://goo.gl/IuL9XL">Angry IP Scanner</a> 是一套好用的 IP Scanner 軟體，支援: Windows, Mac or Linux: </p>
+<p><img alt="gui" src="http://i.imgur.com/ofZVNix.png"></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/angryip/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/bug-report/">如何寫 Bug Report</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
+</header>
+
+  <div class="entry-content"><p>一個好的 Bug Report 應該要提供明確的資訊，可以讓 Developer 快速重視問題，減少分析問題的成本。而管理階層的人從報告可了解問題的嚴重性，進而決定解決這個Bug時間表。</p>
+<h2>Bug Report 應該要有的欄位</h2>
+<ol>
+<li>標題 <br>
+說明要明確，直指問題核心，說明問題發生的模組    </li>
+</ol>
+<p><strong>不好的標題</strong>: 照片無法上傳 <br>
+<strong>比較好的標題</strong>: 當照片尺寸大於10MB，手機無法使用自動上傳照片</p>
+<ol>
+<li>
+<p>問題重現步驟(Steps to reproduce)  <br>
+除了要找出可以重視問題的Steps之外，還要盡量縮小(narrow down)步驟，找出重現問題的關鍵步驟。通常最後一步會寫"預期的結果"(expected result)，實際發生的結果有什麼不同。   </p>
+<ol>
+<li>安裝 APP</li>
+<li>使用 Google 帳號登入</li>
+<li>點選登入按鈕 <br>
+預期結果: 登入成功，進入活動列表  <br>
+實際結果: 登入失敗，出現伺服器連接錯誤    </li>
+</ol>
+</li>
+<li>
+<p>嚴重性  <br>
+<em>Blocker</em>: 產生無法使用，要<em>立即</em>解決，像是產品無法安裝 <br>
+<em>Criticl</em>: 嚴重的問題，需要儘早解決 <br>
+<em>Major</em>: 重要的問題，需要在產品上線前解決 <br>
+<em>Minor</em>: 次要的問題，不一定要解決，有列入已知問題(kownn Issue)的空間 <br>
+<em>Trival</em>: 不直接影響使用者使用，像是打錯字，等等   </p>
+</li>
+<li>
+<p>問題發生的版本號   </p>
+</li>
+<li>
+<p>發生的頻率 <br>
+每次/常常/偶爾/很少</p>
+</li>
+<li>
+<p>附件: 錯誤畫面的截圖，相關Log檔案以及任何可以幫助分析問題的檔案</p>
+</li>
+</ol>
+<h3>一些原則</h3>
+<ol>
+<li>如果測試一次發現多個問題，不要把多個 bug 寫在同一筆issue裡，分開一筆一筆記錄，這樣才可以獨立被解決跟驗證(Verify)</li>
+<li>確認這個 bug 是否已經記錄過了？ 不要重覆發。</li>
+</ol>
+<h3>Bug Workflow</h3>
+<p>這是一張在網路上找到一個比較簡單的 bug workflow </p>
+<p><img alt="img" src="https://lh6.googleusercontent.com/-UHiozVdot50/U_MLiVr5MQI/AAAAAAAFNNM/0v8oFN4oTqg/w1280-h1124-no/flow-chart-new.gif"></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/bug-report/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/namp/">nmap 筆記</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
+</header>
+
+  <div class="entry-content"><p>NAMP 是一套網路掃描的工具</p>
+<h2>Nmap</h2>
+<div class="highlight"><pre><span></span><code><span class="n">$</span><span class="w"> </span><span class="n">nmap</span><span class="w"> </span><span class="n">ip</span>
+
+<span class="n">$</span><span class="w"> </span><span class="n">nmap</span><span class="w"> </span><span class="p">[</span><span class="n">ip1</span><span class="w"> </span><span class="n">ip2</span><span class="p">]</span>
+
+<span class="n">$</span><span class="w"> </span><span class="n">namp</span><span class="w"> </span><span class="mf">192.168.10.1</span><span class="o">/</span><span class="mi">24</span>
+</code></pre></div>
+
+<p>隨機掃描目標(慎用)</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>nmap<span class="w"> </span>-iR<span class="w"> </span><span class="m">3</span>
+</code></pre></div>
+
+<h2>Ping</h2>
+<p>$ nmap 172.16.21.134 172.16.21.135 -sP</p>
+<p>Starting Nmap 6.40 ( http://nmap.org ) at 2014-04-24 09:38 CST
+Nmap scan report for 172.16.21.134
+Host is up (0.00084s latency).
+Nmap done: 2 IP addresses (1 host up) scanned in 1.21 seconds</p>
+<h2>Traceroute</h2>
+<div class="highlight"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="nx">sudo</span><span class="w"> </span><span class="nx">nmap</span><span class="w"> </span><span class="m m-Double">8.8.8.8</span><span class="w"> </span><span class="o">--</span><span class="nx">traceroute</span>
+
+<span class="nx">Starting</span><span class="w"> </span><span class="nx">Nmap</span><span class="w"> </span><span class="m m-Double">6.40</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">http</span><span class="p">:</span><span class="c1">//nmap.org ) at 2014-04-24 09:39 CST</span>
+<span class="nx">Nmap</span><span class="w"> </span><span class="nx">scan</span><span class="w"> </span><span class="nx">report</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">google</span><span class="o">-</span><span class="nx">public</span><span class="o">-</span><span class="nx">dns</span><span class="o">-</span><span class="nx">a</span><span class="p">.</span><span class="nx">google</span><span class="p">.</span><span class="nx">com</span><span class="w"> </span><span class="p">(</span><span class="m m-Double">8 …</span></code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/namp/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/sikuli/">Execute Sikuli Script at Jython level on Windows 7</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
+</header>
+
+  <div class="entry-content"><ol>
+<li>
+<p>Install JRE 32-bit</p>
+</li>
+<li>
+<p>Install Sikuli </p>
+<p>https://launchpad.net/sikuli/sikuli-api/1.0.0/+download/Sikuli-IDE-1.0.0-Win32.zip</p>
+</li>
+<li>
+<p>Set Environment </p>
+<p>JYTHONPATH=C:\jython2.5.1\Lib;C:\Sikuli-IDE-1.0.0-Win32\sikuli-script.jar\Lib
+CLASSPATH=C:\Sikuli-IDE-1.0.0-Win32\sikuli-script.jar
+PATH=C:\Program Files\Java\jre7\bin;C:\jython2.5.1\bin;C:\Sikuli-IDE-1.0.0-Win32\libs
+SIKULI_HOME=C:\Sikuli-IDE-1.0.0-Win32</p>
+</li>
+<li>
+<p>Sikuli sciprt </p>
+</li>
+</ol>
+<p>example: </p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sikuli.Sikuli</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="n">doubleClick</span><span class="p">(</span><span class="sa">r</span><span class="s2">"C:\siku.sikuli\1370345639170.png"</span><span class="p">)</span>
+</code></pre></div>
+
+<h1>Install Sikuli-IDE on Ubuntu 12.04</h1>
+<div class="highlight"><pre><span></span><code>sudo apt-get install sikuli-ide
+sudo apt-get install libopencv-*
+</code></pre></div>
+
+<h1>Reference :</h1>
+<ul>
+<li><a href="http://ccaloha.cc/blog/2012/10/16/installation-guide-robotframework-2-dot-7-4-plus-sikuli-plus-databaselibrary-plus-sshlibrary-plus-seleniumlibrary-jybot-and-pybot-in-ubuntu-12-dot-04/">[Installation Guide] RobotFramework 2.7.4 + Sikuli + DatabaseLibrary +SSHLibrary …</a></li></ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/sikuli/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/install-testlink-on-centos/">Install testlink on CentOS</a>
+      </h1>
+      <p class="meta"><time datetime="2013-05-12T00:00:00+08:00" pubdate>2013 May 12 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p>In this post, I'll try to explain how to install <a href="http://testlink.sourceforge.net/docs/testLink.php">Test link 1.9.3</a> on CentOS 6.2 step by step: </p>
+<h2>Using yum to install required packages</h2>
+<div class="highlight"><pre><span></span><code>yum install mysql-server php php-mysql php-gd php-ldap
+</code></pre></div>
+
+<h2>Modify /etc/php.ini to optimize php configuration for TestLink</h2>
+<div class="highlight"><pre><span></span><code>session.gc_maxlifetime = 2400
+max_execution_time = 120
+</code></pre></div>
+
+<h2>Set up web server and mysql services</h2>
+<div class="highlight"><pre><span></span><code> chkconfig httpd on
+ chkconfig mysqld on
+ service httpd start
+ service mysqld start
+</code></pre></div>
+
+<h2>Set a password for mysql root user</h2>
+<div class="highlight"><pre><span></span><code> mysqladmin -u root password NEWPASSWORD
+</code></pre></div>
+
+<h2>Add port 80 to iptables, Add the following rule into /etc/sysconfig/iptables</h2>
+<div class="highlight"><pre><span></span><code>-A INPUT -m state --state NEW …</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/install-testlink-on-centos/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/install-jenkins-on-centos-6/">Install Jenkins on CentOS 6.3</a>
+      </h1>
+      <p class="meta"><time datetime="2012-09-02T20:41:00+08:00" pubdate>2012 September 02 Sun</time></p>
+</header>
+
+  <div class="entry-content"><h3>安裝 JDK</h3>
+<p>CentOS預設的JAVA版本和Jenkins不相容，所以要改安裝 OpenJDK 。可以用 yum search 檢查應該安裝那一個版本:
+    yum search openjdk
+會有 java-1.6.0 跟 java-1.7.0 兩個版本可供安裝，在此我選擇比較新的版本：1.7.0：
+    yum install java-1.7.0-openjdk -y</p>
+<h3>安裝 Jenkins</h3>
+<div class="highlight"><pre><span></span><code><span class="n">sudo</span> <span class="n">wget</span> <span class="o">-</span><span class="n">O</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">yum</span><span class="o">.</span><span class="n">repos</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">jenkins</span><span class="o">.</span><span class="n">repo</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">pkg</span><span class="o">.</span><span class="n">jenkins</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">redhat</span><span class="o">/</span><span class="n">jenkins</span><span class="o">.</span><span class="n">repo</span>
+<span class="n">sudo</span> <span class="n">rpm</span> <span class="o">--</span><span class="kn">import</span><span class="w"> </span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">pkg</span><span class="o">.</span><span class="n">jenkins</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">redhat</span><span class="o">/</span><span class="n">jenkins</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">org</span><span class="o">.</span><span class="n">key</span>
+<span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">jenkins</span> <span class="o">-</span><span class="n">y</span>
+</code></pre></div>
+
+<h3>設定 Jenkins</h3>
+<ol>
+<li>
+<p>修改 iptables : 打開 80 Port，編輯<code>/etc/sysconfig/iptables</code>，把下面的rule加到最後一條
+    iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT</p>
+</li>
+<li>
+<p>讓 Jenkins 開機自動啟動
+    chkconfig Jenkins …</p></li></ol></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/install-jenkins-on-centos-6/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/daily-improvement-testing/">軟體測試人的每日體操</a>
+      </h1>
+      <p class="meta"><time datetime="2012-06-14T00:00:00+08:00" pubdate>2012 June 14 Thu</time></p>
+</header>
+
+  <div class="entry-content"><p>之前讀了一本軟體測試的書《<a href="http://book.douban.com/subject/4196675/">贏在測試</a>》，裡面主要以訪談的形式來訪問中國界的軟體測試界的前輩，像是Google的段念，IBM的陳雅麗等。詳細誰講了什麼，我記不清了。但是裡面有前輩提到做軟體測試的人<strong>很容易忘了讓自己持續的進步，而漸漸地失去競爭力</strong>。這也難怪，因為做軟體測試畢竟永遠不是公司內最核心的研發主力，普遍來說技術水平比開發人員要求來得低一些。</p>
+<p>之前讀到一篇<a href="http://www.satisfice.com/blog/">James Bach</a>老兄的<a href="http://www.satisfice.com/blog/archives/764">文章</a>，覺得還不錯。James Bach是軟體測試界的名人，他最著名的就是在<a href="http://en.wikipedia.org/wiki/Exploratory_testing">Exploratory Testing</a>的貢獻。有一位軟體測試的菜鳥問他說軟體測試工作者的每日家庭作業是什麼。Bach提出了四點：</p>
+<h2>Write every day</h2>
+<p>隨身帶筆記本，隨時記下任何對測試的想法</p>
+<h2>Watch yourself think ever day</h2>
+<p>工作時，當有任何測試的點子，嘗試去追蹤自己的想法。這是一種訓練<a href="http://en.wikipedia.org/wiki/Introspection">Self-observation</a>的方法</p>
+<h2>Question something about how you work every day</h2>
+<p>問問題，例如：何時需要寫下一個測試，那些步驟需要被記下。而不是只討論那些案例"Passing"或是"Failing"</p>
+<h2>Explain testing every day</h2>
+<p>解釋測試方法(Methodology)，不要只說自己在做黑箱測試，更深入些，並解釋為什麼你去做？</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/daily-improvement-testing/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/angryip/">Angry IP Scaner</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/bug-report/">如何寫 Bug Report</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/namp/">nmap 筆記</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/sikuli/">Execute Sikuli Script at Jython level on Windows 7</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/install-testlink-on-centos/">Install testlink on CentOS</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

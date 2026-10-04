@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - application</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/application.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>在 Genymotion 的 Android 6.0 Marshmallow 裝置上安裝 Google Apps</title><link href="https://blog.codylab.com/genymotion/" rel="alternate"></link><published>2016-01-15T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2016-01-15:/genymotion/</id><content type="html">&lt;p&gt;&lt;img alt="genymotion" src="http://i.imgur.com/teP6juM.png"&gt;&lt;/p&gt;
+&lt;p&gt;Android Studio 官方有 AVD(Android Virtual Device)，運作在 QEMU 的 Emulator 之上，使用上效率不好，所以近期開發 Android 都是使用 &lt;a href="https://www.genymotion.com/"&gt;Genymotion&lt;/a&gt; 這套 Android emulator(仿真器)上。Genymotion 是基於 VirtualBox 基礎上，而 Genymotion 上的 virtual device 預設沒有Google Play、Google Maps 等 Google Apps。如果想要在上面裝 Google Apps，需要以下額外的設定:   &lt;/p&gt;
+&lt;p&gt;註: 如果要安裝 gapps 在 Genymotion 推出的 &lt;code&gt;PREVIEW - Google Nexus 5X - 6.0.0&lt;/code&gt; 或 &lt;code&gt;PREVIEW - Google Nexus 5P - 6.0.0&lt;/code&gt;話，則需要額外的步驟：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;安裝 &lt;a href="http://www.mirrorcreator.com/files/0ZIO8PME/Genymotion-ARM-Translation_v1.1.zip_links"&gt;Genymotion-ARM-Translation_v1.1.zip&lt;/a&gt;，重啟裝置&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img alt="install-1" src="http://i.imgur.com/UZfF996l.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="install-2" src="http://i.imgur.com/U8qStNvl.png"&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;安裝 &lt;a href="https://www.androidfilehost.com/?fid=96042739161891406 - gapps-L-4-21-15.zip"&gt;gapps-L-4-21-15.zip&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;先登入 Google 帳號&lt;/li&gt;
+&lt;li&gt;安裝 &lt;a href="https://www.androidfilehost.com/?fid=24052804347835438 - benzo-gapps-M-20151011-signed-chroma-r3.zip"&gt;benzo-gapps-M-20151011-signed-chroma-r3.zip&lt;/a&gt;，重啟裝置&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img alt="google-play" src="http://i.imgur.com/uhP04jal.png"&gt;&lt;/p&gt;
+&lt;p&gt;這樣就有 Google Play 可以用了&lt;/p&gt;
+&lt;!--
+
+首先，下載 [Genymotion-ARM-Translation.zip](http://www.mirrorcreator.com/files/0ZIO8PME/Genymotion-ARM-Translation_v1.1.zip_links)，並且安裝: 
+
+1. Genymotion-ARM-Translation_v1.1.zip，拖拉到 VM 中來執行安裝
+
+
+2. 執行 `adb reboot` 重新啟動 VM
+
+下載 Android 對應版本的[Google Apps](http://opengapps.org/)，以 Android 6.0 為例，下載了 open_gapps-arm-6.0-pico-20160114.zip
+
+接著把 `gapps-xx-xxxxxxxx-signed.zip` 拖拉到 VM 中中途會問是否 flash it ，選擇 Yes
+
+4. 再次執行 `adb reboot`，重新啟動 VM
+
+
+## 參考
+- [Genymotion with Google Play Services](https://gist.github.com/wbroek/9321145)，
+--&gt;</content><category term="application"></category><category term="Android"></category></entry><entry><title>使用 imgur 來當 blog 圖床</title><link href="https://blog.codylab.com/imgur-imgbed/" rel="alternate"></link><published>2015-11-17T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2015-11-17:/imgur-imgbed/</id><summary type="html">&lt;p&gt;這個 Cody Lab Blog 的圖片都是放在 &lt;a href="imgur.com"&gt;imgur&lt;/a&gt; 的雲端圖片服務，用了一陣子，感覺還不錯。
+使用 imgur 來當圖床有以下優點:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;圖片不會被刪除，即使瀏覽量很低 &lt;a href="https://goo.gl/u7AIAf"&gt;[1]&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;桌面版可以使用&lt;a href="https://chrome.google.com/webstore/detail/imgur-extension-by-metron/ehoopddfhgaehhmphfcooacjdpmbjlao"&gt;Chrome 的 Extension&lt;/a&gt;，可支援直接 copy &amp;amp; paste 跟拖拉上傳。&lt;/li&gt;
+&lt;li&gt;預設圖片上傳都是私密的，除非知道圖片網址，否則無法瀏覽&lt;/li&gt;
+&lt;li&gt;可以直接用網址來控制圖片的大小&lt;/li&gt;
+&lt;li&gt;完全免費&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;目前 imgur 支援六種不同尺寸的縮圖: 
+&lt;img alt="imgur-url" src="http://i.imgur.com/Y36YLPe.png"&gt;&lt;/p&gt;
+&lt;p&gt;例如有一張圖片是存放在: http://i.imgur.com/y4UZ1mx.jpg，如果想要不同尺寸的話，就直接在.jpg副檔名前面加上參數, &lt;/p&gt;
+&lt;p&gt;Huge thumbnail 1024x1024 http://i.imgur.com/y4UZ1mx&lt;strong&gt;h&lt;/strong&gt;.jpg
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxh.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Large thumbnail 640x640 http://i.imgur.com/y4UZ1mx&lt;strong&gt;l&lt;/strong&gt;.jpg &lt;br&gt;
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxl.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Medium thumbnail 320x320 http://i.imgur.com/y4UZ1mx&lt;strong&gt;m&lt;/strong&gt;.jpg  &lt;br&gt;
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxm.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Small thumbnail 160x160 http://i.imgur.com/y4UZ1mx&lt;strong&gt;t&lt;/strong&gt;.jpg  &lt;br&gt;
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxt.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Big square 160x160: http://i.imgur.com/y4UZ1mx&lt;strong&gt;b&lt;/strong&gt;.jpg  &lt;br&gt;
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxb.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Small square 90x90: http://i.imgur.com/y4UZ1mx&lt;strong&gt;s …&lt;/strong&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;這個 Cody Lab Blog 的圖片都是放在 &lt;a href="imgur.com"&gt;imgur&lt;/a&gt; 的雲端圖片服務，用了一陣子，感覺還不錯。
+使用 imgur 來當圖床有以下優點:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;圖片不會被刪除，即使瀏覽量很低 &lt;a href="https://goo.gl/u7AIAf"&gt;[1]&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;桌面版可以使用&lt;a href="https://chrome.google.com/webstore/detail/imgur-extension-by-metron/ehoopddfhgaehhmphfcooacjdpmbjlao"&gt;Chrome 的 Extension&lt;/a&gt;，可支援直接 copy &amp;amp; paste 跟拖拉上傳。&lt;/li&gt;
+&lt;li&gt;預設圖片上傳都是私密的，除非知道圖片網址，否則無法瀏覽&lt;/li&gt;
+&lt;li&gt;可以直接用網址來控制圖片的大小&lt;/li&gt;
+&lt;li&gt;完全免費&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;目前 imgur 支援六種不同尺寸的縮圖: 
+&lt;img alt="imgur-url" src="http://i.imgur.com/Y36YLPe.png"&gt;&lt;/p&gt;
+&lt;p&gt;例如有一張圖片是存放在: http://i.imgur.com/y4UZ1mx.jpg，如果想要不同尺寸的話，就直接在.jpg副檔名前面加上參數, &lt;/p&gt;
+&lt;p&gt;Huge thumbnail 1024x1024 http://i.imgur.com/y4UZ1mx&lt;strong&gt;h&lt;/strong&gt;.jpg
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxh.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Large thumbnail 640x640 http://i.imgur.com/y4UZ1mx&lt;strong&gt;l&lt;/strong&gt;.jpg &lt;br&gt;
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxl.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Medium thumbnail 320x320 http://i.imgur.com/y4UZ1mx&lt;strong&gt;m&lt;/strong&gt;.jpg  &lt;br&gt;
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxm.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Small thumbnail 160x160 http://i.imgur.com/y4UZ1mx&lt;strong&gt;t&lt;/strong&gt;.jpg  &lt;br&gt;
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxt.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Big square 160x160: http://i.imgur.com/y4UZ1mx&lt;strong&gt;b&lt;/strong&gt;.jpg  &lt;br&gt;
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxb.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Small square 90x90: http://i.imgur.com/y4UZ1mx&lt;strong&gt;s&lt;/strong&gt;.jpg  &lt;br&gt;
+&lt;img alt="img" src="http://i.imgur.com/y4UZ1mxs.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;也就是只要用網址就可以控制圖片的大小了，對於 blog 來說相當方便。&lt;/p&gt;</content><category term="application"></category><category term="Blog"></category></entry><entry><title>聊聊 口袋地陪</title><link href="https://blog.codylab.com/product-pocket-dipei/" rel="alternate"></link><published>2015-07-20T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2015-07-20:/product-pocket-dipei/</id><content type="html">&lt;p&gt;最近看到不少在中國有趣的旅遊新點子，口袋地陪就是其中一個例子:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;口袋地陪目前不是一个手机 app，而是一个依托于微信的服务号，每天50元可以提供9个小时的实时咨询。当游客需要一个线上地陪时，通过服务号预约下单，选择出行需求，口袋地陪系统会为其派发一个最适合的地陪人员。旅游过程中，地陪随时在线，与游客通过微信（时下最频繁的沟通工具）保持联系，时刻了解并满足游客的需求。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img alt="口袋地陪的畫面" src="https://lh3.googleusercontent.com/PLba33VQwwqtp7lzE-PGZmwD1AGGJPA9QNzDJrrQ9VNP=w700-h414-no"&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例如，当你迷路在东京站 300 多个出口时，拍一张照片，地陪就能根据你的当前位置告诉你目的地应该如何走；当你在一家餐厅看不懂菜单，服务员又不会讲英文，拍一张菜单的照片，地陪会立刻为你翻译成中文；当你想在大阪购买最实用最便宜的电饭煲，地陪会将推荐商城和导航信息直接发给你。&lt;/p&gt;
+&lt;p&gt;窮游、攜程等網站只能滿足遊客旅行前的攻略、機票酒店預定，無法顧及到旅行過程中的售後環節。口袋地陪彌補的正是這一塊市場的空缺&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;口袋地陪主打的是旅遊中的服務，目前這塊還是藍海。讓我驚訝的是口袋地陪選用微信而不是自己打造一個 App。我想最主要的原因應該是降低使用者入門的門檻，畢竟下載一個 App 在大部份的情況都是太麻煩了。另外一個就是在確認需求前，節省 App 開發的成本。在人們已經習慣的平台上面交流，如果是用在台灣，那想必就是 LINE 了。&lt;/p&gt;</content><category term="application"></category><category term="Product"></category></entry><entry><title>Angry IP Scaner</title><link href="https://blog.codylab.com/angryip/" rel="alternate"></link><published>2014-01-01T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2014-01-01:/angryip/</id><content type="html">&lt;p&gt;&lt;a href="http://goo.gl/IuL9XL"&gt;Angry IP Scanner&lt;/a&gt; 是一套好用的 IP Scanner 軟體，支援: Windows, Mac or Linux: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="gui" src="http://i.imgur.com/ofZVNix.png"&gt;&lt;/p&gt;</content><category term="application"></category><category term="Testing"></category></entry><entry><title>Tmux Notes</title><link href="https://blog.codylab.com/tmux/" rel="alternate"></link><published>2014-01-01T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2014-01-01:/tmux/</id><content type="html">&lt;p&gt;Default pefix key &lt;code&gt;&amp;lt;Prefix&amp;gt;&lt;/code&gt; is Ctrl+b&lt;/p&gt;
+&lt;h1&gt;Installation&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;tmux
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1&gt;config&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;~/.tmux.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Reload&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;tmux&lt;span class="w"&gt; &lt;/span&gt;source-file&lt;span class="w"&gt; &lt;/span&gt;~/.tmux.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1&gt;Attach&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;tmux&lt;span class="w"&gt; &lt;/span&gt;attach
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1&gt;視窗(Windows)&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;新增一個視窗&lt;code&gt;&amp;lt;Prefix&amp;gt;c&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;下一個視窗&lt;code&gt;&amp;lt;Prefix&amp;gt;n&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;上一個視窗&lt;code&gt;&amp;lt;Prefix&amp;gt;p&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;選單 &lt;code&gt;&amp;lt;Prefix&amp;gt;w&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;關視窗&lt;code&gt;&amp;lt;Prefix&amp;gt;x&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Panes&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;水平分割 &lt;code&gt;&amp;lt;Prefix&amp;gt;%&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;垂直分割 &lt;code&gt;&amp;lt;Prefix&amp;gt;"&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Resize &lt;code&gt;&amp;lt;Prefix&amp;gt;&amp;lt;Meta-Up[Down][Left][Right]&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Close &lt;code&gt;&amp;lt;Prefix&amp;gt;x&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;視窗(Windows)&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;新增一個視窗&lt;code&gt;&amp;lt;Prefix&amp;gt;c&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;下一個視窗&lt;code&gt;&amp;lt;Prefix&amp;gt;n&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;上一個視窗&lt;code&gt;&amp;lt;Prefix&amp;gt;n&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;選單 &lt;code&gt;&amp;lt;Prefix&amp;gt;w&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;關視窗&lt;code&gt;&amp;lt;Prefix&amp;gt;x&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;重新命名&lt;code&gt;&amp;lt;Prefix&amp;gt;,&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;More&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.dayid.org/os/- notes/tm.html"&gt;dayid's screen and tmux cheat sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.openbsd.org/cgi-bin/man.cgi?query=tmux&amp;amp;sektion=1"&gt;Manual Pages: tmux(1)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=wKEGA8oEWXw"&gt;▶ tmux Quick Start - YouTube&lt;/a&gt;
+http://blog.chh.tw/posts/tmux-terminal-multiplexer/&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://josephj.com/entry.php?id=373"&gt;進化版 screen - tmux&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="application"></category></entry></feed>

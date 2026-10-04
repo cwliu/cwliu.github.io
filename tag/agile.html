@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cody Blog - Agile</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/continuous-delivery/">Continuous Delivery 持續交付 @ Agile Taichung 2015/9</a>
+      </h1>
+      <p class="meta"><time datetime="2015-09-21T00:00:00+08:00" pubdate>2015 September 21 Mon</time></p>
+</header>
+
+  <div class="entry-content"><p>今天在 Agile Taichung 分享自己學習 Continuous Delivery 的心得</p>
+<p><img alt="agile.taichung." src="http://imgur.com/6T5axdXl.jpg"></p>
+<p>聚會的投影片如下: </p>
+<iframe src="http://www.slideshare.net/slideshow/embed_code/key/nDlxLYBn5HcARp" width="600" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen></iframe>
+
+<p>另外，我覺得直接聽大師講最快，我的投影片主要都是參考 Jez Humble 跟 Martin Flower 大師們的 Talk內容。下面兩個 youtube，是我覺得講 CD 講的很清楚</p>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/aoMfbgF2D_4" frameborder="0" allowfullscreen></iframe>
+
+<p>Martin Fowler 在 XCONF 談 Continuous Delivery</p>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/ZLBhVEo1OG4" frameborder="0" allowfullscreen></iframe>
+
+<p>Jez Humble 在 Spark 2013 談 Continuous Delivery</p>
+<p>最後則是用一張圖視覺化所有 CD 重要的觀念:</p>
+<p><img alt="condinuous-delivery" src="http://i.imgur.com/oWBYQ4ol.jpg"></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/continuous-delivery/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/automation-pyramid/">自動化軟體測試的金字塔</a>
+      </h1>
+      <p class="meta"><time datetime="2012-11-08T07:09:00+08:00" pubdate>2012 November 08 Thu</time></p>
+</header>
+
+  <div class="entry-content"><p><img alt="Automation pyramid" src="https://lh4.googleusercontent.com/-NoFl4D43v24/UrcmgxdfyuI/AAAAAAAFHeU/wNzRs5ir5Dg/w441-h400-no/crispin-test-automation-pyramid.png"></p>
+<h3>測試的重點</h3>
+<p>軟體測試在敏捷化開發一定會遇到的問題，就是原本很可能都是以“週”為單位完成的Task。如果在一個三週Sprint的情況下，測試工作很可能都要變成以“天“為單位完成的Task，我們要如何能把大部份的測試活動都在短的時間區間完成！？如同 Scrum 大師 Mike Cohn 所說的，我們需要一個健康測試金字塔。把時間投資在<strong>對</strong>的測試活動上。</p>
+<p>金字塔有三層，由下而上分別是 Unit Test ，Acceptance Test, GUI Tests。最上面不一定大小的 Manual Tests。這邊傳達的最重要的概念就是，我們應該盡可能地把時間投資在 Unit test 上，理由很簡單，因為 Unit Test 穩定度是最高的，而且最容易被執行。如果一個測試目標能在 Unit tests level 被處理掉的話，我們應該要盡量讓它們在 Unit test level 就發生。而當測試的 Scope 愈來愈大，測試的成本就會愈來愈貴，可能會由白箱測試變黑箱測試，所需要的測試文件就需要更多來傳達資訊。</p>
+<p>很可惜地，大部份的測試團隊，剛好相反。投入了大量人力在 Manual tests 之上。也因為有大量的 Tester 在執行 GUI Test、Manual Test 所以 Developer 在相對少的資源下，就只能把大部份可以在 unit test level 就處理掉的任務直接讓給 tester 來完成。</p>
+<h3>金字塔 與 三隻小豬的故事</h3>
+<p><img alt="三隻小豬" src="https://lh5.googleusercontent.com/-PYQEcmegLJs/UrcmgJuV1tI/AAAAAAAFHeQ/aoH8iGYHDJs/w400-h274-no/20071103100325326364392.jpg"></p>
+<p>Patrick Wilson-Welsh 把這個金字塔比喻成三隻小豬的故事。有做過 GUI test 的人應該都知道，我們應該最後才做 GUI test，因為他最 brittle，最容易因為一點點的改變而讓測試不通過。所以 Patrick …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/automation-pyramid/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/pretotype/">Pretotype - 把事情做對之前， 確保做了對的事</a>
+      </h1>
+      <p class="meta"><time datetime="2012-10-07T19:57:00+08:00" pubdate>2012 October 07 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p>看了GTAC 2011 <a href="http://www.youtube.com/watch?v=X1jWe5rOu3g">Opening Keynote: Test is dead</a>時注意到這本書。查了一下，發現<a href="http://www.amazon.com/Pretotype-It-ebook/dp/B007JLHL78/ref=sr_1_1?ie=UTF8&amp;qid=1349618362&amp;sr=8-1&amp;keywords=pretotype">Amazon的高評價</a>，就馬上買了Kindle版(0.99 Usd)來看。裡面有一些不錯的觀念，在現今軟體業 Startup 風氣盛行的年代，我想值得記錄一下。</p>
+<h1>什麼是 Pretotype</h1>
+<p>Pretotype 不是 Prototype 的筆誤。這個字是作者 Alberto Savoia 自創的單字。從 Prototype 衍生而來。pre 跟 pro 都有 earier, before 的意思。一般傳統上，我們常常為了證明一些點子是否可行，都會先用少量的成本投入，來測試看看是否值得再繼續投入下去，比如說原型(Prototype)，或是POC(Prove of Concept)都是典型的例子。但是Alberto覺得Prototype還是太貴了。能否有一些更快速，省成本的方法來驗證我們做的是對的<em>它</em>。因為找對的<em>它</em>來做是非常重要的，一些常見的統計數據告訴我們：</p>
+<ul>
+<li>90% 的 Mobile App 不賺錢</li>
+<li>80% 的 Startup 把投資者的錢賠了</li>
+<li>80% 的 餐廳在一年內就關門大吉</li>
+</ul>
+<p>所以，愈早知道是否是對的“它”，遠比把“它”做對來得重要的多。</p>
+<h3>失敗定律</h3>
+<blockquote>
+<p>絕大多數的新物事都將會失敗， 即使被完美無瑕地執行</p>
+</blockquote>
+<p>所以，我們常常在做一些不對的事情而不自知。當然，這邊所謂的對或是不對，其實定義可以很簡單，就是指目標市場的接受度。但是如果市場不買帳，就算他做的很完美，終究會走向失敗之路。Pretotype 是一種讓我們可以少痛一點的方式，即早發見這其實是不對的。而不是花了大把銀子跟青春才發現這不是市場要的。Pretotype 是指一種介於抽象概念(Abstract concept)跟原型(Prototype …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/pretotype/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/install-jenkins-on-centos-6/">Install Jenkins on CentOS 6.3</a>
+      </h1>
+      <p class="meta"><time datetime="2012-09-02T20:41:00+08:00" pubdate>2012 September 02 Sun</time></p>
+</header>
+
+  <div class="entry-content"><h3>安裝 JDK</h3>
+<p>CentOS預設的JAVA版本和Jenkins不相容，所以要改安裝 OpenJDK 。可以用 yum search 檢查應該安裝那一個版本:
+    yum search openjdk
+會有 java-1.6.0 跟 java-1.7.0 兩個版本可供安裝，在此我選擇比較新的版本：1.7.0：
+    yum install java-1.7.0-openjdk -y</p>
+<h3>安裝 Jenkins</h3>
+<div class="highlight"><pre><span></span><code><span class="n">sudo</span> <span class="n">wget</span> <span class="o">-</span><span class="n">O</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">yum</span><span class="o">.</span><span class="n">repos</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">jenkins</span><span class="o">.</span><span class="n">repo</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">pkg</span><span class="o">.</span><span class="n">jenkins</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">redhat</span><span class="o">/</span><span class="n">jenkins</span><span class="o">.</span><span class="n">repo</span>
+<span class="n">sudo</span> <span class="n">rpm</span> <span class="o">--</span><span class="kn">import</span><span class="w"> </span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">pkg</span><span class="o">.</span><span class="n">jenkins</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">redhat</span><span class="o">/</span><span class="n">jenkins</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">org</span><span class="o">.</span><span class="n">key</span>
+<span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">jenkins</span> <span class="o">-</span><span class="n">y</span>
+</code></pre></div>
+
+<h3>設定 Jenkins</h3>
+<ol>
+<li>
+<p>修改 iptables : 打開 80 Port，編輯<code>/etc/sysconfig/iptables</code>，把下面的rule加到最後一條
+    iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT</p>
+</li>
+<li>
+<p>讓 Jenkins 開機自動啟動
+    chkconfig Jenkins …</p></li></ol></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/install-jenkins-on-centos-6/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/attributes-components-capabilities-acc/">使用 Attributes-Components-Capabilities(ACC) 來制定敏捷測試計劃</a>
+      </h1>
+      <p class="meta"><time datetime="2012-08-28T15:12:00+08:00" pubdate>2012 August 28 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p>這套方法是記錄在<a href="http://www.amazon.com/Google-Tests-Software-James-Whittaker/dp/0321803027">《How Google Tests Software》</a> 一書之中，我覺得蠻不錯的，分享一下︰</p>
+<p>Attributes-Components-Capabilities(ACC) 是Google團隊使用的測試建模的方法，可以視為快速譔寫 Test Plan 的一種方式。據 Jame Whittaker 的講法，一份ACC的完成時間約為 10~30 分鐘，如果達不到，代表自己對於要測的系統不夠了解。</p>
+<p>目前 Google 己經把這個方法實現在 Google Test Analytics (GTA) 這套系統之上，更棒的是 GTA 目前己經 Open Source 出來了，而且有一個公開的<a href="https://test-analytics.appspot.com/">沙箱網站</a>，任何人都可以上去快速體驗一下ACC的魅力。</p>
+<h2>ACC 內容</h2>
+<p>ACC主要的內容就是依照產品的 <code>Attribute</code>(特性), <code>Component</code>(元件), <code>Capability</code> (能力) 的三者，分別依照順序，一步一步來分析我們到底要測什麼，該測什麼，什麼要先測等等問題。下面分別介紹ACC三者的意義︰</p>
+<ol>
+<li>
+<p>Attributes: 產品的特色，是產品的<strong>形容詞</strong>。例如︰快，安全，穩定，好用。這個清單說明為什麼顧客要用我們的產品，而不是其它的競爭者的。</p>
+</li>
+<li>
+<p>Components: 產品的元件，是產品的<strong>名詞</strong>。例如︰資料庫，通知系統，使用者..等等。這個清單列舉出整個系統中的元件，約10個左右為宜。</p>
+</li>
+<li>
+<p>Capability: 產品的功能，是產品的<strong>動詞</strong>。例如︰分享照片給朋友，新增好友，收到朋友訊息通知。</p>
+</li>
+</ol>
+<p>關於 Attribute 跟 Componet，這邊書中是舉Google+為例︰</p>
+<h3>Attribute :</h3>
+<ul>
+<li>Social: Empowers users to share information …</li></ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/attributes-components-capabilities-acc/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/how-google-test/">How Google Tests Software ?</a>
+      </h1>
+      <p class="meta"><time datetime="2012-08-22T22:14:00+08:00" pubdate>2012 August 22 Wed</time></p>
+</header>
+
+  <div class="entry-content"><p>這本書的作者是在軟體測試界很有名的 James Whittaker，以 How to break xxx 系列跟 Exploratory Testing 聞名。這本是他在Google期間完成的著作。可惜他己經在2012年３月左右離開了Google，發表了一篇<a href="http://blogs.msdn.com/b/jw_on_tech/archive/2012/03/13/why-i-left-google.aspx">Why I left google</a>/<a href="http://www.csdn.net/article/2012-03-14/313106">中文翻譯</a>。從微軟到Google，最後又回鍋到微軟了。文中大體的原因就是Google把創新精神丟掉，而只專注在廣告上，不再是一家是以技術優先導向的公司。但是這些還是毫不影響Google在軟體界的王者地位。</p>
+<p>Google跟微軟在軟體測試上的策略很不一樣。傳統上，微軟的開發與測試人員比例大概是１：１左右。小弟的公司也是如此。但是Google專職在測試的人員，就明顯少得很多。我想從本書找到，如果專職測試人員少的話，那麼整個軟體開發流程會變的如何？其實，微軟在2008年也有出一本拿自己公司名稱當招牌的測試書 <a href="http://www.amazon.com/How-We-Test-Software-Microsoft/dp/0735624259">How We Test Software at Microsoft</a>，這本有點厚，之後找個機會來看。以目前軟體公司的發展看來，也許之後就會看到一本以 Facebook 為主角的測試書了。</p>
+<h3>Ch1. Introduction to Google Software Testing</h3>
+<ul>
+<li>
+<p>在 Google，測試工作是由一個中央的組職稱為 Engineering Productivity 來負責。包含 Developer 跟 Tester tool chain, Release engineer 。從 Unit test 包到 Exploratory testing。</p>
+</li>
+<li>
+<p>Google 在2001年時，約有200位開發工程師，但是只有<em>3</em>位測試工程師，那時開發工程師就必需為自己寫的程試的品質負責。那時TDD跟JUnit才準備流行，所以測試主要以 ad-hoc 為主。</p>
+</li>
+<li>
+<p>James 常給人的忠告︰「不要顧用太多測試員工」，Larry Page︰「Scarcity brings clarity (意指︰在缺乏資源的情況時，會有清楚的目標；銀彈不足，才會想辦法彈無虛發 …</p></li></ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/how-google-test/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/trello/">使用Trello心得</a>
+      </h1>
+      <p class="meta"><time datetime="2012-06-12T23:32:00+08:00" pubdate>2012 June 12 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p>Trello，是一個小團隊任務管理的工具。關於Trello的使用方法，這此就不再多言了，Google一下都可以找到不少介紹，這篇主要是想記錄一下，我親身使用Trello之後觀察到的一些小心得。</p>
+<h2>資訊可以快速在成員之間流通</h2>
+<p>我能在一個畫面就知道目前Project的最新狀態，相較於使用Email溝通，我能比較自由的方式去更新我目前的狀態，也不用太擔心訊息是否會干擾其它成員。</p>
+<h2>有助於形成 Self Organizing Team</h2>
+<p>工作的指派可不可以自己決定？在Trello中，我們會希望答案是Yes。傳統工作模式中，可能就是每週一次的指派任務、回報進度。大家都是各做各的。等到一個星期之後，再彼此更新自己的Status。但是在Trello中，我們可以在"一個畫面"就可以知道目前團隊成員正在做什麼，還沒完成什麼。所以當我完成手頭的工作，尋找下一個工作，也許就可以是別人還沒完成的工作。整個氣氛就會變成整個團隊努力把ToDo List中的工作一步一步搬到 Done List中。</p>
+<h2>快速完成一小步的成就感</h2>
+<p>在使用Trello中，每一張Card的描述應該要被常常更新。如果這個Card任務太大，那我們就應該適時的把它拆解成幾個比較小的Card。當一個人Own了一個Task，好幾天都不動的時侯，我們就會應該讓它活絡一下。使用Trello的一個大好處就是我可以很容易感受到每一天的小小進步，這樣工作會比較有趣。</p>
+<h2>有趣其它用法</h2>
+<ol>
+<li>我們會在上午開一張Card來訂下午茶，回收率很快。</li>
+<li>開一個Card來當聊天室或是宣佈一些小事情，Trello的系統設計的很好，Response Time 也讓大家感到驚奇。</li>
+</ol>
+<h3>三個月之後的更新 2012/8</h3>
+<p>我發現團隊不少人都己經常態使用Trello，甚至是自己私人的規劃，像是出國玩，搬家等等。可見Trello系統的魅力。</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/trello/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/trello-list-agile-scrum/">Trello : 適合小型軟體開發團隊的工作清單系統</a>
+      </h1>
+      <p class="meta"><time datetime="2012-05-08T00:00:00+08:00" pubdate>2012 May 08 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p>Trello : <a href="https://trello.com/">https://trello.com/</a></p>
+<p>看公司某些Team在實行 Scrum，別的不敢說，學得最像的一定是這種上面貼滿，地下也掉滿的便利貼 Task board：</p>
+<p><a href="http://www.infoq.com/resource/articles/agile-kanban-boards/en/resources/Fig1_task-board.jpg"><img alt="img" src="http://www.infoq.com/resource/articles/agile-kanban-boards/en/resources/Fig1_task-board.jpg" title="kanban-boards"></a></p>
+<p>Trello就是類似這種清單系統的線上網站。我覺得 Trello 令人驚奇的點就是他可以讓團隊的每一個人可以專注在自己的任務上，也可以同時知道團隊其它人的狀態。Trello UI設計的很簡單，使用上很流暢。讓我一用就決定在日常工作試用看看，並且也說服我的同事們一起使用。</p>
+<p><a href="http://cache.lifehacker.com/assets/images/17/2011/09/trello-4.jpg"><img alt="img" src="http://cache.lifehacker.com/assets/images/17/2011/09/trello-4.jpg"></a></p>
+<p>Task Board 適用在短時間的任務清單管理上。因為在每一個Scrum中，團隊的任務就是把最左邊的Task努力搬到最右邊，彼此可以互相幫助。如果每個Task分的很細的話，上面也放不了多少Task。所以當達到 MileStone的時侯，就需要適時的 Reset，喘口氣，可以繼續衝下個回合。</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/trello-list-agile-scrum/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/continuous-delivery/">Continuous Delivery 持續交付 @ Agile Taichung 2015/9</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/automation-pyramid/">自動化軟體測試的金字塔</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/pretotype/">Pretotype - 把事情做對之前， 確保做了對的事</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/install-jenkins-on-centos-6/">Install Jenkins on CentOS 6.3</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/attributes-components-capabilities-acc/">使用 Attributes-Components-Capabilities(ACC) 來制定敏捷測試計劃</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

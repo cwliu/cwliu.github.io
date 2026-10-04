@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cody Blog - Articles by Cody Liu</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/From-Octopress-To-Pelican/">從 Octorpess 搬家到 Pelican</a>
+      </h1>
+      <p class="meta"><time datetime="2013-05-31T00:00:00+08:00" pubdate>2013 May 31 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>這是一個披著Octopress皮的Pelican. XD</p>
+<p>前幾天的參加了<a href="http://tw.pycon.org/2013/zh/">PyConTaiwan</a>後，對於Python的忠誠度又提升了不少。於是就一時興起Survey了一下Python的Blog系統，花了一些時間，從原本Rudy 的 Octopress blog系統轉換到Python的Pelican Blog系統了。Octopress也沒有什麼不好。但是畢竟octopress是一個我沒有接觸過的Ruby語言，當需要做一些調整，想要去看程式碼時，總是沒有比我比較熟悉的Python來得親近。但是，因為Octopress的外觀實在簡單好看，又希望盡量無痛轉移，於是我就選擇了<a href="https://github.com/duilio/pelican-octopress-theme">pelican-octopress-theme</a>，做為我的佈景主題。</p>
+<p>從Octopress搬到Pelican，我主要是參考這篇<a href="http://jakevdp.github.io/blog/2013/05/07/migrating-from-octopress-to-pelican/">Migrating from Octopress to Pelican</a>文章，裡面有詳盡的Migrate步驟。</p>
+<h2>Pelican 的優點</h2>
+<ul>
+<li>100% Python</li>
+<li>是目前最活躍的Python Blog 之一</li>
+<li>是Static Page Blog系統，快，安全。</li>
+</ul>
+<h2>Deploy 到 Github Page</h2>
+<p>Github 的 user page。靜態網頁一定要放在<code>Master</code>branch，而我開了另一個Source branch來放原始的Markdown檔案。使用<a href="http://docs.getpelican.com/en/3.0/tips.html">ghp-import</a>這個工具(沒錯，這也是Python的)可以讓deploy到github上更方便，可以平常就待在source branch來維護原始檔案的更新，而deploy則是透過指令，自動更新到<code>Master</code> branch，指令如下:</p>
+<div class="highlight"><pre><span></span><code><span class="n">pelican</span> <span class="o">-</span><span class="n">s</span> <span class="n">pelicanconf</span><span class="o">.</span><span class="n">py</span> <span class="n">content</span><span class="o">/</span> <span class="o">&amp;&amp;</span> <span class="n">ghp</span><span class="o">-</span><span class="kn">import</span><span class="w"> </span><span class="nn">output</span> <span class="o">-</span><span class="n">b</span> <span class="n">master</span> <span class="o">-</span><span class="n">p</span>
+</code></pre></div>
+
+<p>也可以加到<code>Makefile</code>的git，裡面預設是<code>gh-pages</code>，記得改成 <code>master</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">github</span><span class="p">:</span> <span class="n">publish</span>
+    <span class="n">ghp</span><span class="o">-</span><span class="kn">import</span><span class="w"> </span><span class="nn">output</span> <span class="o">-</span><span class="n">b</span> <span class="n">master</span> <span class="o">-</span><span class="n">p</span>
+</code></pre></div>
+
+<p>這樣之後執行<code>make github …</code></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/From-Octopress-To-Pelican/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/install-testlink-on-centos/">Install testlink on CentOS</a>
+      </h1>
+      <p class="meta"><time datetime="2013-05-12T00:00:00+08:00" pubdate>2013 May 12 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p>In this post, I'll try to explain how to install <a href="http://testlink.sourceforge.net/docs/testLink.php">Test link 1.9.3</a> on CentOS 6.2 step by step: </p>
+<h2>Using yum to install required packages</h2>
+<div class="highlight"><pre><span></span><code>yum install mysql-server php php-mysql php-gd php-ldap
+</code></pre></div>
+
+<h2>Modify /etc/php.ini to optimize php configuration for TestLink</h2>
+<div class="highlight"><pre><span></span><code>session.gc_maxlifetime = 2400
+max_execution_time = 120
+</code></pre></div>
+
+<h2>Set up web server and mysql services</h2>
+<div class="highlight"><pre><span></span><code> chkconfig httpd on
+ chkconfig mysqld on
+ service httpd start
+ service mysqld start
+</code></pre></div>
+
+<h2>Set a password for mysql root user</h2>
+<div class="highlight"><pre><span></span><code> mysqladmin -u root password NEWPASSWORD
+</code></pre></div>
+
+<h2>Add port 80 to iptables, Add the following rule into /etc/sysconfig/iptables</h2>
+<div class="highlight"><pre><span></span><code>-A INPUT -m state --state NEW …</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/install-testlink-on-centos/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/new-htc-one-info/">一些 New HTC One 的資訊</a>
+      </h1>
+      <p class="meta"><time datetime="2013-05-05T10:23:00+08:00" pubdate>2013 May 05 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p>第一次使用HTC的手機，整理一下 New HTC One的相關資訊。感覺這隻真的不錯，全鋁合金機身，而且又是找五月天代言，正港的MIT，一定要支持一下。</p>
+<h2>剛拿到手機可以先做的事</h2>
+<ul>
+<li>
+<p>檢查一下沒有沒縫。這隻採鋁合金外，有很漂亮的金屬質感，但是也造成上市初期的良率太低，而傳出多起<a href="http://www.mobile01.com/topicdetail.php?f=566&amp;t=3282065">接縫</a>問題。據說五月後的貨這方面的問題少了很多</p>
+</li>
+<li>
+<p>把舊手機的資料傳輸到新手機 <a href="https://play.google.com/store/apps/details?id=com.htc.dnatransfer.legacy&amp;feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5odGMuZG5hdHJhbnNmZXIubGVnYWN5Il0.">HTC 傳輸工具 - Google Play Android 應用程式</a>
+把舊Android手機(支援2.3以上，不一定要HTC)的設定，照片，簡訊等資訊透過無線網路傳輸到NewOne。用官方的方法沒辦法用Pin碼自動配對成功，之後是用新一內建的App:設定精靈。並讓舊手機連到一個特殊的基地台，就Ok了。</p>
+</li>
+<li>
+<p>查詢 IMEI 手機的身份證字號: 撥打 *#06#</p>
+</li>
+<li>
+<p>查詢出廠時間: <a href="http://219.80.249.25/IMEIQuery/IMEIQuery.aspx?ct=zh-CN">HTC Support</a>
+需要輸入的<strong>IMEI</strong>跟<strong>S/N</strong>可以在包裝盒裡面的貼紙找到</p>
+</li>
+<li>
+<p>hTC硬體功能測試(HTC function Test v4.01.04g): 撥打 <em>#</em>#3424#<em>#</em>
+可以測試hTC的各項硬體功能，建議可以先全部都測過一遍，檢查一下是否正常</p>
+</li>
+<li>
+<p><a href="https://start.htcsense.com/#pairing">HTC 輕鬆上手</a></p>
+</li>
+</ul>
+<h2>DIY</h2>
+<ul>
+<li>使用包裝盒製作底座 <a href="http://www.mobile01.com/topicdetail.php?f=566&amp;t=3312431&amp;last=43127676">New One 送原廠底座!!! (第1頁) - HTC (Android) - Mobile01</a></li>
+</ul>
+<h2>特色</h2>
+<ul>
+<li>BlinkFeed, 即時動態 隨心選擇 <a href="http://www.youtube.com/watch?v=KgXh9lOa6Os">HTC輕鬆玩 - 新HTC One : 豬血糕篇 - YouTube</a></li>
+<li>Sense TV, 互動式節目表 <a href="http://www.youtube.com/watch?v=uMBuOVSkevY">HTC輕鬆玩 - 新HTC One : 娘娘篇 - YouTube</a></li>
+<li>BoomSound, 雙前置立體揚聲器 <a href="http://www.youtube.com/watch?v=X7eycEci5-c">HTC輕鬆玩 - 新HTC One : 潮貴人篇 - YouTube</a></li>
+<li>Sense …</li></ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/new-htc-one-info/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/sed-substitute-s-command/">sed的s指令筆記</a>
+      </h1>
+      <p class="meta"><time datetime="2013-04-26T11:11:00+08:00" pubdate>2013 April 26 Fri</time></p>
+</header>
+
+  <div class="entry-content"><h2>s Command</h2>
+<p><strong>s</strong>(substitue) 指令是 sed 中最常用的，可以把文件中的字串替換掉。基本的syntax <code>s/RegEx/SubEx/</code>，例如 <code>s/Old/New/</code>:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">'this is old'</span><span class="w"> </span>&gt;<span class="w"> </span>input.txt
+$<span class="w"> </span>sed<span class="w"> </span>s/old/new/<span class="w"> </span>input.txt
+</code></pre></div>
+
+<p>這個sed指令可以把文件中的old字串換成new</p>
+<h2>sed 執行流程</h2>
+<p>sed不像一般程式語言有 variable 的概念，但是sed有兩個特別的buffer(or workspace)可以讓sed執行較複雜的工作。這兩個buffer稱為<strong>Pattern space</strong>和<strong>Hold space</strong>。sed執行是從input stream中，每次執行一行，流程大致如下:</p>
+<ol>
+<li>sed從input stream讀一行的內容</li>
+<li>把換行符號(trailing newlines)移除</li>
+<li>把它放到<strong>pattern sapce</strong></li>
+<li>執行指令(上面的例子就是<strong>s</strong> command把old取代成new)</li>
+<li>把換行符號(trailing newlines)補回來</li>
+<li>sed 把結果印到 output steam</li>
+<li>如果還有input的話，就繼續執行step1，否則就結束</li>
+</ol>
+<p>而pattern space在每一個迴圈都會清除，但是hold space則不會，可參考‘h’, ‘H’, ‘x’, ‘g’, ‘G’指令。</p>
+<h2>s 指令的其它選項</h2>
+<p>-e: sed script，可以連接多個 sed script，如果只有一個 sed script 則 -e 可以省略。例如:
+    $ echo 1234567890 …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/sed-substitute-s-command/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/cmd-iconv-big5-to-utf-8.md/">使用 iconv 轉換檔案編碼</a>
+      </h1>
+      <p class="meta"><time datetime="2013-01-01T00:00:00+08:00" pubdate>2013 January 01 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p>iconv 可以轉換編碼, 例如想把 big5 檔換轉到 utf8: </p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>iconv<span class="w"> </span>-f<span class="w"> </span>big5<span class="w"> </span>-t<span class="w"> </span>utf8<span class="w"> </span>big5_input.txt<span class="w"> </span>-o<span class="w"> </span>utf8_output
+</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/cmd-iconv-big5-to-utf-8.md/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/automation-pyramid/">自動化軟體測試的金字塔</a>
+      </h1>
+      <p class="meta"><time datetime="2012-11-08T07:09:00+08:00" pubdate>2012 November 08 Thu</time></p>
+</header>
+
+  <div class="entry-content"><p><img alt="Automation pyramid" src="https://lh4.googleusercontent.com/-NoFl4D43v24/UrcmgxdfyuI/AAAAAAAFHeU/wNzRs5ir5Dg/w441-h400-no/crispin-test-automation-pyramid.png"></p>
+<h3>測試的重點</h3>
+<p>軟體測試在敏捷化開發一定會遇到的問題，就是原本很可能都是以“週”為單位完成的Task。如果在一個三週Sprint的情況下，測試工作很可能都要變成以“天“為單位完成的Task，我們要如何能把大部份的測試活動都在短的時間區間完成！？如同 Scrum 大師 Mike Cohn 所說的，我們需要一個健康測試金字塔。把時間投資在<strong>對</strong>的測試活動上。</p>
+<p>金字塔有三層，由下而上分別是 Unit Test ，Acceptance Test, GUI Tests。最上面不一定大小的 Manual Tests。這邊傳達的最重要的概念就是，我們應該盡可能地把時間投資在 Unit test 上，理由很簡單，因為 Unit Test 穩定度是最高的，而且最容易被執行。如果一個測試目標能在 Unit tests level 被處理掉的話，我們應該要盡量讓它們在 Unit test level 就發生。而當測試的 Scope 愈來愈大，測試的成本就會愈來愈貴，可能會由白箱測試變黑箱測試，所需要的測試文件就需要更多來傳達資訊。</p>
+<p>很可惜地，大部份的測試團隊，剛好相反。投入了大量人力在 Manual tests 之上。也因為有大量的 Tester 在執行 GUI Test、Manual Test 所以 Developer 在相對少的資源下，就只能把大部份可以在 unit test level 就處理掉的任務直接讓給 tester 來完成。</p>
+<h3>金字塔 與 三隻小豬的故事</h3>
+<p><img alt="三隻小豬" src="https://lh5.googleusercontent.com/-PYQEcmegLJs/UrcmgJuV1tI/AAAAAAAFHeQ/aoH8iGYHDJs/w400-h274-no/20071103100325326364392.jpg"></p>
+<p>Patrick Wilson-Welsh 把這個金字塔比喻成三隻小豬的故事。有做過 GUI test 的人應該都知道，我們應該最後才做 GUI test，因為他最 brittle，最容易因為一點點的改變而讓測試不通過。所以 Patrick …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/automation-pyramid/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/pretotype/">Pretotype - 把事情做對之前， 確保做了對的事</a>
+      </h1>
+      <p class="meta"><time datetime="2012-10-07T19:57:00+08:00" pubdate>2012 October 07 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p>看了GTAC 2011 <a href="http://www.youtube.com/watch?v=X1jWe5rOu3g">Opening Keynote: Test is dead</a>時注意到這本書。查了一下，發現<a href="http://www.amazon.com/Pretotype-It-ebook/dp/B007JLHL78/ref=sr_1_1?ie=UTF8&amp;qid=1349618362&amp;sr=8-1&amp;keywords=pretotype">Amazon的高評價</a>，就馬上買了Kindle版(0.99 Usd)來看。裡面有一些不錯的觀念，在現今軟體業 Startup 風氣盛行的年代，我想值得記錄一下。</p>
+<h1>什麼是 Pretotype</h1>
+<p>Pretotype 不是 Prototype 的筆誤。這個字是作者 Alberto Savoia 自創的單字。從 Prototype 衍生而來。pre 跟 pro 都有 earier, before 的意思。一般傳統上，我們常常為了證明一些點子是否可行，都會先用少量的成本投入，來測試看看是否值得再繼續投入下去，比如說原型(Prototype)，或是POC(Prove of Concept)都是典型的例子。但是Alberto覺得Prototype還是太貴了。能否有一些更快速，省成本的方法來驗證我們做的是對的<em>它</em>。因為找對的<em>它</em>來做是非常重要的，一些常見的統計數據告訴我們：</p>
+<ul>
+<li>90% 的 Mobile App 不賺錢</li>
+<li>80% 的 Startup 把投資者的錢賠了</li>
+<li>80% 的 餐廳在一年內就關門大吉</li>
+</ul>
+<p>所以，愈早知道是否是對的“它”，遠比把“它”做對來得重要的多。</p>
+<h3>失敗定律</h3>
+<blockquote>
+<p>絕大多數的新物事都將會失敗， 即使被完美無瑕地執行</p>
+</blockquote>
+<p>所以，我們常常在做一些不對的事情而不自知。當然，這邊所謂的對或是不對，其實定義可以很簡單，就是指目標市場的接受度。但是如果市場不買帳，就算他做的很完美，終究會走向失敗之路。Pretotype 是一種讓我們可以少痛一點的方式，即早發見這其實是不對的。而不是花了大把銀子跟青春才發現這不是市場要的。Pretotype 是指一種介於抽象概念(Abstract concept)跟原型(Prototype …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/pretotype/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/install-jenkins-on-centos-6/">Install Jenkins on CentOS 6.3</a>
+      </h1>
+      <p class="meta"><time datetime="2012-09-02T20:41:00+08:00" pubdate>2012 September 02 Sun</time></p>
+</header>
+
+  <div class="entry-content"><h3>安裝 JDK</h3>
+<p>CentOS預設的JAVA版本和Jenkins不相容，所以要改安裝 OpenJDK 。可以用 yum search 檢查應該安裝那一個版本:
+    yum search openjdk
+會有 java-1.6.0 跟 java-1.7.0 兩個版本可供安裝，在此我選擇比較新的版本：1.7.0：
+    yum install java-1.7.0-openjdk -y</p>
+<h3>安裝 Jenkins</h3>
+<div class="highlight"><pre><span></span><code><span class="n">sudo</span> <span class="n">wget</span> <span class="o">-</span><span class="n">O</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">yum</span><span class="o">.</span><span class="n">repos</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">jenkins</span><span class="o">.</span><span class="n">repo</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">pkg</span><span class="o">.</span><span class="n">jenkins</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">redhat</span><span class="o">/</span><span class="n">jenkins</span><span class="o">.</span><span class="n">repo</span>
+<span class="n">sudo</span> <span class="n">rpm</span> <span class="o">--</span><span class="kn">import</span><span class="w"> </span><span class="nn">http</span><span class="p">:</span><span class="o">//</span><span class="n">pkg</span><span class="o">.</span><span class="n">jenkins</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">redhat</span><span class="o">/</span><span class="n">jenkins</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">org</span><span class="o">.</span><span class="n">key</span>
+<span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">jenkins</span> <span class="o">-</span><span class="n">y</span>
+</code></pre></div>
+
+<h3>設定 Jenkins</h3>
+<ol>
+<li>
+<p>修改 iptables : 打開 80 Port，編輯<code>/etc/sysconfig/iptables</code>，把下面的rule加到最後一條
+    iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT</p>
+</li>
+<li>
+<p>讓 Jenkins 開機自動啟動
+    chkconfig Jenkins …</p></li></ol></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/install-jenkins-on-centos-6/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/testopia/">Testopia 測試案例管理系統簡介</a>
+      </h1>
+      <p class="meta"><time datetime="2012-09-02T18:34:00+08:00" pubdate>2012 September 02 Sun</time></p>
+</header>
+
+  <div class="entry-content"><h2>Why Testopia ?</h2>
+<p>最近想研究一些時下流行的測試案例(Test Case)管理系統，之前有稍微裝一下<a href="http://testlink.sourceforge.net/docs/testLink.php">Test Link</a>來玩看看。因為看到《How Google Tests Software》裡面有提到一點，就是在Gogole裡，如果自動化測試測試沒過的話，會直接自動新增一筆Bug Tacker給相關人員，可見其相當重視自動化測試的品質，讓Automation的Bug提升到跟Product Bug相等重要。這也讓我重新思考 Bug Tracking System 對於Automation們的重要性。所以這讓我注意到另一套 Test Case Management System: Testopia。我覺得Testopia最大的特色，就是他是一套Bug Tracking System: Bugzilla 的延伸套件。也就是如果我們採用了Testopia來當我們的測試案例管理系統的話。也就相當於能直接擁有一套 Bug Tracking System了。這成為我想玩玩看 Testopia 的最大理由 :)</p>
+<h2>安裝 Testopia:</h2>
+<p>要玩 Testopia 之前要先安裝 Bugzilla，關於 Bugzilla 的安裝，這邊有<a href="/install-bugzilla-centos-6-3-step-step">記錄</a>，安裝 Testopia 其實很簡單，下載 Testopia 的 tarball file : 當下最新的版本是<a href="ftp://ftp.mozilla.org/pub/mozilla.org/webtools/testopia/testopia-2.5-BUGZILLA-4.2.tar.gz">2.5版</a></p>
+<ol>
+<li>
+<p>解壓縮︰ tar zxvf testopia-2.5-BUGZILLA-4.2.tar.gz</p>
+</li>
+<li>
+<p>把裡面的內容丟到 bugzilla 的根目錄，例如 /var/www/html/bugzilla</p>
+</li>
+<li>
+<p>執行 checksetup 的 perl 檔 : ./checksetup.pl</p>
+</li>
+</ol>
+<p>這樣就安裝完成了。</p>
+<h2>Testopia 的架構</h2>
+<p>Testopia 手冊裡面有一張圖很清楚地表達整個 Testopia 的架構 …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/testopia/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/attributes-components-capabilities-acc/">使用 Attributes-Components-Capabilities(ACC) 來制定敏捷測試計劃</a>
+      </h1>
+      <p class="meta"><time datetime="2012-08-28T15:12:00+08:00" pubdate>2012 August 28 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p>這套方法是記錄在<a href="http://www.amazon.com/Google-Tests-Software-James-Whittaker/dp/0321803027">《How Google Tests Software》</a> 一書之中，我覺得蠻不錯的，分享一下︰</p>
+<p>Attributes-Components-Capabilities(ACC) 是Google團隊使用的測試建模的方法，可以視為快速譔寫 Test Plan 的一種方式。據 Jame Whittaker 的講法，一份ACC的完成時間約為 10~30 分鐘，如果達不到，代表自己對於要測的系統不夠了解。</p>
+<p>目前 Google 己經把這個方法實現在 Google Test Analytics (GTA) 這套系統之上，更棒的是 GTA 目前己經 Open Source 出來了，而且有一個公開的<a href="https://test-analytics.appspot.com/">沙箱網站</a>，任何人都可以上去快速體驗一下ACC的魅力。</p>
+<h2>ACC 內容</h2>
+<p>ACC主要的內容就是依照產品的 <code>Attribute</code>(特性), <code>Component</code>(元件), <code>Capability</code> (能力) 的三者，分別依照順序，一步一步來分析我們到底要測什麼，該測什麼，什麼要先測等等問題。下面分別介紹ACC三者的意義︰</p>
+<ol>
+<li>
+<p>Attributes: 產品的特色，是產品的<strong>形容詞</strong>。例如︰快，安全，穩定，好用。這個清單說明為什麼顧客要用我們的產品，而不是其它的競爭者的。</p>
+</li>
+<li>
+<p>Components: 產品的元件，是產品的<strong>名詞</strong>。例如︰資料庫，通知系統，使用者..等等。這個清單列舉出整個系統中的元件，約10個左右為宜。</p>
+</li>
+<li>
+<p>Capability: 產品的功能，是產品的<strong>動詞</strong>。例如︰分享照片給朋友，新增好友，收到朋友訊息通知。</p>
+</li>
+</ol>
+<p>關於 Attribute 跟 Componet，這邊書中是舉Google+為例︰</p>
+<h3>Attribute :</h3>
+<ul>
+<li>Social: Empowers users to share information …</li></ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/attributes-components-capabilities-acc/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+    <a class="prev" href="https://blog.codylab.com/author/cody-liu11.html">&larr; Older</a>
+
+    <a class="next" href="https://blog.codylab.com/author/cody-liu9.html">Newer &rarr;</a>
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

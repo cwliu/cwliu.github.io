@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - java</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/java.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>Java verify Error(unchecked exception)</title><link href="https://blog.codylab.com/java-verify-error-unchecked-exception/" rel="alternate"></link><published>2015-04-09T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2015-04-09:/java-verify-error-unchecked-exception/</id><summary type="html">&lt;p&gt;前幾天，在 Google Play Console 收到了二個從使用者回報的 Crash Log，分別是從 Android 5.1 和 4.4 版本所回報的，Android 5.1 的 Traceback:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="nt"&gt;Caused&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;by&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;java&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;lang&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;NoClassDefFoundError&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;Failed&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;resolution&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;of&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;Lcom&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;adobe&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;xmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;XMPMetaFactory&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Android 4.4 的 Traceback&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;...
+Caused by: java.lang.VerifyError: com/drew/metadata/xmp/XmpReader 
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;我花了一些時間把 tracecode 希望可以找到是那邊發生的，但是一直找不到。最後發現，這邊丟出來的 Error 是 &lt;code&gt;unchecked exceptions&lt;/code&gt; 也就是預期是程式有 Bug，所以不會由 Try-catch 來 handle 這種 error。這種 Error 需要丟出來讓外界來把這個 bug 修掉。這個問題是因為我們有用到一個 thirdparty 的 Library 叫 &lt;code&gt;metadata-extractor&lt;/code&gt; 其中包含了兩個 jar 檔： &lt;code&gt;metadata-extractor-x.x.x.jar&lt;/code&gt; 和 &lt;code&gt;xmpcore-x.x.x.jar&lt;/code&gt;。我們因故漏放了&lt;code&gt;xmpcore-x.x.x.jar&lt;/code&gt;，導致在處理 xmp 相關的圖檔出現這個錯誤。最後緊急把&lt;code&gt;xmpcore-x.x …&lt;/code&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;前幾天，在 Google Play Console 收到了二個從使用者回報的 Crash Log，分別是從 Android 5.1 和 4.4 版本所回報的，Android 5.1 的 Traceback:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="nt"&gt;Caused&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;by&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;java&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;lang&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;NoClassDefFoundError&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;Failed&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;resolution&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;of&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;Lcom&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;adobe&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;xmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;XMPMetaFactory&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Android 4.4 的 Traceback&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;...
+Caused by: java.lang.VerifyError: com/drew/metadata/xmp/XmpReader 
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;我花了一些時間把 tracecode 希望可以找到是那邊發生的，但是一直找不到。最後發現，這邊丟出來的 Error 是 &lt;code&gt;unchecked exceptions&lt;/code&gt; 也就是預期是程式有 Bug，所以不會由 Try-catch 來 handle 這種 error。這種 Error 需要丟出來讓外界來把這個 bug 修掉。這個問題是因為我們有用到一個 thirdparty 的 Library 叫 &lt;code&gt;metadata-extractor&lt;/code&gt; 其中包含了兩個 jar 檔： &lt;code&gt;metadata-extractor-x.x.x.jar&lt;/code&gt; 和 &lt;code&gt;xmpcore-x.x.x.jar&lt;/code&gt;。我們因故漏放了&lt;code&gt;xmpcore-x.x.x.jar&lt;/code&gt;，導致在處理 xmp 相關的圖檔出現這個錯誤。最後緊急把&lt;code&gt;xmpcore-x.x.x.jar&lt;/code&gt;加回來解決了這個問題。&lt;/p&gt;
+&lt;h2&gt;Unchecked exception 的例子&lt;/h2&gt;
+&lt;p&gt;包含 RuntimeException, Error, 跟他們的子類別，例如: NullPointerException.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Here's the bottom line guideline: 
+If a client can reasonably be expected to recover from an exception, make it a checked exception. 
+If a client cannot do anything to recover from the exception, make it an unchecked exception.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.oracle.com/javase/tutorial/essential/exceptions/runtime.html"&gt;Unchecked Exceptions — The Controversy (The Java™ Tutorials &amp;gt; Essential Classes &amp;gt; Exceptions)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://teddy-chen-tw.blogspot.tw/2011/05/checked-or-unchecked-exceptions-1.html"&gt;搞笑談軟工: Checked or unchecked exceptions (1)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="java"></category><category term="Java"></category><category term="Android"></category></entry></feed>

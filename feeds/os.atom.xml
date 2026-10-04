@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - os</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/os.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>Install Juniper on Ubuntu 14.04</title><link href="https://blog.codylab.com/juniper/" rel="alternate"></link><published>2014-06-20T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2014-06-20:/juniper/</id><content type="html">&lt;p&gt;On Ubuntu 14.04, install Juniper VPN&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;update-alternatives&lt;span class="w"&gt; &lt;/span&gt;--display&lt;span class="w"&gt; &lt;/span&gt;java
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Requirement&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="mf"&gt;64&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Mozilla&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Firefox&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;browser&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;is&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;installed&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;First, install the 64bit jre/jdk and icedtea&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;openjdk-7-jre&lt;span class="w"&gt; &lt;/span&gt;icedtea-7-plugin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Second, install the 32bit jre&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;openjdk-7-jre:i386
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;link update-alternatives to /usr/sbin/&lt;/h2&gt;
+&lt;p&gt;juniper use it in that folder. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;ln&lt;span class="w"&gt; &lt;/span&gt;-s&lt;span class="w"&gt; &lt;/span&gt;/usr/bin/update-alternatives&lt;span class="w"&gt; &lt;/span&gt;/usr/sbin/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="os"></category><category term="OS"></category></entry><entry><title>SSH Tunnel</title><link href="https://blog.codylab.com/ssh-port-forwarding/" rel="alternate"></link><published>2014-05-09T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2014-05-09:/ssh-port-forwarding/</id><summary type="html">&lt;p&gt;使 ssh 遠端連線的人很多, 但是 ssh 這個指令其實還有一些很有趣的tunnel用法，可以讓你擺脫一些限制。這邊稍微筆記一下:&lt;/p&gt;
+&lt;h2&gt;Local port forwarding&lt;/h2&gt;
+&lt;p&gt;在本地端開一個 port，然後 remote machine 會把封包轉送到指定的位置:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;ssh&lt;span class="w"&gt; &lt;/span&gt;-L&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;local_port&amp;gt;:&amp;lt;target_host&amp;gt;:&amp;lt;target_port&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;remote_user@remote_host
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;例如本地端防火牆只有開 &lt;code&gt;22&lt;/code&gt; port, 而封鎖了&lt;code&gt;8080&lt;/code&gt; port, 此時可以透過 local port forward 的方式，達到連線到遠端 8080 port。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;ssh&lt;span class="w"&gt; &lt;/span&gt;-L&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1234&lt;/span&gt;:localhost:8080&lt;span class="w"&gt; &lt;/span&gt;cwliu@118.100.100.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這時連到 localhost:1234，就相當於連線到 118.100.100.1:8080，避開防火牆的效果&lt;/p&gt;
+&lt;!--
+    ssh -L 1234:proxy.ntu.edu.tw:3128 name@xxx.ntu.edu.tw
+--&gt;
+
+&lt;h2&gt;Remote port forwarding (Reverse SSH)&lt;/h2&gt;
+&lt;p&gt;這邊的&lt;code&gt;-R&lt;/code&gt;代表的是 remote 之意，直接舉個例子&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;ssh&lt;span class="w"&gt; &lt;/span&gt;-R&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5900&lt;/span&gt;:localhost:22&lt;span class="w"&gt; &lt;/span&gt;guest@remote-pc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;在遠端 &lt;code&gt;remote-pc&lt;/code&gt; 會開一個 5900 port，其流量會導到 localhost 的 22 port。實際的應用是當 local machine 沒有固定 IP 的時侯，可以先建立好此 ssh 連線。就可以讓遠端機器透過 localhost:5900 直接連線回local。&lt;/p&gt;
+&lt;h2&gt;SOCKS …&lt;/h2&gt;</summary><content type="html">&lt;p&gt;使 ssh 遠端連線的人很多, 但是 ssh 這個指令其實還有一些很有趣的tunnel用法，可以讓你擺脫一些限制。這邊稍微筆記一下:&lt;/p&gt;
+&lt;h2&gt;Local port forwarding&lt;/h2&gt;
+&lt;p&gt;在本地端開一個 port，然後 remote machine 會把封包轉送到指定的位置:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;ssh&lt;span class="w"&gt; &lt;/span&gt;-L&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;local_port&amp;gt;:&amp;lt;target_host&amp;gt;:&amp;lt;target_port&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;remote_user@remote_host
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;例如本地端防火牆只有開 &lt;code&gt;22&lt;/code&gt; port, 而封鎖了&lt;code&gt;8080&lt;/code&gt; port, 此時可以透過 local port forward 的方式，達到連線到遠端 8080 port。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;ssh&lt;span class="w"&gt; &lt;/span&gt;-L&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1234&lt;/span&gt;:localhost:8080&lt;span class="w"&gt; &lt;/span&gt;cwliu@118.100.100.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這時連到 localhost:1234，就相當於連線到 118.100.100.1:8080，避開防火牆的效果&lt;/p&gt;
+&lt;!--
+    ssh -L 1234:proxy.ntu.edu.tw:3128 name@xxx.ntu.edu.tw
+--&gt;
+
+&lt;h2&gt;Remote port forwarding (Reverse SSH)&lt;/h2&gt;
+&lt;p&gt;這邊的&lt;code&gt;-R&lt;/code&gt;代表的是 remote 之意，直接舉個例子&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;ssh&lt;span class="w"&gt; &lt;/span&gt;-R&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;5900&lt;/span&gt;:localhost:22&lt;span class="w"&gt; &lt;/span&gt;guest@remote-pc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;在遠端 &lt;code&gt;remote-pc&lt;/code&gt; 會開一個 5900 port，其流量會導到 localhost 的 22 port。實際的應用是當 local machine 沒有固定 IP 的時侯，可以先建立好此 ssh 連線。就可以讓遠端機器透過 localhost:5900 直接連線回local。&lt;/p&gt;
+&lt;h2&gt;SOCKS Proxy Forwarding&lt;/h2&gt;
+&lt;p&gt;主要可以用來保護非信任的網路，當不想讓別人知道自己的 http 連線時, 或是可以避開 IT 網路控管，可以用這個:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;ssh&lt;span class="w"&gt; &lt;/span&gt;-C&lt;span class="w"&gt; &lt;/span&gt;-D&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;8080&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;cwliu@123.123.123.123
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;使用 &lt;code&gt;-D&lt;/code&gt;參數建立一個 socks proxy，瀏覽器設定 &lt;code&gt;localhost:8080&lt;/code&gt; 的 SOCKS v4 proxy  就可以讓出去的 http 連線透過 ssh 安全地到達遠端機器。
+&lt;code&gt;-C&lt;/code&gt;是把資料先壓縮後再傳送&lt;/p&gt;
+&lt;!--
+
+可用參數:
+
+-N: 不執行任何指令
+-f: 背景執行
+
+--&gt;
+
+&lt;h3&gt;參考資料&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding"&gt;SSH/OpenSSH/PortForwarding - Community Ubuntu Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://portable.easylife.tw/2043"&gt;Reverse SSH Tunnel實際運用，搭配auotssh永不斷線，putty建立反向tunnel :: 綠色工廠 Easylife Blog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.thegeekstuff.com/2013/11/reverse-ssh-tunnel/?utm_source=feedburner&amp;amp;utm_medium=email&amp;amp;utm_campaign=Feed%3A+TheGeekStuff+%28The+Geek+Stuff%29"&gt;How to Setup Reverse SSH Tunnel on Linux&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="os"></category><category term="Linux"></category></entry><entry><title>NTP note</title><link href="https://blog.codylab.com/ntp/" rel="alternate"></link><published>2014-01-01T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2014-01-01:/ntp/</id><content type="html">&lt;p&gt;使用 ntpd 來跟上行的 server 是不會立即更新時間的。&lt;/p&gt;
+&lt;h1&gt;新增 NTP Server&lt;/h1&gt;
+&lt;p&gt;把 server 加到 /etc/ntp.conf&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;server tick.stdtime.gov.tw
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1&gt;觀察目前連線的狀態&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;~ # ntpq -p
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ 118-163-81-62.H 192.168.0.2      2 u    7   64    3   13.063  546.533  61.627
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="os"></category></entry><entry><title>Install TeamView 9 in Ubuntu</title><link href="https://blog.codylab.com/teamviewer/" rel="alternate"></link><published>2014-01-01T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2014-01-01:/teamviewer/</id><content type="html">&lt;h2&gt;Install TeamView  Ubuntu 13.10 64-bit&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;cd&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;Downloads&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;wget&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;download&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;teamviewer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;download&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;version_9x&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;teamviewer_linux&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;deb&lt;/span&gt;
+&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sudo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;install&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;gdebi&lt;/span&gt;
+&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sudo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;gdebi&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;Downloads&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;teamviewer_linux&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;deb&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;讓 TeamView 不要偷偷在背景執行&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo teamviewer --daemon disable
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://ubuntuhandbook.org/index.php/2013/11/install-teamviewer-9-beta-new-features/"&gt;Install TeamViewer 9 Beta in Ubuntu [Great New Features include] | UbuntuHandbook&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://play.google.com/store/apps/details?id=com.teamviewer.quicksupport.market"&gt;TeamViewer QuickSupport - Google Play Android 應用程式&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="os"></category><category term="OS"></category></entry></feed>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - Trend</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/trend.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>Mobile is eating the world</title><link href="https://blog.codylab.com/trend-mobile-is-eating-the-world/" rel="alternate"></link><published>2013-06-01T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-06-01:/trend-mobile-is-eating-the-world/</id><content type="html">&lt;p&gt;這個投影片還蠻不錯的。用數字說明Mobile是如何正在主宰整個資訊產業&lt;/p&gt;
+&lt;iframe src="http://www.slideshare.net/slideshow/embed_code/21354744" width="597" height="486" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen&gt; &lt;/iframe&gt;
+&lt;div style="margin-bottom:5px"&gt; &lt;strong&gt; &lt;a href="http://www.slideshare.net/bge20/2013-05-bea" title="2013 05 BEA - ’Mobile is eating the World’" target="_blank"&gt;2013 05 BEA - ’Mobile is eating the World’&lt;/a&gt; &lt;/strong&gt; from &lt;strong&gt;&lt;a href="http://www.slideshare.net/bge20" target="_blank"&gt;Benedict Evans&lt;/a&gt;&lt;/strong&gt; &lt;/div&gt;
+
+&lt;h1&gt;其中我看到的一些事實&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Smart phone 和 tablets 從 2007 年開始僅花了四年的時間，從於2011年開始每年的銷售的裝置數已超越PC。&lt;/li&gt;
+&lt;li&gt;PC平均每4～5年更換一次，Mobile device平均每2年更換一次&lt;/li&gt;
+&lt;li&gt;Mobile相較於PC所擁有的一些優勢: &lt;ul&gt;
+&lt;li&gt;知道使用者的所在位置: location based service(LBS),&lt;/li&gt;
+&lt;li&gt;Apps 之間常常有密切的整合服務: 地址用 Google Map開，影片用 Youtube開, 文章記錄到 Evernote中&lt;/li&gt;
+&lt;li&gt;Prediction. 因為手機是使用者一天當中長時間持有，用取得使用者的資訊比較多，較容易做出一些預測服務(Ex: &lt;a href="http://www.google.com/landing/now/"&gt;Google Now&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;其它的像是 NFS, Image recognition 目前似乎還沒有看到什麼殺手級應用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;自帶微軟系統的裝置數量直線下滑，微軟在資訊產業的影響力逐漸變小&lt;/li&gt;
+&lt;li&gt;行動裝置由 Apple 和 Samsung 主導市場&lt;/li&gt;
+&lt;li&gt;電子閱讀器市場平緩進步: Amazon 營收逐年增加，但淨利卻只有持平&lt;/li&gt;
+&lt;li&gt;電子商務逐年增加，新創公司常常做商品導購的服務&lt;/li&gt;
+&lt;li&gt;行動世界的四巨頭: Apple, Google, Facebook, Amazon&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Trend"></category><category term="mobile"></category></entry></feed>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - Go</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/go.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2026-10-04T19:41:21+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</title><link href="https://blog.codylab.com/bouzy-5-21/" rel="alternate"></link><published>2026-10-04T00:00:00+08:00</published><updated>2026-10-04T19:41:21+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2026-10-04:/bouzy-5-21/</id><summary type="html">&lt;p&gt;這是「圍棋 AI 學習筆記」系列的第一篇，從一個很老、但很直觀的問題開始：&lt;strong&gt;看著一盤棋，電腦要怎麼判斷哪裡是誰的地？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在 AlphaGo 用神經網路直接「看」出形勢之前，早期的圍棋程式多半靠手寫規則來估算勢力範圍。Bruno Bouzy 在 2003 年發表的 5/21 演算法&lt;sup&gt;[1]&lt;/sup&gt;就是其中一個經典做法：借用影像處理的「數學形態學」，把每顆棋子的影響力向外擴散，再把邊緣不穩的部分削掉，剩下來的就是比較確定的地盤。它的膨脹步驟改自 Zobrist 在 1969 年提出的勢力模型&lt;sup&gt;[2]&lt;/sup&gt;，Bouzy 再補上對應的侵蝕步驟；這個方法用在他自己的圍棋程式 Indigo 裡，後來也被 GNU Go 採用。&lt;/p&gt;
+&lt;h2&gt;互動演示&lt;/h2&gt;
+&lt;p&gt;下面的棋盤可以自己擺子，拉動步驟滑桿或按播放，看數值怎麼一步步變化。滑鼠移到格點上，會顯示那一步是怎麼算出來的。&lt;/p&gt;
+&lt;iframe src="https://blog.codylab.com/files/go/bouzy-5-21.html" title="Bouzy's 5/21 互動演示" width="100%" height="520" style="border:0;display:block" loading="lazy" onload="this.style.height = this.contentDocument.body.offsetHeight + 'px'"&gt;&lt;/iframe&gt;
+
+&lt;h2&gt;演算法&lt;/h2&gt;
+&lt;p&gt;整個過程只有三個階段，每一步都是&lt;strong&gt;同時&lt;/strong&gt;更新所有格點（用上一步的值計算，不會邊算邊影響）。&lt;/p&gt;
+&lt;h3&gt;1. 初始化&lt;/h3&gt;
+&lt;p&gt;黑子設為 +64，白子設為 −64，空點設為 0，這是原論文&lt;sup&gt;[1]&lt;/sup&gt;沿用 Zobrist 模型的設定。正值代表黑方的影響力，負值代表白方的。&lt;/p&gt;
+&lt;h3&gt;2. 膨脹（Dilation）5 次&lt;/h3&gt;
+&lt;p&gt;對每個格點：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果它 &lt;strong&gt;≥ 0&lt;/strong&gt;，而且上下左右四鄰&lt;strong&gt;沒有負值&lt;/strong&gt;，就加上四鄰中正值的個數。&lt;/li&gt;
+&lt;li&gt;負值那一方對稱處理：如果它 &lt;strong&gt;≤ 0&lt;/strong&gt;，而且四鄰&lt;strong&gt;沒有正值&lt;/strong&gt;，就減去四鄰中負值的個數。&lt;/li&gt;
+&lt;li&gt;四鄰正負都有的點不動，代表雙方勢力在這裡碰頭。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;膨脹讓影響力像水波一樣往外擴散，一次一格。5 次之後，單顆子的影響會涵蓋距離 5 以內的菱形範圍，越靠近棋子數值越大 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;這是「圍棋 AI 學習筆記」系列的第一篇，從一個很老、但很直觀的問題開始：&lt;strong&gt;看著一盤棋，電腦要怎麼判斷哪裡是誰的地？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在 AlphaGo 用神經網路直接「看」出形勢之前，早期的圍棋程式多半靠手寫規則來估算勢力範圍。Bruno Bouzy 在 2003 年發表的 5/21 演算法&lt;sup&gt;[1]&lt;/sup&gt;就是其中一個經典做法：借用影像處理的「數學形態學」，把每顆棋子的影響力向外擴散，再把邊緣不穩的部分削掉，剩下來的就是比較確定的地盤。它的膨脹步驟改自 Zobrist 在 1969 年提出的勢力模型&lt;sup&gt;[2]&lt;/sup&gt;，Bouzy 再補上對應的侵蝕步驟；這個方法用在他自己的圍棋程式 Indigo 裡，後來也被 GNU Go 採用。&lt;/p&gt;
+&lt;h2&gt;互動演示&lt;/h2&gt;
+&lt;p&gt;下面的棋盤可以自己擺子，拉動步驟滑桿或按播放，看數值怎麼一步步變化。滑鼠移到格點上，會顯示那一步是怎麼算出來的。&lt;/p&gt;
+&lt;iframe src="https://blog.codylab.com/files/go/bouzy-5-21.html" title="Bouzy's 5/21 互動演示" width="100%" height="520" style="border:0;display:block" loading="lazy" onload="this.style.height = this.contentDocument.body.offsetHeight + 'px'"&gt;&lt;/iframe&gt;
+
+&lt;h2&gt;演算法&lt;/h2&gt;
+&lt;p&gt;整個過程只有三個階段，每一步都是&lt;strong&gt;同時&lt;/strong&gt;更新所有格點（用上一步的值計算，不會邊算邊影響）。&lt;/p&gt;
+&lt;h3&gt;1. 初始化&lt;/h3&gt;
+&lt;p&gt;黑子設為 +64，白子設為 −64，空點設為 0，這是原論文&lt;sup&gt;[1]&lt;/sup&gt;沿用 Zobrist 模型的設定。正值代表黑方的影響力，負值代表白方的。&lt;/p&gt;
+&lt;h3&gt;2. 膨脹（Dilation）5 次&lt;/h3&gt;
+&lt;p&gt;對每個格點：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果它 &lt;strong&gt;≥ 0&lt;/strong&gt;，而且上下左右四鄰&lt;strong&gt;沒有負值&lt;/strong&gt;，就加上四鄰中正值的個數。&lt;/li&gt;
+&lt;li&gt;負值那一方對稱處理：如果它 &lt;strong&gt;≤ 0&lt;/strong&gt;，而且四鄰&lt;strong&gt;沒有正值&lt;/strong&gt;，就減去四鄰中負值的個數。&lt;/li&gt;
+&lt;li&gt;四鄰正負都有的點不動，代表雙方勢力在這裡碰頭。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;膨脹讓影響力像水波一樣往外擴散，一次一格。5 次之後，單顆子的影響會涵蓋距離 5 以內的菱形範圍，越靠近棋子數值越大。&lt;/p&gt;
+&lt;h3&gt;3. 侵蝕（Erosion）21 次&lt;/h3&gt;
+&lt;p&gt;對每個格點：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果它是&lt;strong&gt;正值&lt;/strong&gt;，就減去四鄰中 &lt;strong&gt;≤ 0&lt;/strong&gt; 的個數，最多減到 0。&lt;/li&gt;
+&lt;li&gt;負值那一方對稱處理：加上四鄰中 &lt;strong&gt;≥ 0&lt;/strong&gt; 的個數，最多加到 0。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;侵蝕從勢力範圍的邊緣往內削。邊緣的點跟 0 或對方相鄰，會一直被扣分；被自己人包圍的點則不受影響。&lt;/p&gt;
+&lt;h3&gt;結果&lt;/h3&gt;
+&lt;p&gt;做完 26 步之後，&lt;strong&gt;正值的空點算黑地，負值的空點算白地&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2&gt;為什麼是 5 和 21？&lt;/h2&gt;
+&lt;p&gt;21 不是隨便挑的。Bouzy 在論文&lt;sup&gt;[1]&lt;/sup&gt;裡讓侵蝕次數 E 和膨脹次數 D 滿足：&lt;/p&gt;
+&lt;p style="text-align:center"&gt;E = D × (D − 1) + 1&lt;/p&gt;
+
+&lt;p&gt;D = 5 時剛好是 21（論文也提到 Indigo 依對局階段使用 4/13 或 5/21）。這個關係的效果是：&lt;strong&gt;一顆孤零零的子，侵蝕會剛好把膨脹出來的範圍全部削掉&lt;/strong&gt;，不會憑空生出地來。在上面的演示選「單顆子」播放到最後就能看到：5 次膨脹後擴散出一大片，21 次侵蝕後所有空點都回到 0。&lt;/p&gt;
+&lt;p&gt;換句話說，單顆子只有「影響力」、沒有「地」；要有好幾顆子互相支援、把一塊區域圍起來，那塊區域裡的點才撐得過侵蝕。這很符合下棋的直覺。&lt;/p&gt;
+&lt;h2&gt;可以觀察的幾件事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;兩子對峙&lt;/strong&gt;：兩顆子中間那一列在整個過程中都是 0。膨脹時雙方在這裡碰頭，誰也進不去，就成了分界線。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;角落小盤面&lt;/strong&gt;：試著把一方的子往邊角靠，或在對方勢力裡多放一顆，看最後的地盤怎麼變。棋盤邊線不算鄰居，所以邊角的點比中央更不容易被侵蝕。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;打開「顯示數字」&lt;/strong&gt;：膨脹階段數值增加得很快，侵蝕階段每一步只扣個位數。可以把滑鼠移到勢力邊緣的點，看它是被哪些鄰居扣分的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;侷限&lt;/h2&gt;
+&lt;p&gt;5/21 只看棋子的位置，不懂死活：一顆被包圍、其實已經死掉的子，還是會被當成有影響力的子。它也不分辨誰下一手，以及哪裡還有劫或打入的餘地。所以它比較適合當「大致的形勢判斷」，而不是精確的終局數地。後面的筆記會再看更進一步的方法怎麼處理這些問題。&lt;/p&gt;
+&lt;h2&gt;參考資料&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Bruno Bouzy (2003). "Mathematical morphology applied to computer Go." &lt;em&gt;International Journal of Pattern Recognition and Artificial Intelligence&lt;/em&gt;, 17(2), 257–268. &lt;a href="https://helios2.mi.parisdescartes.fr/~bouzy/publications/Bouzy-IJPRAI.pdf"&gt;PDF&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Albert L. Zobrist (1969). "A model of visual organization for the game of Go." &lt;em&gt;Proceedings of the AFIPS Spring Joint Computer Conference&lt;/em&gt;, 103–111.&lt;/li&gt;
+&lt;/ol&gt;</content><category term="Go"></category><category term="Go"></category><category term="AI"></category><category term="Algorithm"></category></entry></feed>

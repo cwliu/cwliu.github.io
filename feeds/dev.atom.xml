@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - dev</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/dev.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>使用 south 來做 Django database migration</title><link href="https://blog.codylab.com/django-south/" rel="alternate"></link><published>2014-08-16T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2014-08-16:/django-south/</id><summary type="html">&lt;p&gt;一般在 Django 底下更動 model 的時侯，必須使用 &lt;code&gt;syncdb&lt;/code&gt; 這個指令，把修改的 model 同步到 database 之中，但是有個限制，就是只有新的 model 才會被更新，已經存在的 model 就不會更動，此時就需要&lt;code&gt;south&lt;/code&gt;的幫忙。在 django 1.7 之後，這個 library 正式被整進到 django 之中。不過目前我手頭上的專案還是以 1.6 為主，所以還是要筆記一下。&lt;/p&gt;
+&lt;h2&gt;初始化 south&lt;/h2&gt;
+&lt;p&gt;安裝完 south 之後，第一次先執行 &lt;code&gt;syncdb&lt;/code&gt; 把 south 相關的&lt;code&gt;south_migrationhistory&lt;/code&gt; 新增到資料庫中。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;./manage.py&lt;span class="w"&gt; &lt;/span&gt;syncdb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;開始 migration&lt;/h2&gt;
+&lt;p&gt;首先要介紹的是  &lt;code&gt;schemamigration &amp;lt;APP_NAME&amp;gt; --initial&lt;/code&gt;，這個指令會在 app 資料夾下面產生一個 &lt;code&gt;migrations&lt;/code&gt; 資料夾。如果是第一次執行的話，裡面的檔名會是 0001_initial.py 開頭，裡面會記錄如何從無到有，把資料表建立起來。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;forwards&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;orm&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="c1"&gt;# Adding model 'UserModel'&lt;/span&gt;
+    &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'dusers_dmodel'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'id'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'django.db.models.fields.AutoField'&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;primary_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;此時可以執行 syncdb 做一下確認&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;syncdb …&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;一般在 Django 底下更動 model 的時侯，必須使用 &lt;code&gt;syncdb&lt;/code&gt; 這個指令，把修改的 model 同步到 database 之中，但是有個限制，就是只有新的 model 才會被更新，已經存在的 model 就不會更動，此時就需要&lt;code&gt;south&lt;/code&gt;的幫忙。在 django 1.7 之後，這個 library 正式被整進到 django 之中。不過目前我手頭上的專案還是以 1.6 為主，所以還是要筆記一下。&lt;/p&gt;
+&lt;h2&gt;初始化 south&lt;/h2&gt;
+&lt;p&gt;安裝完 south 之後，第一次先執行 &lt;code&gt;syncdb&lt;/code&gt; 把 south 相關的&lt;code&gt;south_migrationhistory&lt;/code&gt; 新增到資料庫中。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;./manage.py&lt;span class="w"&gt; &lt;/span&gt;syncdb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;開始 migration&lt;/h2&gt;
+&lt;p&gt;首先要介紹的是  &lt;code&gt;schemamigration &amp;lt;APP_NAME&amp;gt; --initial&lt;/code&gt;，這個指令會在 app 資料夾下面產生一個 &lt;code&gt;migrations&lt;/code&gt; 資料夾。如果是第一次執行的話，裡面的檔名會是 0001_initial.py 開頭，裡面會記錄如何從無到有，把資料表建立起來。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;forwards&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;orm&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="c1"&gt;# Adding model 'UserModel'&lt;/span&gt;
+    &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'dusers_dmodel'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'id'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'django.db.models.fields.AutoField'&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;primary_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;此時可以執行 syncdb 做一下確認&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;syncdb
+&lt;span class="go"&gt;....&lt;/span&gt;
+&lt;span class="go"&gt;Synced:&lt;/span&gt;
+&lt;span class="go"&gt; &amp;gt; django.contrib.admin&lt;/span&gt;
+&lt;span class="go"&gt;....&lt;/span&gt;
+&lt;span class="go"&gt;Not synced (use migrations):&lt;/span&gt;
+&lt;span class="go"&gt; - southtut&lt;/span&gt;
+&lt;span class="gp gp-VirtualEnv"&gt;(use ./manage.py migrate to migrate these)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;就會發現 app(southtut) 會放到 Not synced。也就是說從此 syncdb 這個指令就不會再去管 southtut 這個 app 了。此時可能會有兩個情況，如果之前已經先執行過 syncdb，而 database 跟 model 已經完全一致的情況下，我們就必須額外跟 south 說，我們已經同步好了，你不需要幫我們做 migration。這時需要用&lt;code&gt;--fake&lt;/code&gt;這個指令。來告訴 south，目前我們的 db 是在 migrations 資料夾的那一個版本。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;migrate&lt;span class="w"&gt; &lt;/span&gt;rango&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0001&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--fake
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;另一個情況是我們沒有對這個 app 同步過，這時就不能用 syncdb 來做，要改用 &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;migrate&lt;span class="w"&gt; &lt;/span&gt;rango
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這時在 south_migrationhistory 這個資料表就會記錄目前這個 app 已經同步到那一個版本&lt;/p&gt;
+&lt;p&gt;id |  app_name  |   migration      |            applied
+ ---+------------+------------------+-------------------------------
+  1 | dusers     | 0001_initial     | 2014-08-15 10:24:45.694512+08&lt;/p&gt;
+&lt;p&gt;所以第一次使用的時侯是用 &lt;code&gt;--initial&lt;/code&gt;，接下來只要有改變，就可以用&lt;code&gt;--auto&lt;/code&gt;。在 model 有修改之後，執行以下指令來建立跟上一個版本的差異資訊到 rango/migrations 資料夾中。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;./manage.py&lt;span class="w"&gt; &lt;/span&gt;schemamigration&lt;span class="w"&gt; &lt;/span&gt;rango&lt;span class="w"&gt; &lt;/span&gt;--auto
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;過程當中會詢問你如果有新的欄位，是否要填入一預設值。&lt;/p&gt;
+&lt;p&gt;最後再使用&lt;code&gt;migrate &amp;lt;APP_NAME&amp;gt;&lt;/code&gt;，正式修改資料庫schema，並把新的資料填入資料庫:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;./manage.py&lt;span class="w"&gt; &lt;/span&gt;migrate&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;APP_NAME&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;回復到之前的版本&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;migrate&lt;span class="w"&gt; &lt;/span&gt;photo&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0002&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;查看目前那些版本還沒有做 migrate&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;migrate&lt;span class="w"&gt; &lt;/span&gt;--list
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;備註&lt;/h2&gt;
+&lt;p&gt;如果發生 django.db.utils.DatabaseError: table "XXXXX" already exists，代表目前資料庫的 schema 跟 south_migrationhistory 裡面所記錄的不同。&lt;/p&gt;
+&lt;p&gt;可以執行:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;migrate&lt;span class="w"&gt; &lt;/span&gt;dodo&lt;span class="w"&gt; &lt;/span&gt;--fake
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;來告訴 south 說，目前資料庫的狀態已經是 migration 資料夾裡面最新的版本了，不需要替我做 migration 的動作。&lt;/p&gt;</content><category term="dev"></category><category term="Python"></category><category term="Django"></category></entry><entry><title>使用 Pyenv 管理多個 Python 版本</title><link href="https://blog.codylab.com/python-pyenv-management/" rel="alternate"></link><published>2014-07-08T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2014-07-08:/python-pyenv-management/</id><summary type="html">&lt;p&gt;&lt;a href="https://github.com/yyuu/pyenv"&gt;pyenv&lt;/a&gt; 是一個 Python 版本管理器，也可以安裝 &lt;a href="https://github.com/yyuu/pyenv-virtualenv"&gt;pyenv-virtualenv&lt;/a&gt; 達來支援 virtualenv 的功能。&lt;/p&gt;
+&lt;h2&gt;安裝 pyenv 和 pyenv-virtualenv&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;clone&lt;span class="w"&gt; &lt;/span&gt;https://github.com/yyuu/pyenv.git&lt;span class="w"&gt; &lt;/span&gt;~/.pyenv
+&lt;span class="gp"&gt;$ &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;clone&lt;span class="w"&gt; &lt;/span&gt;https://github.com/yyuu/pyenv-virtualenv.git&lt;span class="w"&gt; &lt;/span&gt;~/.pyenv/plugins/pyenv-virtualenv
+&lt;span class="gp"&gt;$ &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;pip&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;virtualenv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In Ubuntu:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;-y&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;build-essential&lt;span class="w"&gt; &lt;/span&gt;libssl-dev&lt;span class="w"&gt; &lt;/span&gt;zlib1g-dev&lt;span class="w"&gt; &lt;/span&gt;libbz2-dev&lt;span class="w"&gt; &lt;/span&gt;libreadline-dev&lt;span class="w"&gt; &lt;/span&gt;libsqlite3-dev&lt;span class="w"&gt; &lt;/span&gt;wget&lt;span class="w"&gt; &lt;/span&gt;curl&lt;span class="w"&gt; &lt;/span&gt;llvm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Or, 使用&lt;a href="https://goo.gl/uiUZgk"&gt;yyuu/pyenv-installer&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;把下列加到 ~/.bashrc&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="go"&gt;export PYENV_ROOT="$HOME/.pyenv"&lt;/span&gt;
+&lt;span class="go"&gt;export PATH="$PYENV_ROOT/bin:$PATH"&lt;/span&gt;
+&lt;span class="go"&gt;eval "$(pyenv init -)"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;安裝其它版本的 Python&lt;/h2&gt;
+&lt;p&gt;查看可供安裝的 python 版本&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;-l
+&lt;span class="go"&gt;...&lt;/span&gt;
+&lt;span class="go"&gt;3.4.0&lt;/span&gt;
+&lt;span class="go"&gt;3.4.1&lt;/span&gt;
+&lt;span class="go"&gt;3.4-dev&lt;/span&gt;
+&lt;span class="go"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;如果想要裝 3.4.1 的話，就使用&lt;code&gt;pyenv install&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;.4.1 …&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;&lt;a href="https://github.com/yyuu/pyenv"&gt;pyenv&lt;/a&gt; 是一個 Python 版本管理器，也可以安裝 &lt;a href="https://github.com/yyuu/pyenv-virtualenv"&gt;pyenv-virtualenv&lt;/a&gt; 達來支援 virtualenv 的功能。&lt;/p&gt;
+&lt;h2&gt;安裝 pyenv 和 pyenv-virtualenv&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;clone&lt;span class="w"&gt; &lt;/span&gt;https://github.com/yyuu/pyenv.git&lt;span class="w"&gt; &lt;/span&gt;~/.pyenv
+&lt;span class="gp"&gt;$ &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;clone&lt;span class="w"&gt; &lt;/span&gt;https://github.com/yyuu/pyenv-virtualenv.git&lt;span class="w"&gt; &lt;/span&gt;~/.pyenv/plugins/pyenv-virtualenv
+&lt;span class="gp"&gt;$ &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;pip&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;virtualenv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In Ubuntu:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;-y&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;build-essential&lt;span class="w"&gt; &lt;/span&gt;libssl-dev&lt;span class="w"&gt; &lt;/span&gt;zlib1g-dev&lt;span class="w"&gt; &lt;/span&gt;libbz2-dev&lt;span class="w"&gt; &lt;/span&gt;libreadline-dev&lt;span class="w"&gt; &lt;/span&gt;libsqlite3-dev&lt;span class="w"&gt; &lt;/span&gt;wget&lt;span class="w"&gt; &lt;/span&gt;curl&lt;span class="w"&gt; &lt;/span&gt;llvm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Or, 使用&lt;a href="https://goo.gl/uiUZgk"&gt;yyuu/pyenv-installer&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;把下列加到 ~/.bashrc&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="go"&gt;export PYENV_ROOT="$HOME/.pyenv"&lt;/span&gt;
+&lt;span class="go"&gt;export PATH="$PYENV_ROOT/bin:$PATH"&lt;/span&gt;
+&lt;span class="go"&gt;eval "$(pyenv init -)"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;安裝其它版本的 Python&lt;/h2&gt;
+&lt;p&gt;查看可供安裝的 python 版本&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;-l
+&lt;span class="go"&gt;...&lt;/span&gt;
+&lt;span class="go"&gt;3.4.0&lt;/span&gt;
+&lt;span class="go"&gt;3.4.1&lt;/span&gt;
+&lt;span class="go"&gt;3.4-dev&lt;/span&gt;
+&lt;span class="go"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;如果想要裝 3.4.1 的話，就使用&lt;code&gt;pyenv install&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;.4.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;查看已安裝的 Python 版本&lt;/h2&gt;
+&lt;p&gt;先用&lt;code&gt;pyenv versions&lt;/code&gt; 查看目前已安裝 Python 的版本&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;versions
+&lt;span class="go"&gt;* system&lt;/span&gt;
+&lt;span class="go"&gt;  3.4.1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;顯示目前預設是 system, 而可以切換到 3.4.1 的版本&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;global&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;version&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c1"&gt;# set global python version&lt;/span&gt;
+&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;local&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;version&amp;gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;#在當前目錄創建一個.python-version，以後進入這個目錄自動切換爲該版本&lt;/span&gt;
+&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;shell&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;version&amp;gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;#在當前shell的session裏啓用某個Python版本，優先級高於global,local&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;查看目前使用的 python 版本&lt;/h2&gt;
+&lt;p&gt;pyenv 可以設定三種 scope，分別是 global, local 和 shell。shell 是只有當次登入 shell 有效，而 global 則是有修改系統 python 版本的效果, 我最常用的是 local，會更改當下目錄使用的 python 版本。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;global
+&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;local&lt;/span&gt;
+&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;shell
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;使用 pyenv-virtualenv&lt;/h2&gt;
+&lt;p&gt;新增一個 virtualenv &lt;code&gt;uber&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;virtualenv&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;.4.1&lt;span class="w"&gt; &lt;/span&gt;uber
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;此時會發現多了一個 python&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;versions
+&lt;span class="go"&gt;  system&lt;/span&gt;
+&lt;span class="go"&gt;  3.4.1&lt;/span&gt;
+&lt;span class="go"&gt;* uber (set by /home/cwliu/Downloads/uber/.python-version)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;在此目錄使用該 virtualenv&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pyenv&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;local&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;uber
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="dev"></category><category term="Python"></category></entry><entry><title>從 Octorpess 搬家到 Pelican</title><link href="https://blog.codylab.com/From-Octopress-To-Pelican/" rel="alternate"></link><published>2013-05-31T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-05-31:/From-Octopress-To-Pelican/</id><summary type="html">&lt;p&gt;這是一個披著Octopress皮的Pelican. XD&lt;/p&gt;
+&lt;p&gt;前幾天的參加了&lt;a href="http://tw.pycon.org/2013/zh/"&gt;PyConTaiwan&lt;/a&gt;後，對於Python的忠誠度又提升了不少。於是就一時興起Survey了一下Python的Blog系統，花了一些時間，從原本Rudy 的 Octopress blog系統轉換到Python的Pelican Blog系統了。Octopress也沒有什麼不好。但是畢竟octopress是一個我沒有接觸過的Ruby語言，當需要做一些調整，想要去看程式碼時，總是沒有比我比較熟悉的Python來得親近。但是，因為Octopress的外觀實在簡單好看，又希望盡量無痛轉移，於是我就選擇了&lt;a href="https://github.com/duilio/pelican-octopress-theme"&gt;pelican-octopress-theme&lt;/a&gt;，做為我的佈景主題。&lt;/p&gt;
+&lt;p&gt;從Octopress搬到Pelican，我主要是參考這篇&lt;a href="http://jakevdp.github.io/blog/2013/05/07/migrating-from-octopress-to-pelican/"&gt;Migrating from Octopress to Pelican&lt;/a&gt;文章，裡面有詳盡的Migrate步驟。&lt;/p&gt;
+&lt;h2&gt;Pelican 的優點&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;100% Python&lt;/li&gt;
+&lt;li&gt;是目前最活躍的Python Blog 之一&lt;/li&gt;
+&lt;li&gt;是Static Page Blog系統，快，安全。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Deploy 到 Github Page&lt;/h2&gt;
+&lt;p&gt;Github 的 user page。靜態網頁一定要放在&lt;code&gt;Master&lt;/code&gt;branch，而我開了另一個Source branch來放原始的Markdown檔案。使用&lt;a href="http://docs.getpelican.com/en/3.0/tips.html"&gt;ghp-import&lt;/a&gt;這個工具(沒錯，這也是Python的)可以讓deploy到github上更方便，可以平常就待在source branch來維護原始檔案的更新，而deploy則是透過指令，自動更新到&lt;code&gt;Master&lt;/code&gt; branch，指令如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;pelican&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;pelicanconf&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;ghp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;output&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;master&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;也可以加到&lt;code&gt;Makefile&lt;/code&gt;的git，裡面預設是&lt;code&gt;gh-pages&lt;/code&gt;，記得改成 &lt;code&gt;master&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;github&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;publish&lt;/span&gt;
+    &lt;span class="n"&gt;ghp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;output&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;master&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這樣之後執行&lt;code&gt;make github …&lt;/code&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;這是一個披著Octopress皮的Pelican. XD&lt;/p&gt;
+&lt;p&gt;前幾天的參加了&lt;a href="http://tw.pycon.org/2013/zh/"&gt;PyConTaiwan&lt;/a&gt;後，對於Python的忠誠度又提升了不少。於是就一時興起Survey了一下Python的Blog系統，花了一些時間，從原本Rudy 的 Octopress blog系統轉換到Python的Pelican Blog系統了。Octopress也沒有什麼不好。但是畢竟octopress是一個我沒有接觸過的Ruby語言，當需要做一些調整，想要去看程式碼時，總是沒有比我比較熟悉的Python來得親近。但是，因為Octopress的外觀實在簡單好看，又希望盡量無痛轉移，於是我就選擇了&lt;a href="https://github.com/duilio/pelican-octopress-theme"&gt;pelican-octopress-theme&lt;/a&gt;，做為我的佈景主題。&lt;/p&gt;
+&lt;p&gt;從Octopress搬到Pelican，我主要是參考這篇&lt;a href="http://jakevdp.github.io/blog/2013/05/07/migrating-from-octopress-to-pelican/"&gt;Migrating from Octopress to Pelican&lt;/a&gt;文章，裡面有詳盡的Migrate步驟。&lt;/p&gt;
+&lt;h2&gt;Pelican 的優點&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;100% Python&lt;/li&gt;
+&lt;li&gt;是目前最活躍的Python Blog 之一&lt;/li&gt;
+&lt;li&gt;是Static Page Blog系統，快，安全。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Deploy 到 Github Page&lt;/h2&gt;
+&lt;p&gt;Github 的 user page。靜態網頁一定要放在&lt;code&gt;Master&lt;/code&gt;branch，而我開了另一個Source branch來放原始的Markdown檔案。使用&lt;a href="http://docs.getpelican.com/en/3.0/tips.html"&gt;ghp-import&lt;/a&gt;這個工具(沒錯，這也是Python的)可以讓deploy到github上更方便，可以平常就待在source branch來維護原始檔案的更新，而deploy則是透過指令，自動更新到&lt;code&gt;Master&lt;/code&gt; branch，指令如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;pelican&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;pelicanconf&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;ghp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;output&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;master&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;也可以加到&lt;code&gt;Makefile&lt;/code&gt;的git，裡面預設是&lt;code&gt;gh-pages&lt;/code&gt;，記得改成 &lt;code&gt;master&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;github&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;publish&lt;/span&gt;
+    &lt;span class="n"&gt;ghp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;output&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="n"&gt;master&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這樣之後執行&lt;code&gt;make github&lt;/code&gt;就可以更新網誌了。&lt;/p&gt;
+&lt;!--## pygments
+
+在 :::identifier 
+
+    &lt;code goes here&gt;
+--&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="dev"></category><category term="blog"></category></entry></feed>

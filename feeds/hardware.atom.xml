@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - hardware</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/hardware.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>ThinkPad x220</title><link href="https://blog.codylab.com/thinkpad-x220/" rel="alternate"></link><published>2014-01-01T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2014-01-01:/thinkpad-x220/</id><content type="html">&lt;p&gt;&lt;code&gt;再見了，小黑(2011/5 - 2014/8)。願你在新的主人那邊可以有繼續發揮的空間&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;把小黑賣掉，主要的原因是斷捨離的概念，讓我決定放下。另一方面也是對於 Lenovo 沒辦法在創造出新價值，有點失望。用腳投票，投入蘋果陣營。&lt;/p&gt;
+&lt;h2&gt;X220 美規機(過保)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;CPU : i5 2410m&lt;/li&gt;
+&lt;li&gt;RAM : 海盜船 16GB (8GB x 2)  &lt;/li&gt;
+&lt;li&gt;硬碟 : SATA 320GB, Masta SSD Intel 320 80GB&lt;/li&gt;
+&lt;li&gt;螢幕 : 自換 IPS 面板&lt;/li&gt;
+&lt;li&gt;電池 : 6 cell x1, 9cell x1&lt;/li&gt;
+&lt;li&gt;電源供應器: 65W 充電器 x1 +  原廠 90W 充電器 x 1&lt;/li&gt;
+&lt;li&gt;Express Card :  &lt;/li&gt;
+&lt;li&gt;ATM 晶片卡 Smart card reader, 可以ATM轉帳，網路報稅&lt;/li&gt;
+&lt;li&gt;AKE USB 3.0 ExpressCard : 多二個 USB 3.0 孔&lt;/li&gt;
+&lt;li&gt;Windows 7 序號&lt;/li&gt;
+&lt;li&gt;USB 外接鍵盤&lt;/li&gt;
+&lt;/ul&gt;</content><category term="hardware"></category><category term="Thinkpad"></category></entry><entry><title>20分鐘了解 CPU 基本運作</title><link href="https://blog.codylab.com/how-cpu-works/" rel="alternate"></link><published>2013-06-02T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-06-02:/how-cpu-works/</id><summary type="html">&lt;p&gt;這兩天發現了一個不錯的教學影片，用二十分鐘左右的時間介紹CPU的基本運作原理，相當值得一看。&lt;/p&gt;
+&lt;iframe width="560" height="315" src="http://www.youtube.com/embed/cNN_tTXABUA" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p&gt;這個影片主要是來自一本書&lt;a href="http://www.amazon.com/But-How-Know-Principles-Computers/dp/0615303765/ref=sr_1_1?ie=UTF8&amp;amp;qid=1370181735&amp;amp;sr=8-1&amp;amp;keywords=But+how+do+it+know"&gt;《But How Do It Know》&lt;/a&gt;，天瓏這本代訂購一本賣 946，薄薄的一本，只有2百多頁。這本書虛構了一個Scott CPU來舉例，我看完教學影片做了一些筆記當參考:&lt;/p&gt;
+&lt;h1&gt;Instruction Set&lt;/h1&gt;
+&lt;p&gt;CPU 基於最基本的 Instruction Set 來達成複雜的工作。例如:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Load&lt;/strong&gt; a number from RAM into the CPU&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ADD&lt;/strong&gt; two numbers toether&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;STORE&lt;/strong&gt; a number from the CPU back out to RAM&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;COMPARE&lt;/strong&gt; one number with another &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;JUMP IF&lt;/strong&gt; &lt;em&gt;Condition&lt;/em&gt; to another address in RAM&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;JUMP&lt;/strong&gt; to another address in RAM &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OUT&lt;/strong&gt;put to a device such as a monitor &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IN&lt;/strong&gt;put to from a device such as a keyboard&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;基本元件&lt;/h1&gt;
+&lt;p&gt;從這個影片中，整理一下一些元件的用途&lt;/p&gt;
+&lt;h2&gt;Random access memory(RAM)&lt;/h2&gt;
+&lt;p&gt;其 Random　之意就是代表可以隨意存取某個Addreess的資料。RAM主要分兩部份，Address 和 Data。CPU 可以要求從某個 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;這兩天發現了一個不錯的教學影片，用二十分鐘左右的時間介紹CPU的基本運作原理，相當值得一看。&lt;/p&gt;
+&lt;iframe width="560" height="315" src="http://www.youtube.com/embed/cNN_tTXABUA" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p&gt;這個影片主要是來自一本書&lt;a href="http://www.amazon.com/But-How-Know-Principles-Computers/dp/0615303765/ref=sr_1_1?ie=UTF8&amp;amp;qid=1370181735&amp;amp;sr=8-1&amp;amp;keywords=But+how+do+it+know"&gt;《But How Do It Know》&lt;/a&gt;，天瓏這本代訂購一本賣 946，薄薄的一本，只有2百多頁。這本書虛構了一個Scott CPU來舉例，我看完教學影片做了一些筆記當參考:&lt;/p&gt;
+&lt;h1&gt;Instruction Set&lt;/h1&gt;
+&lt;p&gt;CPU 基於最基本的 Instruction Set 來達成複雜的工作。例如:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Load&lt;/strong&gt; a number from RAM into the CPU&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ADD&lt;/strong&gt; two numbers toether&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;STORE&lt;/strong&gt; a number from the CPU back out to RAM&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;COMPARE&lt;/strong&gt; one number with another &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;JUMP IF&lt;/strong&gt; &lt;em&gt;Condition&lt;/em&gt; to another address in RAM&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;JUMP&lt;/strong&gt; to another address in RAM &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OUT&lt;/strong&gt;put to a device such as a monitor &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IN&lt;/strong&gt;put to from a device such as a keyboard&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;基本元件&lt;/h1&gt;
+&lt;p&gt;從這個影片中，整理一下一些元件的用途&lt;/p&gt;
+&lt;h2&gt;Random access memory(RAM)&lt;/h2&gt;
+&lt;p&gt;其 Random　之意就是代表可以隨意存取某個Addreess的資料。RAM主要分兩部份，Address 和 Data。CPU 可以要求從某個 Address 讀出 Data。而RAM的Data又可以分成好幾種類型: 
+- 指令集
+- 數字
+- 另一個記憶體位置
+- 字元&lt;/p&gt;
+&lt;h2&gt;Control Unit&lt;/h2&gt;
+&lt;p&gt;CPU 可以說是電腦的大腦，而 Control Unit 則可以說是CPU的艦長，負責發號司令負責叫ALU運算跟控制暫存器&lt;/p&gt;
+&lt;h2&gt;Arithmetic Logic Unit(ALU)&lt;/h2&gt;
+&lt;p&gt;負責實際運算的部份，Input 由 Control Unit 控制，運算完的結果透過 Output 或是 Flags 來讓 Control Unit 知道結果&lt;/p&gt;
+&lt;h2&gt;BUS(匯流排)&lt;/h2&gt;
+&lt;p&gt;ALU, Control Unit 和 Register 透過共用的BUS來轉移資料&lt;/p&gt;
+&lt;h2&gt;Register&lt;/h2&gt;
+&lt;p&gt;Register(暫存器)在 CPU 裡面扮演重要的腳色，它們讓 ALU 計算出來的數值可以有地方暫時存放，以供之後的運算。而Control unit 會用&lt;code&gt;set wire&lt;/code&gt;跟&lt;code&gt;enable wire&lt;/code&gt;來控制那些 Register 會被寫入，和輸出:
+- set wire: 讓 ALU 計算完的值可以透過 bus(匯流排)來寫入 register
+- enable wire: 讓register的值可以輸出到 bus 上 &lt;/p&gt;
+&lt;p&gt;因為多個 Register 彼此共用一個 bus，為了要讓 ALU 可以讀到兩個Input，會在其中一個Input 加入一個 Temp register，讓這個 register 可以暫時鎖死一個值到 ALU，然後另一個值再從Register中用 enable wire直接打到 ALU上　。&lt;/p&gt;
+&lt;h3&gt;其它的Register&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Instruction register: 把指令的種類輸出到 Control Unit &lt;/li&gt;
+&lt;li&gt;Instruction address register: 下一個指令所在的 address 輸出到 memory address register&lt;/li&gt;
+&lt;li&gt;Memory address register: 把 address 輸出到 Memory &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;參考連結&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.youtube.com/watch?v=wOuYLq6vfLE"&gt;AMD CPU製作過程中文 - YouTube&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://visual6502.org/JSSim/index.html"&gt;Visual 6502 in JavaScript&lt;/a&gt;, 利用 HTML5 的技術來視覺化 AppleII 使用的 CPU 6502&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ejournal.stpi.narl.org.tw/NSC_INDEX/Journal/EJ0001/9903/9903-11.pdf"&gt;積體電路的發明&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Hardware"></category><category term="CPU"></category></entry></feed>

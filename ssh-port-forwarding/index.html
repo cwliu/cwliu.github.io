@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>SSH Tunnel</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">SSH Tunnel</h1>
+      <p class="meta"><time datetime="2014-05-09T00:00:00+08:00" pubdate>2014 May 09 Fri</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><p>使 ssh 遠端連線的人很多, 但是 ssh 這個指令其實還有一些很有趣的tunnel用法，可以讓你擺脫一些限制。這邊稍微筆記一下:</p>
+<h2>Local port forwarding</h2>
+<p>在本地端開一個 port，然後 remote machine 會把封包轉送到指定的位置:</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>-L<span class="w"> </span>&lt;local_port&gt;:&lt;target_host&gt;:&lt;target_port&gt;<span class="w"> </span>remote_user@remote_host
+</code></pre></div>
+
+<p>例如本地端防火牆只有開 <code>22</code> port, 而封鎖了<code>8080</code> port, 此時可以透過 local port forward 的方式，達到連線到遠端 8080 port。</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">1234</span>:localhost:8080<span class="w"> </span>cwliu@118.100.100.1
+</code></pre></div>
+
+<p>這時連到 localhost:1234，就相當於連線到 118.100.100.1:8080，避開防火牆的效果</p>
+<!--
+    ssh -L 1234:proxy.ntu.edu.tw:3128 name@xxx.ntu.edu.tw
+-->
+
+<h2>Remote port forwarding (Reverse SSH)</h2>
+<p>這邊的<code>-R</code>代表的是 remote 之意，直接舉個例子</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>-R<span class="w"> </span><span class="m">5900</span>:localhost:22<span class="w"> </span>guest@remote-pc
+</code></pre></div>
+
+<p>在遠端 <code>remote-pc</code> 會開一個 5900 port，其流量會導到 localhost 的 22 port。實際的應用是當 local machine 沒有固定 IP 的時侯，可以先建立好此 ssh 連線。就可以讓遠端機器透過 localhost:5900 直接連線回local。</p>
+<h2>SOCKS Proxy Forwarding</h2>
+<p>主要可以用來保護非信任的網路，當不想讓別人知道自己的 http 連線時, 或是可以避開 IT 網路控管，可以用這個:</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>-C<span class="w"> </span>-D<span class="w"> </span><span class="m">8080</span><span class="w"> </span>cwliu@123.123.123.123
+</code></pre></div>
+
+<p>使用 <code>-D</code>參數建立一個 socks proxy，瀏覽器設定 <code>localhost:8080</code> 的 SOCKS v4 proxy  就可以讓出去的 http 連線透過 ssh 安全地到達遠端機器。
+<code>-C</code>是把資料先壓縮後再傳送</p>
+<!--
+
+可用參數:
+
+-N: 不執行任何指令
+-f: 背景執行
+
+-->
+
+<h3>參考資料</h3>
+<ul>
+<li><a href="https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding">SSH/OpenSSH/PortForwarding - Community Ubuntu Documentation</a></li>
+<li><a href="http://portable.easylife.tw/2043">Reverse SSH Tunnel實際運用，搭配auotssh永不斷線，putty建立反向tunnel :: 綠色工廠 Easylife Blog</a></li>
+<li><a href="http://www.thegeekstuff.com/2013/11/reverse-ssh-tunnel/?utm_source=feedburner&amp;utm_medium=email&amp;utm_campaign=Feed%3A+TheGeekStuff+%28The+Geek+Stuff%29">How to Setup Reverse SSH Tunnel on Linux</a></li>
+</ul></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2014-05-09T00:00:00+08:00" pubdate>2014 May 09 Fri</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+  <section>
+    <h1>Related Posts</h1>
+    <ul>
+      <li><a href="https://blog.codylab.com/ubuntu-pidgin-ms-office-communicator/">Using Microsoft communicator in Ubuntu with pidgin-sipe plugin</a></li>
+      <li><a href="https://blog.codylab.com/thinkpad-thinkfan/">安裝ThinkFan風扇控制軟體</a></li>
+    </ul>
+  <section>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/ssh-port-forwarding/';
+          var disqus_url = 'https://blog.codylab.com/ssh-port-forwarding/';
+          var disqus_title = 'SSH Tunnel';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

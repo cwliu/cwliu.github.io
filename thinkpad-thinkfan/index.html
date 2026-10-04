@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>安裝ThinkFan風扇控制軟體</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">安裝ThinkFan風扇控制軟體</h1>
+      <p class="meta"><time datetime="2013-12-05T00:00:00+08:00" pubdate>2013 December 05 Thu</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><h2>安裝 Thinkfan</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>thinkfan
+</code></pre></div>
+
+<h2>開啟風扇控制權</h2>
+<p>系統預設並不容許直接控制風扇速度，所以需要特別設定<code>thinkpad-acpi</code>的config值: </p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"options thinkpad_acpi fan_control=1"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/modprobe.d/thinkpad_acpi.conf
+</code></pre></div>
+
+<p>重新載入<code>thinkpad_acpi</code> driver 套用新的設定值</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>modprobe<span class="w"> </span>-rv<span class="w"> </span>thinkpad_acpi
+$<span class="w"> </span>sudo<span class="w"> </span>modprobe<span class="w"> </span>-v<span class="w"> </span>thinkpad_acpi
+</code></pre></div>
+
+<h2>修改 thinkfan 設定檔</h2>
+<p>thinkfan 設定檔在 <code>/etc/thinkfan.conf</code>，主要可以設定的要用那些sensor以及設定溫度與轉速的規則。首先先找到溫度量測的檔案:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>find<span class="w"> </span>/sys/devices<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">"temp*_input"</span>
+</code></pre></div>
+
+<p>以x220為例，一共找到四個檔:</p>
+<div class="highlight"><pre><span></span><code>/sys/devices/virtual/hwmon/hwmon0/temp1_input
+/sys/devices/platform/coretemp.0/temp3_input
+/sys/devices/platform/coretemp.0/temp1_input
+/sys/devices/platform/coretemp.0/temp2_input
+</code></pre></div>
+
+<p>把這四行寫入到 <code>/etc/thinkfan.conf</code></p>
+<div class="highlight"><pre><span></span><code>sensor /sys/devices/virtual/hwmon/hwmon0/temp1_input
+sensor /sys/devices/platform/coretemp.0/temp3_input
+sensor /sys/devices/platform/coretemp.0/temp1_input
+sensor /sys/devices/platform/coretemp.0/temp2_input
+</code></pre></div>
+
+<p>這樣ThinkFan就會取這四個sensor最高溫度來監度</p>
+<h2>得到目前風扇的速度</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cat<span class="w"> </span>/proc/acpi/ibm/fan
+status:<span class="w">     </span>enabled
+speed:<span class="w">      </span><span class="m">4464</span>
+level:<span class="w">      </span>auto
+commands:<span class="w">   </span>level<span class="w"> </span>&lt;level&gt;<span class="w"> </span><span class="o">(</span>&lt;level&gt;<span class="w"> </span>is<span class="w"> </span><span class="m">0</span>-7,<span class="w"> </span>auto,<span class="w"> </span>disengaged,<span class="w"> </span>full-speed<span class="o">)</span>
+commands:<span class="w">   </span>enable,<span class="w"> </span>disable
+commands:<span class="w">   </span>watchdog<span class="w"> </span>&lt;timeout&gt;<span class="w"> </span><span class="o">(</span>&lt;timeout&gt;<span class="w"> </span>is<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">(</span>off<span class="o">)</span>,<span class="w"> </span><span class="m">1</span>-120<span class="w"> </span><span class="o">(</span>seconds<span class="o">))</span>
+</code></pre></div>
+
+<p>從中也可以了解到如何手動控制風扇，例如手動控制風扇用速度<code>7</code>來跑:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>level<span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/proc/acpi/ibm/fan
+</code></pre></div>
+
+<h2>前景執行 thinkfan</h2>
+<p>想知道 thinkfan 執行的過程，可以試著跑前景模式，並每一秒更新一次：</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>thinkfan<span class="w"> </span>-n<span class="w"> </span>-s<span class="w"> </span><span class="m">1</span>
+<span class="nv">sleeptime</span><span class="o">=</span><span class="m">1</span>,<span class="w"> </span><span class="nv">tmax</span><span class="o">=</span><span class="m">49</span>,<span class="w"> </span><span class="nv">last_tmax</span><span class="o">=</span><span class="m">49</span>,<span class="w"> </span><span class="nv">biased_tmax</span><span class="o">=</span><span class="m">49</span><span class="w"> </span>-&gt;<span class="w"> </span><span class="nv">fan</span><span class="o">=</span><span class="s2">"level 0"</span>
+<span class="nv">sleeptime</span><span class="o">=</span><span class="m">1</span>,<span class="w"> </span><span class="nv">tmax</span><span class="o">=</span><span class="m">51</span>,<span class="w"> </span><span class="nv">last_tmax</span><span class="o">=</span><span class="m">49</span>,<span class="w"> </span><span class="nv">biased_tmax</span><span class="o">=</span><span class="m">51</span><span class="w"> </span>-&gt;<span class="w"> </span><span class="nv">fan</span><span class="o">=</span><span class="s2">"level 1"</span>
+<span class="nv">sleeptime</span><span class="o">=</span><span class="m">1</span>,<span class="w"> </span><span class="nv">tmax</span><span class="o">=</span><span class="m">50</span>,<span class="w"> </span><span class="nv">last_tmax</span><span class="o">=</span><span class="m">51</span>,<span class="w"> </span><span class="nv">biased_tmax</span><span class="o">=</span><span class="m">50</span><span class="w"> </span>-&gt;<span class="w"> </span><span class="nv">fan</span><span class="o">=</span><span class="s2">"level 0"</span>
+...<span class="w"> </span>略
+</code></pre></div>
+
+<h2>Reference</h2>
+<ul>
+<li><a href="http://www.cnblogs.com/henryau/archive/2012/03/03/ubuntu_thinkfan.html">[原创] Thinkfan安装配置使用 - HenrYau - 博客园</a></li>
+<li><a href="http://overtag.dk/wordpress/2012/03/to-all-my-thinkpad-friends-running-linux/">To all my Thinkpad friends running Linux | Ben Jao Ming</a></li>
+</ul>
+<h2>備註: Thinkpad X220 在不同 Level 的轉速</h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>RPM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2000</td>
+</tr>
+<tr>
+<td>2</td>
+<td>3000</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3500</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3500</td>
+</tr>
+<tr>
+<td>5</td>
+<td>4000</td>
+</tr>
+<tr>
+<td>6</td>
+<td>4000</td>
+</tr>
+<tr>
+<td>7</td>
+<td>4500</td>
+</tr>
+<tr>
+<td>8+</td>
+<td>6000 (全速)</td>
+</tr>
+</tbody>
+</table>
+<!-- 
+## lm-sensors
+
+如果想知道目前CPU溫度，可以額外安裝 lm-sensors
+
+    $ sudo apt-get install lm-sensors
+
+第一次可以先執行`sensors-detect`來掃系統有那些sensor可用。
+
+    $ sudo sensors-detect
+
+以x220為例，掃到了`coretemp`，最後一個問題他會問你要不要把`coretemp`加到`/etc/modules`，這樣開機就會自動載入溫度監控程式，`sensors`指令可以看到目前有的sensors，也包括溫度:
+
+    $ sensors
+    acpitz-virtual-0
+    Adapter: Virtual device
+    temp1:        +56.0°C  (crit = +99.0°C)
+
+    thinkpad-isa-0000
+    Adapter: ISA adapter
+    fan1:        3474 RPM
+
+    coretemp-isa-0000
+    Adapter: ISA adapter
+    Physical id 0:  +57.0°C  (high = +86.0°C, crit = +100.0°C)
+    Core 0:         +57.0°C  (high = +86.0°C, crit = +100.0°C)
+   2013/05/12 22:34:48  Core 1:         +57.0°C  (high = +86.0°C, crit = +100.0°C)
+
+
+## 參考的 config 
+
+(0,     0,      66)
+(1,     56,     75)
+(2,     68,     78)
+(3,     71,     81)
+(5,     74,     84)
+(7,     77,     87)
+(127,   80,     32767)
+
+--></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2013-12-05T00:00:00+08:00" pubdate>2013 December 05 Thu</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+    <a class="category" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+  <section>
+    <h1>Related Posts</h1>
+    <ul>
+      <li><a href="https://blog.codylab.com/ssh-port-forwarding/">SSH Tunnel</a></li>
+      <li><a href="https://blog.codylab.com/ubuntu-pidgin-ms-office-communicator/">Using Microsoft communicator in Ubuntu with pidgin-sipe plugin</a></li>
+      <li><a href="https://blog.codylab.com/thinkpad-x220/">ThinkPad x220</a></li>
+      <li><a href="https://blog.codylab.com/linux-powersaving-run-script/">Linux在充放電切換時執行特定指令</a></li>
+      <li><a href="https://blog.codylab.com/thinkpad-bios/">Update ThinkPad BIOS in Linux with a USB disk</a></li>
+    </ul>
+  <section>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/thinkpad-thinkfan/';
+          var disqus_url = 'https://blog.codylab.com/thinkpad-thinkfan/';
+          var disqus_title = '安裝ThinkFan風扇控制軟體';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

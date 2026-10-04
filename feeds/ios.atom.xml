@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - ios</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/ios.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>使用 linphone 函式庫發生 exc_bad_access 的除錯經驗</title><link href="https://blog.codylab.com/ios-linphone-exc-bad-access/" rel="alternate"></link><published>2016-07-01T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2016-07-01:/ios-linphone-exc-bad-access/</id><summary type="html">&lt;p&gt;&lt;img alt="exc_bad_access" src="http://i.imgur.com/epeolml.png"&gt;&lt;/p&gt;
+&lt;p&gt;在叫用 linphone 的函式庫時，發生 &lt;code&gt;exc_bad_access&lt;/code&gt;的錯誤，因為這個錯誤往往發生的地方跟掛掉的地方是不一樣的，所以比較難除錯。&lt;/p&gt;
+&lt;h2&gt;EXC_BAD_ACCESS&lt;/h2&gt;
+&lt;p&gt;是因為對已經釋放的記憶體進行了非法操作，程式會直接 Crash，無法用 error handle  catch 來處理。&lt;/p&gt;
+&lt;p&gt;&lt;img alt="exc_bad_access" src="https://i.imgur.com/Z1198IW.png"&gt;&lt;/p&gt;
+&lt;h2&gt;Crash 片段&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="zombie" src="https://i.imgur.com/CUtZpok.png"&gt;&lt;/p&gt;
+&lt;p&gt;記錄發生 crash 的地方不只有一處，共同的特色就是都是掛在 linphone 的函式庫:&lt;/p&gt;
+&lt;p&gt;發生位置1 &lt;code&gt;linphone_core_iterate()&lt;/code&gt;: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;objc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;func&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;iterate&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;let&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;lc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;LinphoneManager&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLc&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;lc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;!=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;nil&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;linphone_core_iterate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lc&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;iterate&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;initiates&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;registration&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*/&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;發生位置2 &lt;code&gt;linphone_core_iterate()&lt;/code&gt;: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;if let phone = phoneNumber, lc = LinphoneManager.lc {
+    nameLabel.text = calleeName!
+    linphone_core_invite(lc, phone)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;透 Debug build 測試&lt;/h2&gt;
+&lt;p&gt;因為預設從 linphone 網站下載的 iphone sdk 是沒有 debug symbol 的，所以在發生 crash 的時侯，只能看到看組合語言: 
+&lt;img alt="acc" src="https://i.imgur.com/YQQIst3.png"&gt;
+&lt;img alt="EXC_I386_GPFLT" src="https://i.imgur.com/eWVoO0y.png"&gt;&lt;/p&gt;
+&lt;p&gt;雖然有 linphone 的函式名稱，但是對於問題的幫助不大。所以我就直接 build 一個 有 debug symbol 的 liblinphone-sdk，build debug sdk 步驟記錄在&lt;a href="https://blog.codylab.com/ios-build-linphone-iphone-sdk/"&gt;另一篇&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;經過有 debug build 的協助之後， crash 的資訊從原本的組合語言變成了 c 語言 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="exc_bad_access" src="http://i.imgur.com/epeolml.png"&gt;&lt;/p&gt;
+&lt;p&gt;在叫用 linphone 的函式庫時，發生 &lt;code&gt;exc_bad_access&lt;/code&gt;的錯誤，因為這個錯誤往往發生的地方跟掛掉的地方是不一樣的，所以比較難除錯。&lt;/p&gt;
+&lt;h2&gt;EXC_BAD_ACCESS&lt;/h2&gt;
+&lt;p&gt;是因為對已經釋放的記憶體進行了非法操作，程式會直接 Crash，無法用 error handle  catch 來處理。&lt;/p&gt;
+&lt;p&gt;&lt;img alt="exc_bad_access" src="https://i.imgur.com/Z1198IW.png"&gt;&lt;/p&gt;
+&lt;h2&gt;Crash 片段&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="zombie" src="https://i.imgur.com/CUtZpok.png"&gt;&lt;/p&gt;
+&lt;p&gt;記錄發生 crash 的地方不只有一處，共同的特色就是都是掛在 linphone 的函式庫:&lt;/p&gt;
+&lt;p&gt;發生位置1 &lt;code&gt;linphone_core_iterate()&lt;/code&gt;: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;objc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;func&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;iterate&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;let&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;lc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;LinphoneManager&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLc&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;lc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;!=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;nil&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;linphone_core_iterate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lc&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;iterate&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;initiates&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;registration&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*/&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;發生位置2 &lt;code&gt;linphone_core_iterate()&lt;/code&gt;: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;if let phone = phoneNumber, lc = LinphoneManager.lc {
+    nameLabel.text = calleeName!
+    linphone_core_invite(lc, phone)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;透 Debug build 測試&lt;/h2&gt;
+&lt;p&gt;因為預設從 linphone 網站下載的 iphone sdk 是沒有 debug symbol 的，所以在發生 crash 的時侯，只能看到看組合語言: 
+&lt;img alt="acc" src="https://i.imgur.com/YQQIst3.png"&gt;
+&lt;img alt="EXC_I386_GPFLT" src="https://i.imgur.com/eWVoO0y.png"&gt;&lt;/p&gt;
+&lt;p&gt;雖然有 linphone 的函式名稱，但是對於問題的幫助不大。所以我就直接 build 一個 有 debug symbol 的 liblinphone-sdk，build debug sdk 步驟記錄在&lt;a href="https://blog.codylab.com/ios-build-linphone-iphone-sdk/"&gt;另一篇&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;經過有 debug build 的協助之後， crash 的資訊從原本的組合語言變成了 c 語言，地點是在&lt;code&gt;submodules/linphone/coreapi/vtables.c&lt;/code&gt;檔案: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="NOTIFY_IF_EXIST" src="https://i.imgur.com/fZj7CMw.png"&gt;&lt;/p&gt;
+&lt;p&gt;NOTIFY_IF_EXIST 是一個 macro，執行 event 的 notify: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gh"&gt;#&lt;/span&gt;define NOTIFY_IF_EXIST(function_name, ...) \
+    MSList* iterator; \
+    VTableReference &lt;span class="gs"&gt;*ref; \&lt;/span&gt;
+&lt;span class="gs"&gt;    bool_t has_cb = FALSE; \&lt;/span&gt;
+&lt;span class="gs"&gt;    for (iterator=lc-&amp;gt;vtable_refs; iterator!=NULL; iterator=iterator-&amp;gt;next)\&lt;/span&gt;
+&lt;span class="gs"&gt;        if ((ref=(VTableReference*&lt;/span&gt;)iterator-&amp;gt;data)-&amp;gt;valid &amp;amp;&amp;amp; (lc-&amp;gt;current_vtable=ref-&amp;gt;vtable)-&amp;gt;function_name) {\
+            lc-&amp;gt;current_vtable-&amp;gt;function_name(__VA_ARGS__);\
+            has_cb = TRUE;\
+        }\
+    if (has_cb) ms_message("Linphone core [%p] notifying [%s]",lc,#function_name)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;我開始思考，這邊有什麼變數是已經釋放了？於是我找到了關鍵字&lt;code&gt;current_vtable&lt;/code&gt;，回頭看到自己的 LinphoneCoreTable 是放在 class property 中: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="bug" src="https://i.imgur.com/QgmGnhw.png"&gt;&lt;/p&gt;
+&lt;p&gt;哈，賓果！推斷是因為 linphone 函式使用到這個已經釋放的 object，把程式修改成用 struct static 專門來放 global variables:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="struct" src="https://i.imgur.com/vHtX5Z5.png"&gt;&lt;/p&gt;
+&lt;p&gt;再次執行！ Problem Solved !!&lt;/p&gt;
+&lt;h2&gt;結論&lt;/h2&gt;
+&lt;p&gt;我本身比較少 C/C++ 的除錯經驗，因為這個 bug 足足花了15個小時才找到問題，把除錯的經驗記錄於此。除錯過程中，盡量讓自己有更多的資訊可以下判斷，像是掛載 debug symbol 就是一例。在 swift 呼叫 c 的 library 時，有些物件的 life cycle 要特別留意，是不是可能會讓外部的 library 呼叫到自己已經釋放的 object。下次遇到這個問題，應該要先把跟外部函式庫有關聯的&lt;strong&gt;變數&lt;/strong&gt;列出來，一一檢視是否釋放的時機過早。我想效率會比較好。&lt;/p&gt;
+&lt;h2&gt;註1: 嘗試過的解法&lt;/h2&gt;
+&lt;p&gt;在用 debug symbol 前，其實嘗試了許多無用的解法:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Linphone core 物件是 nil？  -&amp;gt; 不是這個原因&lt;/li&gt;
+&lt;li&gt;懷疑可能是 liblinphone 的 bug，故升級 liblinphone 的版本到從3.9.1升級到最新版3.13.9 -&amp;gt; 無效&lt;/li&gt;
+&lt;li&gt;把 linphonecore 從 class static properties 改成 struct static variable -&amp;gt; 無效&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;XCode Profiler&lt;/code&gt; -&amp;gt; 看不出問題&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;linphone_core_invite&lt;/code&gt; 相關的函式放到 background thread -&amp;gt; 無效&lt;/li&gt;
+&lt;li&gt;DismissViewControllerAnimated() 造成 EXC_Bad_ACCESS &lt;a href="http://goo.gl/5f3V2Z"&gt;ref&lt;/a&gt; -&amp;gt; 無效&lt;/li&gt;
+&lt;li&gt;嘗試把 debug optimization level 調成 -Os，讓 debug，release 的情況一致
+&lt;img alt="level" src="https://i.imgur.com/JOvis5fl.png"&gt;&lt;/li&gt;
+&lt;li&gt;嘗試 build 一個簡單的 linphone sample proejct &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;註2: NSZombie&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="NSZombie1" src="https://i.imgur.com/rKF5g9p.png"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="NSZombie2" src="https://i.imgur.com/A8YyocF.png"&gt;&lt;/p&gt;
+&lt;p&gt;NSZombie 原本是設計讓你除錯用的，卻因為我把這個功能開啟，反而造成本地端不會 Crash，上傳到 testflight 的 release 版本就會 crash。在這個 Case 中， NSZombie 沒有辦法找到問題，也許是因為 Crash 的點的是發生在外部函式庫中？&lt;/p&gt;</content><category term="ios"></category><category term="iOS"></category></entry><entry><title>Build liblinphone-sdk for iOS</title><link href="https://blog.codylab.com/ios-build-linphone-iphone-sdk/" rel="alternate"></link><published>2016-06-30T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2016-06-30:/ios-build-linphone-iphone-sdk/</id><summary type="html">&lt;h3&gt;Install git, homebrew&lt;/h3&gt;
+&lt;p&gt;install git, homebew if you have no one.&lt;/p&gt;
+&lt;h3&gt;Clone ios-linphone&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;clone&lt;span class="w"&gt; &lt;/span&gt;git://git.linphone.org/linphone-iphone.git&lt;span class="w"&gt; &lt;/span&gt;--recursive
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Remember add &lt;code&gt;--recursive&lt;/code&gt; to download submodule&lt;/p&gt;
+&lt;h3&gt;Excute .prepare.py&lt;/h3&gt;
+&lt;p&gt;$ ./prepare.py&lt;/p&gt;
+&lt;p&gt;You may need execute this command many time until you install all dependecies.&lt;/p&gt;
+&lt;p&gt;In my case, I installed these tools: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;brew&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;imagemagick&lt;span class="w"&gt; &lt;/span&gt;doxygen&lt;span class="w"&gt; &lt;/span&gt;cmake&lt;span class="w"&gt; &lt;/span&gt;intltool&lt;span class="w"&gt; &lt;/span&gt;yasm&lt;span class="w"&gt; &lt;/span&gt;automake&lt;span class="w"&gt; &lt;/span&gt;coreutils&lt;span class="w"&gt; &lt;/span&gt;wget&lt;span class="w"&gt; &lt;/span&gt;optipng&lt;span class="w"&gt; &lt;/span&gt;nasm&lt;span class="w"&gt; &lt;/span&gt;
+$&lt;span class="w"&gt; &lt;/span&gt;brew&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;intltool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;If it works, you will get the following message:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;-- Configuring done&lt;/span&gt;
+&lt;span class="c1"&gt;-- Generating done&lt;/span&gt;
+&lt;span class="c1"&gt;-- Build files have been written to: /Users/cwliu/Dev@Local/WiAdvance/1603_GoodWox/liblinphone/linphone-iphone/WORK/ios-armv7/cmake&lt;/span&gt;
+&lt;span class="nl"&gt;INFO&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;You …&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;h3&gt;Install git, homebrew&lt;/h3&gt;
+&lt;p&gt;install git, homebew if you have no one.&lt;/p&gt;
+&lt;h3&gt;Clone ios-linphone&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;clone&lt;span class="w"&gt; &lt;/span&gt;git://git.linphone.org/linphone-iphone.git&lt;span class="w"&gt; &lt;/span&gt;--recursive
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Remember add &lt;code&gt;--recursive&lt;/code&gt; to download submodule&lt;/p&gt;
+&lt;h3&gt;Excute .prepare.py&lt;/h3&gt;
+&lt;p&gt;$ ./prepare.py&lt;/p&gt;
+&lt;p&gt;You may need execute this command many time until you install all dependecies.&lt;/p&gt;
+&lt;p&gt;In my case, I installed these tools: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;brew&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;imagemagick&lt;span class="w"&gt; &lt;/span&gt;doxygen&lt;span class="w"&gt; &lt;/span&gt;cmake&lt;span class="w"&gt; &lt;/span&gt;intltool&lt;span class="w"&gt; &lt;/span&gt;yasm&lt;span class="w"&gt; &lt;/span&gt;automake&lt;span class="w"&gt; &lt;/span&gt;coreutils&lt;span class="w"&gt; &lt;/span&gt;wget&lt;span class="w"&gt; &lt;/span&gt;optipng&lt;span class="w"&gt; &lt;/span&gt;nasm&lt;span class="w"&gt; &lt;/span&gt;
+$&lt;span class="w"&gt; &lt;/span&gt;brew&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;intltool
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;If it works, you will get the following message:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;-- Configuring done&lt;/span&gt;
+&lt;span class="c1"&gt;-- Generating done&lt;/span&gt;
+&lt;span class="c1"&gt;-- Build files have been written to: /Users/cwliu/Dev@Local/WiAdvance/1603_GoodWox/liblinphone/linphone-iphone/WORK/ios-armv7/cmake&lt;/span&gt;
+&lt;span class="nl"&gt;INFO&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;You&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;can&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;'make'&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;to&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;build&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Make&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;./prepare.py&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;./prepare.py&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;make
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Or build debug version: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;./prepare.py&lt;span class="w"&gt; &lt;/span&gt;-c&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;./prepare.py&lt;span class="w"&gt; &lt;/span&gt;--debug&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;make
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Result&lt;/h3&gt;
+&lt;p&gt;The output will be in &lt;code&gt;liblinphone-sdk&lt;/code&gt; folder&lt;/p&gt;
+&lt;p&gt;&lt;img alt="result" src="https://i.imgur.com/8UZvycf.png"&gt;&lt;/p&gt;</content><category term="ios"></category><category term="iOS"></category></entry><entry><title>Using Haneke for Image Cache in Swift</title><link href="https://blog.codylab.com/ios-haneke/" rel="alternate"></link><published>2016-06-22T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2016-06-22:/ios-haneke/</id><summary type="html">&lt;p&gt;如果要在 iOS 上，圖片是從網路下載回來的話，勢必要需要做快取，以避免每一次顯示都要重新載入，今天要介紹一套叫 &lt;a href="https://github.com/Haneke/HanekeSwift"&gt;Haneke&lt;/a&gt;的 Swift Library， Haneke 是使用 extension 的方法讓 UIImageView 多了一些方法可以做快取。&lt;/p&gt;
+&lt;p&gt;首先， 安裝可以透過 &lt;a href="https://goo.gl/7MiE6l"&gt;CocoPods&lt;/a&gt;，這邊不多詳述。使用之前記得要先 import: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;Haneke&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;如果想顯示一張網路上的圖片: http://i.imgur.com/thfn9Ml.jpg，最簡單用法就是&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;imageView.hnk_setImageFromURL("http://i.imgur.com/thfn9Ml.jpg")
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;它就會幫你做完下載、快取、重載的動作，相當的方便。另外，若想刪除所有的 image ache，可執行: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Haneke.Shared.imageCache.removeAll()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;另外比較進階的用法，像是有一些圖片需要帶 HTTP Header 才有權限存取的話，這邊以加一個 Authorization 的 header 為例，先新增一個自訂的 NetworkFetcher&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;public&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;BearerHeaderNetworkFetcher&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;DataConvertible&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NetworkFetcher&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb nb-Type"&gt;String&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;public&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;override&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NSURLSession&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;let&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;configuration&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NSURLSessionConfiguration&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;defaultSessionConfiguration&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;configuration&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTTPAdditionalHeaders&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="s2"&gt;"Authorization"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NSURLSession&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;configuration&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;configuration&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;override&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;URL&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NSURL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;token …&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;如果要在 iOS 上，圖片是從網路下載回來的話，勢必要需要做快取，以避免每一次顯示都要重新載入，今天要介紹一套叫 &lt;a href="https://github.com/Haneke/HanekeSwift"&gt;Haneke&lt;/a&gt;的 Swift Library， Haneke 是使用 extension 的方法讓 UIImageView 多了一些方法可以做快取。&lt;/p&gt;
+&lt;p&gt;首先， 安裝可以透過 &lt;a href="https://goo.gl/7MiE6l"&gt;CocoPods&lt;/a&gt;，這邊不多詳述。使用之前記得要先 import: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;Haneke&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;如果想顯示一張網路上的圖片: http://i.imgur.com/thfn9Ml.jpg，最簡單用法就是&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;imageView.hnk_setImageFromURL("http://i.imgur.com/thfn9Ml.jpg")
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;它就會幫你做完下載、快取、重載的動作，相當的方便。另外，若想刪除所有的 image ache，可執行: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Haneke.Shared.imageCache.removeAll()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;另外比較進階的用法，像是有一些圖片需要帶 HTTP Header 才有權限存取的話，這邊以加一個 Authorization 的 header 為例，先新增一個自訂的 NetworkFetcher&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;public&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;BearerHeaderNetworkFetcher&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;DataConvertible&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NetworkFetcher&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb nb-Type"&gt;String&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;public&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;override&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NSURLSession&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;let&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;configuration&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NSURLSessionConfiguration&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;defaultSessionConfiguration&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;configuration&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTTPAdditionalHeaders&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="s2"&gt;"Authorization"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NSURLSession&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;configuration&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;configuration&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;override&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;URL&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NSURL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;""&lt;/span&gt;
+
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;super&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;URL&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;URL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;convenience&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;URL&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NSURL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb nb-Type"&gt;String&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;URL&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;URL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;使用的方法就要改呼叫 &lt;code&gt;hnk_setImageFromFetcher()&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;let url = NSURL(string: "https://YOUR_URL")
+let fetcher = BearerHeaderNetworkFetcher&amp;lt;UIImage&amp;gt;(URL: url!, token: token)
+imageView.hnk_setImageFromFetcher(fetcher)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://goo.gl/mthnwA"&gt;Fetch with custom headers · Issue #128 · Haneke/HanekeSwift&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://goo.gl/Y2wP4i"&gt;Haneke/HanekeSwift: A lightweight generic cache for iOS written in Swift with extra love for images.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="ios"></category><category term="iOS"></category></entry><entry><title>在iOS/Swift中使用 liblinphone 函式庫</title><link href="https://blog.codylab.com/ios-liblinphone-setup/" rel="alternate"></link><published>2016-05-12T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2016-05-12:/ios-liblinphone-setup/</id><summary type="html">&lt;p&gt;本文記錄了我在 ios 上面使用 &lt;a href="http://www.linphone.org/technical-corner/liblinphone/overview"&gt;Liblinphone&lt;/a&gt; 的過程。 &lt;/p&gt;
+&lt;p&gt;基於 Github &lt;a href="https://goo.gl/wQX6Zx"&gt;basefx/linphone-swift&lt;/a&gt; 上面的這個專案，&lt;a href="http://goo.gl/P9YHud"&gt;StackOverflow 討論&lt;/a&gt; 為基礎來修改的。另外，我把這篇的結果也放到 github 上面給大家參考: &lt;a href="https://github.com/cwliu/linphone-swift-demo"&gt;https://github.com/cwliu/linphone-swift-demo&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;把 linphone iOS 加入 Swift 的 Project&lt;/h2&gt;
+&lt;p&gt;下載 liblinphone SDK: &lt;a href="http://www.linphone.org/releases/ios/liblinphone-iphone-sdk-latest.zip"&gt;http://www.linphone.org/releases/ios/liblinphone-iphone-sdk-latest.zip&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;解壓縮之後，裡面是一個&lt;code&gt;liblinphone-sdk&lt;/code&gt;的資料夾，把這個資料夾複製到 swift 的專案之中。&lt;/p&gt;
+&lt;h3&gt;新增 objective-c bridging header&lt;/h3&gt;
+&lt;p&gt;因為 liblinphone 是 c 的 library，所以要在 swift 的專案中使用的話，要設定&lt;code&gt;bridging header&lt;/code&gt;。在 &lt;code&gt;Project Navigator&lt;/code&gt;中新增一個 .h Header 設定一個檔名，例如 &lt;code&gt;linphone-swift-demo-Bridging.h&lt;/code&gt;。並在 project setting 的 Build Settings &amp;gt; Swift Compiler - Code Generation 中設定&lt;code&gt;Objective-C Bridging Header&lt;/code&gt;為這個檔案:&lt;/p&gt;
+&lt;p&gt;linphonedemo3/bridge.h&lt;/p&gt;
+&lt;p&gt;&lt;img alt="http://i.imgur.com/N5UbxNy.png" src="http://i.imgur.com/N5UbxNy.png"&gt;&lt;/p&gt;
+&lt;p&gt;在這個檔案中加入以下的內容: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;#import "linphone/lpconfig.h"&lt;/span&gt;
+&lt;span class="c1"&gt;#import "linphone/linphonecore.h …&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;本文記錄了我在 ios 上面使用 &lt;a href="http://www.linphone.org/technical-corner/liblinphone/overview"&gt;Liblinphone&lt;/a&gt; 的過程。 &lt;/p&gt;
+&lt;p&gt;基於 Github &lt;a href="https://goo.gl/wQX6Zx"&gt;basefx/linphone-swift&lt;/a&gt; 上面的這個專案，&lt;a href="http://goo.gl/P9YHud"&gt;StackOverflow 討論&lt;/a&gt; 為基礎來修改的。另外，我把這篇的結果也放到 github 上面給大家參考: &lt;a href="https://github.com/cwliu/linphone-swift-demo"&gt;https://github.com/cwliu/linphone-swift-demo&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;把 linphone iOS 加入 Swift 的 Project&lt;/h2&gt;
+&lt;p&gt;下載 liblinphone SDK: &lt;a href="http://www.linphone.org/releases/ios/liblinphone-iphone-sdk-latest.zip"&gt;http://www.linphone.org/releases/ios/liblinphone-iphone-sdk-latest.zip&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;解壓縮之後，裡面是一個&lt;code&gt;liblinphone-sdk&lt;/code&gt;的資料夾，把這個資料夾複製到 swift 的專案之中。&lt;/p&gt;
+&lt;h3&gt;新增 objective-c bridging header&lt;/h3&gt;
+&lt;p&gt;因為 liblinphone 是 c 的 library，所以要在 swift 的專案中使用的話，要設定&lt;code&gt;bridging header&lt;/code&gt;。在 &lt;code&gt;Project Navigator&lt;/code&gt;中新增一個 .h Header 設定一個檔名，例如 &lt;code&gt;linphone-swift-demo-Bridging.h&lt;/code&gt;。並在 project setting 的 Build Settings &amp;gt; Swift Compiler - Code Generation 中設定&lt;code&gt;Objective-C Bridging Header&lt;/code&gt;為這個檔案:&lt;/p&gt;
+&lt;p&gt;linphonedemo3/bridge.h&lt;/p&gt;
+&lt;p&gt;&lt;img alt="http://i.imgur.com/N5UbxNy.png" src="http://i.imgur.com/N5UbxNy.png"&gt;&lt;/p&gt;
+&lt;p&gt;在這個檔案中加入以下的內容: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;#import "linphone/lpconfig.h"&lt;/span&gt;
+&lt;span class="c1"&gt;#import "linphone/linphonecore.h"&lt;/span&gt;
+&lt;span class="c1"&gt;#import "linphone/linphonecore_utils.h"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;修改 Search Paths:&lt;/h2&gt;
+&lt;p&gt;為了能讓 swift 專案能夠找到這些指定的 *.h header 檔案， 修改 &lt;code&gt;Build Settings &amp;gt; Search Paths&lt;/code&gt;:  &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;User Header Search Path&lt;/code&gt; 加入 $(SRCROOT)/liblinphone-sdk/apple-darwin/include&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img alt="user-header-search-path" src="http://i.imgur.com/WVFWEBC.png"&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;Always Search User Paths&lt;/code&gt; 設為 &lt;code&gt;Yes&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img alt="Always Search User Paths" src="http://i.imgur.com/DY44SuJ.png"&gt;&lt;/p&gt;
+&lt;h3&gt;修改 Linked Frameworks and Libraries&lt;/h3&gt;
+&lt;p&gt;先在程式碼任意的地方呼叫 linphone 的函式，例如加上:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;    linphone_core_set_log_file(nil)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這時侯就可以先嘗試 Build看看，會發生很多 Error，這是正常的，會發生很多 &lt;code&gt;Undefined symbols for architecture&lt;/code&gt;，要解決這個問題。&lt;/p&gt;
+&lt;p&gt;到 Project 設定頁中的 &lt;code&gt;General &amp;gt; Linked Frameworks and Libraries&lt;/code&gt;，點選左下角的 &lt;code&gt;+&lt;/code&gt; 鍵 ，點選&lt;code&gt;Add Other...&lt;/code&gt;。先把 &lt;code&gt;liblinphone-sdk/apple-darwin/lib&lt;/code&gt; 跟 &lt;code&gt;linphone-trial/liblinphone-sdk/apple-darwin/lib/mediastreamer&lt;/code&gt; 這兩個資料夾中的所有 &lt;em&gt;.a static library 檔加入。另外再加入以下的 &lt;/em&gt;.tbd 檔跟 Framework:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Link Binary With Libraries" src="http://i.imgur.com/KMajEVv.png"&gt;&lt;/p&gt;
+&lt;h2&gt;設定 linphonerc config&lt;/h2&gt;
+&lt;p&gt;把 linphonerc、linphonerc-factory 這兩個檔案加到 project navigation 中，
+linphonerc 跟 linphonerc-factory 的內容可參考&lt;a href="https://github.com/basefx/linphone-swift/blob/master/linphonerc"&gt;這裡&lt;/a&gt;跟&lt;a href="https://github.com/basefx/linphone-swift/blob/master/linphonerc-factory"&gt;這裡&lt;/a&gt;。&lt;/p&gt;
+&lt;h2&gt;執行&lt;/h2&gt;
+&lt;p&gt;liblinphone 的使用方法這邊就先不多談，可參考: &lt;a href="https://github.com/cwliu/linphone-swift-demo/blob/master/linphone-trial/LinphoneManager.swift"&gt;LinphoneManager.swift&lt;/a&gt;，裡面有示範要如何撥打電話、接聽電話跟使用 call back 來得知 liblinphone 的一些狀態，像是註冊是否成功或是失敗等等。&lt;/p&gt;
+&lt;h2&gt;結論&lt;/h2&gt;
+&lt;p&gt;liblinphone 基本上可以直接使用 swift 開發是沒問題的，只要透過 bridging header 檔案即可使用。只是過程中可能會用到&lt;code&gt;COpaquePointer&lt;/code&gt;來跟 linphone 物件溝通就是了。&lt;/p&gt;
+&lt;h2&gt;更多&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://goo.gl/laUtPf"&gt;Liblinphone in C 官方文件&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://goo.gl/hCahBO"&gt;Liblinphone 整合步驟討論&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://goo.gl/YVKuRP"&gt;Linphone-iOS-移植 - 简书&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://goo.gl/v1gOHn"&gt;官方 linphone-iphone github &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="ios"></category><category term="iOS"></category></entry></feed>

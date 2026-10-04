@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cody Blog - Articles by Cody Liu</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/ssh-port-forwarding/">SSH Tunnel</a>
+      </h1>
+      <p class="meta"><time datetime="2014-05-09T00:00:00+08:00" pubdate>2014 May 09 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>使 ssh 遠端連線的人很多, 但是 ssh 這個指令其實還有一些很有趣的tunnel用法，可以讓你擺脫一些限制。這邊稍微筆記一下:</p>
+<h2>Local port forwarding</h2>
+<p>在本地端開一個 port，然後 remote machine 會把封包轉送到指定的位置:</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>-L<span class="w"> </span>&lt;local_port&gt;:&lt;target_host&gt;:&lt;target_port&gt;<span class="w"> </span>remote_user@remote_host
+</code></pre></div>
+
+<p>例如本地端防火牆只有開 <code>22</code> port, 而封鎖了<code>8080</code> port, 此時可以透過 local port forward 的方式，達到連線到遠端 8080 port。</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">1234</span>:localhost:8080<span class="w"> </span>cwliu@118.100.100.1
+</code></pre></div>
+
+<p>這時連到 localhost:1234，就相當於連線到 118.100.100.1:8080，避開防火牆的效果</p>
+<!--
+    ssh -L 1234:proxy.ntu.edu.tw:3128 name@xxx.ntu.edu.tw
+-->
+
+<h2>Remote port forwarding (Reverse SSH)</h2>
+<p>這邊的<code>-R</code>代表的是 remote 之意，直接舉個例子</p>
+<div class="highlight"><pre><span></span><code>ssh<span class="w"> </span>-R<span class="w"> </span><span class="m">5900</span>:localhost:22<span class="w"> </span>guest@remote-pc
+</code></pre></div>
+
+<p>在遠端 <code>remote-pc</code> 會開一個 5900 port，其流量會導到 localhost 的 22 port。實際的應用是當 local machine 沒有固定 IP 的時侯，可以先建立好此 ssh 連線。就可以讓遠端機器透過 localhost:5900 直接連線回local。</p>
+<h2>SOCKS …</h2></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/ssh-port-forwarding/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/vmware-nested-esxi-promiscuous/">解決 Geust VM 在 Nested ESXi 網路無法連外的問題</a>
+      </h1>
+      <p class="meta"><time datetime="2014-05-06T00:00:00+08:00" pubdate>2014 May 06 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p>我遇到的情況是在 Ubuntu 13.10 上面安裝 VMware Workstation，在上面安裝了 ESXi 5.5。ESXi 上面的網路是使用 NAT，但是在 ESXi 上面的 VM 卻沒辦法連外 。這邊記錄一下解決的過程，簡單的說: ESXi上的 vSwtich 需要開啟<strong>promiscuous mode</strong>，然後 ，normal user 需要<strong>有權限</strong>寫入 /dev/vmnet</p>
+<h2>Promiscuous 是什麼呢？</h2>
+<p>在一般的 swtich 設計之下，預設是流通的frame只收到收件者自己的。但是這在 Nested VM 上面會有一些問題，因為 Guest VM 上面的 Mac address 跟 ESXi VM Mac adddress 不同，所以除非 ESXi 能收到 Guest VM 的 frame，不然像是外部的 DHCP 等等協定就沒辦法跟裡面的 VM 互動。而開啟 Promiscuous mode 之後，VM 就會收到其它 interface 的　frame。ESXi 就可以把需要傳送給自己肚子裡面的 VM 按照 vSwitch 的設定轉送過去。而 Promiscuous mode　可以在 ESXi 裡面的 vSwitch/Port group 安全性設定找到。在 5.5.0 一共有三個設定: </p>
+<ul>
+<li><code>Promiscuous mode …</code></li></ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/vmware-nested-esxi-promiscuous/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/gtd-discardit-danshari/">《斷捨離》 筆記</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-22T00:00:00+08:00" pubdate>2014 January 22 Wed</time></p>
+</header>
+
+  <div class="entry-content"><p><img alt="斷捨離封面" src="https://lh6.googleusercontent.com/31A_VgHhnLUCXKapSF0RTgOdb8rm12F3YuDFrwR1VOib=w367-h519-no">  </p>
+<ul>
+<li>「斷」: 斷絕不需要的東西</li>
+<li>「捨」: 捨去多餘的廢物</li>
+<li>「離」: 脫離對物品的執著</li>
+</ul>
+<p><img alt="斷捨離" src="https://lh6.googleusercontent.com/-2Yhk_dYMHKM/Ut_bqPH_SrI/AAAAAAAFHv0/adQDGWbpgTc/w600"></p>
+<p>從做<strong>斷</strong>和<strong>捨</strong>以達成<strong>離</strong>的狀態</p>
+<ul>
+<li>選擇物品的訣竅是思考<strong>用得到</strong>。因為<strong>用得到</strong>才有價值，而非<strong>可以用</strong></li>
+</ul>
+<h2>「三分法則」</h2>
+<p><img alt="三分" src="https://lh3.googleusercontent.com/-Zk4ZlZmDKKg/Ut_u-vBA6YI/AAAAAAAFHwI/dMzn0adH7ME/w600"></p>
+<p>東西一開始可以先分成三類，像是餐具，器具跟食材。針對每個分類再做三分法，餐具就可以分成「盤子」、「容器」、「飲料容器」</p>
+<h2>7 5 1 「總量規制法則」</h2>
+<p><img alt="751" src="https://lh5.googleusercontent.com/-nzAVktv3QJ0/Ut_u-uZf2rI/AAAAAAAFHwM/VFGQ7r2Im_w/w600"></p>
+<ul>
+<li>看不見的收納只能放滿<strong>七</strong>成</li>
+<li>看不見的收納只能放滿<strong>五</strong>成(餐具櫃)</li>
+<li>展示收納只能放<strong>一</strong>成</li>
+</ul>
+<p>利用總量限制來挑選自己最喜愛的物品</p>
+<blockquote>
+<p>物品要使用才有價值 - 斷</p>
+<p>物品在此刻需要它的地方才有用處 - 捨</p>
+<p>物品要適得其所才顯美麗 - 離</p>
+</blockquote></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/gtd-discardit-danshari/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/ubuntu-pidgin-ms-office-communicator/">Using Microsoft communicator in Ubuntu with pidgin-sipe plugin</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-21T00:00:00+08:00" pubdate>2014 January 21 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p>We can install <code>pidgin-sipe</code> to use Microsoft communicator in Ubuntu. Here are the steps:</p>
+<ol>
+<li>Install sipe plugin</li>
+</ol>
+<p>sudo apt-get install pidgin-sipe</p>
+<ol>
+<li>Add account with the new "Office Communicator" type</li>
+</ol>
+<!--
+- How to Disable Pidgin Notifications in Ubuntu - How-To Geek - http://goo.gl/ffZFN
+- How to Enable Tray Icon : unity - How do I enable the pidgin system tray icon? - Ask Ubuntu - http://goo.gl/YCwDe
+--></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/ubuntu-pidgin-ms-office-communicator/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/running-marathon-heart-rate/">馬拉松心率訓練筆記</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-20T00:00:00+08:00" pubdate>2014 January 20 Mon</time></p>
+</header>
+
+  <div class="entry-content"><h2>心率訓練</h2>
+<p>心跳頻率是身體疲憊情況的重要參考指標。在訓練的時侯，我們可以依照當下的心跳數來決定是否要加速或是放慢速度。另外在<a href="http://www.mr-sport.com.tw/product-test/heart-rate.html">司博特</a>也有提到: </p>
+<blockquote>
+<p>專業的運動員可以透過早晨的靜止心跳，來觀察自己的身體是否有恢復，假設身體狀況良好時，靜止心跳率約為每分鐘60下，在某次高強度的訓練後，隔天早上睡醒心跳達70下，則代表昨天的疲勞還未完全恢復，今日的練習強度應降低。</p>
+</blockquote>
+<p>可以知道心率是一個用來決定當下可承受的運動量重要指標。</p>
+<h3>最高心跳</h3>
+<p>一個人的最高心跳會隨者年紀遞減，一個最簡單的概略<a href="http://thewalkingsite.com/thr.html">算法</a>如下:</p>
+<blockquote>
+<p>最高心跳 = 220 - 年紀</p>
+</blockquote>
+<p>如果以一個三十歲的成人來說，他最高心跳約略為 <strong>190</strong></p>
+<h3>心跳區間</h3>
+<table>
+<thead>
+<tr>
+<th>訓練區間</th>
+<th>心跳區間</th>
+<th>脂肪/卡路里</th>
+<th>心跳(30歲)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Healthy Heart Zone (Warm up/Cool down)</td>
+<td>50~60%</td>
+<td>85%</td>
+<td>95~114</td>
+</tr>
+<tr>
+<td>Fitness Zone (Fat Burning)</td>
+<td>60~70%</td>
+<td>85%</td>
+<td>114~133</td>
+</tr>
+<tr>
+<td>Aerobic Zone (Endurance Training)</td>
+<td>70~80%</td>
+<td>50%</td>
+<td>133~152</td>
+</tr>
+<tr>
+<td>Anaerobic Zone (Performance Training)</td>
+<td>80~90%</td>
+<td>15%</td>
+<td>152~171</td>
+</tr>
+<tr>
+<td>Red Line (Maximum Effort)</td>
+<td>90~100%</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Healthy Heart Zone: 暖身用的區間</li>
+<li>Fitness Zone : 這個區間有最高的瘦身效率，消耗的卡路里有85%來自脂肪</li>
+<li>Aerobic Zone (Endurance Training): 練習心肺耐力的區間</li>
+<li>Anaerobic Zone: 增進 …</li></ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/running-marathon-heart-rate/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/rdss-control-cancellation/">研發替代役出國管制章註銷流程</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-17T00:00:00+08:00" pubdate>2014 January 17 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>聽說役期期滿了不註銷護照上<code>持照人出國應經核準</code>也可以順利出國。像我就比較不放心，還是親自跑一趟外交部領事事務局，把這個章註銷掉。</p>
+<h2>需要準備的證件</h2>
+<ol>
+<li>身分證正本</li>
+<li>護照正本</li>
+<li>退役證明正本</li>
+</ol>
+<h2>流程</h2>
+<p>我是在台北領事局辦的。先搭電扶梯到三樓，右轉走到底就可以看到內政部的櫃台。把<code>身分證</code>、<code>護照</code>、<code>退役證明</code>交給櫃台人員之後，他會在上面蓋章，如圖:</p>
+<p><img alt="兵役管制註銷" src="https://lh5.googleusercontent.com/7KP5UWkWG_0ncYv6U8gPKUsqgc7tL1eFsu6TcJyrMytV=w329-h186-p-no"></p>
+<p>接下來會給你一張變更通知書:</p>
+<p><img alt="變更通知書" src="https://lh6.googleusercontent.com/-zS84CDVuRHY/Utj1HHmebSI/AAAAAAAFHpw/RSp6fGw_Zxs/w500/IMAG0957.jpg"></p>
+<p>然後會請你到旁邊的影印機列印，1張1元。先投錢再列印，需要列印的資料有: </p>
+<ol>
+<li>護照大頭照頁二張</li>
+<li>護照最後一頁被蓋章的那頁二張</li>
+<li>退役證明二張</li>
+</ol>
+<p>把列印好的護照貼到變更通知書，把護照大頭內頁貼在上面，註銷頁貼在下面。最後再交回給內政部的櫃台就完成全部的手續了。</p>
+<p>--</p>
+<h3>外交部領事事務局:</h3>
+<ul>
+<li>台北市中正區濟南路1段2之2號3~5樓</li>
+<li>服務時間:週一至週五 上午：08：30 — 下午：17：00 (中午不休息)(週六、週日及國定假日不上班)</li>
+</ul>
+<h3>Reference</h3>
+<ul>
+<li><a href="https://www.ptt.cc/bbs/RDSS/M.1344833404.A.DB9.html">[資訊] 期滿後的護照註銷戳記處理流程 - 看板 DIRDS - 批踢踢實業坊</a></li>
+</ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/rdss-control-cancellation/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/startup-of-you/">人生是永遠的測試版(The Start-up of You) 閱讀筆記</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-07T00:00:00+08:00" pubdate>2014 January 07 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p><img alt="img" src="https://lh4.googleusercontent.com/-Bol1iv3l7uA/UswURCaTcFI/AAAAAAAFHo8/82QC2OmEy24/w560-h310-no/The-Start-up-of-you-Reid-Hoffman-Ben-Casnocha.jpg"></p>
+<ul>
+<li>精進專業技能是自己的責任，而不是雇主</li>
+<li>創業通常是在資訊相對匱乏，時間緊迫、資源受限的條件下做決定...跟我們每個人經營的職業生涯所面臨的情境非常相似</li>
+<li>創業精神是人生理念</li>
+<li>底特律汽車業的崩解:摧毀那曾經輝煌的城市與產業的改變力量，也可能摧毀你我的職業生涯</li>
+<li>矽谷模式:這些公司不只提供了企業創新模式，也提供個人生涯成功所需的創新思維</li>
+<li>每個人應該把「完成」當成禁忌字眼，我們都是「在製品」(work-in-process)</li>
+<li>創業家生存的基本要件，就是要比競爭對手優秀</li>
+<li>創業家的關鍵不在於創業，而是世界觀: 在別人看到阻礙時，發現機會; 在別人避險時，勇於冒險 by 紐約市長 麥可. 彭博</li>
+<li>去可以迅速成長的地方: 因為迅速成長才能創造各種機會</li>
+<li>關鍵在於提高你巧遇重要人事物的機率</li>
+<li>要找機會前，要先找人</li>
+</ul>
+<h2>競爭優勢</h2>
+<ul>
+<li>自己的<strong>競爭優勢</strong>是職涯策略的發展基礎，幫你決定該追求什麼機會，也指引你該如何投資自己</li>
+<li>無論需求是什麼，除非你對那件事有熱情又很擅長，否則都不會有競爭優勢</li>
+<li>競爭優勢主要包含三個部份: 1.資產 2.抱負與價值觀 3.市場實際狀況</li>
+</ul>
+<h3>1.資產</h3>
+<h4>硬性資產</h4>
+<p>錢、股票、家當等等。這很重要，因為有錢可以讓你投入財務風險較大的行動，像是辭職不工作半年，專心投入新技能的學習。</p>
+<h4>軟性資產</h4>
+<p>知識，人脈，聲譽等等。
+幫你記得自己有多少無形軟性資產的最好方法就是去參加社交活動。通常你是在遇到別人覺得很難，但是你覺得很簡單的挑戰時，才發現你擁有寶貴的軟性資產。</p>
+<ul>
+<li>想辦法強化自己的資產組合 </li>
+<li>單一資產通常沒有太大的價值，當你結合不同的技能、經驗和人脈時、競爭優勢才會顯視</li>
+</ul>
+<h3>2.抱負與價值觀</h3>
+<p>抱負和價值觀是生涯競爭優勢極重要的一環，因為當你在做<strong>自己在乎</strong>的事情時，不但會更努力，也能做得更好</p>
+<h3>3.市場實際狀況</h3>
+<ul>
+<li>無論產品的外型和功能有多炫，顧客不想要或不需要的產品就是無法賺錢。像是Segway代步車。</li>
+<li>不在乎的市場，才不在乎你有多聰明 by 創投家 Marc Andresssen</li>
+<li>所有專業人士及職業生涯的成敗，就看雇主、顧客或合夥人<strong>願不願意買你的時間</strong></li>
+</ul>
+<h2>改寫生涯的方程式: ABZ計畫 …</h2></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/startup-of-you/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/angryip/">Angry IP Scaner</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
+</header>
+
+  <div class="entry-content"><p><a href="http://goo.gl/IuL9XL">Angry IP Scanner</a> 是一套好用的 IP Scanner 軟體，支援: Windows, Mac or Linux: </p>
+<p><img alt="gui" src="http://i.imgur.com/ofZVNix.png"></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/angryip/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/aws-apply-elastic-ip/">How to apply elastic IP more than 5</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
+</header>
+
+  <div class="entry-content"><h1>Apply Elastic IP</h1>
+<p>By default, for every ec2 account, you could only have 5 elastic IPs. However, if you want more, you can submit a here:</p>
+<h2><a href="https://aws.amazon.com/support/createCase?serviceLimitIncreaseType=sns-limits&amp;type=service_limit_increase&amp;isauthcode=true&amp;code=NzA0MmA8ZgMbK5ypdITUAVlCcKcssRxI9Wi6d0OMbo2KgAoPgFh2PO71QfZ_3WZDGYpLsjaBV9vo4JGJGMjT2fYpIj3KrMAPQO5YAungthpY0GN4G-_TSASmFfrT86jtL-7AMBQ8Vu-gIzHpXyKUL2TZrN5G3qtC6W9FlwM3verh5XU_21ibQchtcz2hmWHUYbYYNha9BjMPVGA-E9_O63V0ym4cAVq7Un1rFlRjXAm1LdATMWL-WQRi3QD8zRNkT9f6r3w_eJuGap_4GkTUIEECmKjnuX74_kA9LkyM5DZ0B9L1QS8z-vo4ZJI-Wd42hQ2ye0P0nkCjVkuc162eomJ9A1pIE7qAbim1-viPrB5jgPO2m3RaNUZbMZhn6J_Tl3Eay62iCTt50gVU1ziYZmguP4TlBnzUkEUw5DVdaOj3SvIZqEmwHxsr88849zuV63HAFWvvuQ2YQ6XbISJPWoC0UJ3qAbyZtP_Wn0IUGlLJtiz44PzA1IpQxSNdwIicjKHfXbRg71GCMdxo2A-nEINL3NW03_lY9Yw4vtruVn_1g7h3Ruvmt1JXVqo4evMTpPRIgpNTOAxyG38R35DOLO-sAj9fiioT_Fn_SB2nkdpF7rPCVv3nDAVy1AgN7aotIvBOYZT7pyUjb635VBjhSjICIX8XBzwwBA0U-VwZ9Da86bzV9Xiek48RMZ4L-diWOEoyEHESRS7KnIFuL1TjpQXup8_afLzVBZPIaijUHtGiOAk6lTAT1t72tay8slkfiuR2eGoxiZOOpo6_Om3BsZ2N-yiIqPlW9OkCdrgnpWHIJmUsNPoZp33JuEKj5R44OOeErhNeuK7TlE5FKcBT72hQPtk2x6DmEVsEZbVuRFnlQMj5lSXZoBQO_KYMtmcBiG_95iGIAIsAn7xpN2H922B9PVVC00dZ9bUSCmolLPtUA2f-cNuZDbv278nM_gDvPXcyUr-XFGBZzjJZsE8cfmXlJh5TbcWQ82HOh7a_CONoqV2goBIPZzzGhYxhUzfGAM4LtNEb5CzSRUUGJuWZfwwd3fyyYmDxYgTIlmckzxjPcQhY1fflAmOWx538cHjTHVaf_7JV55P1CLba8_iYakDuq6fn_R4gqIqjy_s6nik5R1r-tBdZcSHgf_WkaXYD1Smii8U7K7TV61-xP8WKOBzxRUMWbdyyv_10oA">Submit a Case</a></h2>
+<p><img alt="screen" src="https://i.imgur.com/orK0T9n.png"></p>
+<!-- # SSH 連線進 Instance
+
+In ubuntu
+
+    chmod 400 my-pem-file.pem
+    ssh -i my-pem-file.pem ubuntu@my-instance-address
+
+Others
+
+    ssh -i my-pem-file.pem ec2-user@my-instance-address
+
+使用 Password SSH 連線進 Instance 可參考: [Enable Password SSH Access to your Amazon EC2 Linux Instance « Ben's Notepad](http://bensnotepad.com/enable-password-access-to-your-amazon-ec2-linux-instance/)
+--></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/aws-apply-elastic-ip/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/bug-report/">如何寫 Bug Report</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
+</header>
+
+  <div class="entry-content"><p>一個好的 Bug Report 應該要提供明確的資訊，可以讓 Developer 快速重視問題，減少分析問題的成本。而管理階層的人從報告可了解問題的嚴重性，進而決定解決這個Bug時間表。</p>
+<h2>Bug Report 應該要有的欄位</h2>
+<ol>
+<li>標題 <br>
+說明要明確，直指問題核心，說明問題發生的模組    </li>
+</ol>
+<p><strong>不好的標題</strong>: 照片無法上傳 <br>
+<strong>比較好的標題</strong>: 當照片尺寸大於10MB，手機無法使用自動上傳照片</p>
+<ol>
+<li>
+<p>問題重現步驟(Steps to reproduce)  <br>
+除了要找出可以重視問題的Steps之外，還要盡量縮小(narrow down)步驟，找出重現問題的關鍵步驟。通常最後一步會寫"預期的結果"(expected result)，實際發生的結果有什麼不同。   </p>
+<ol>
+<li>安裝 APP</li>
+<li>使用 Google 帳號登入</li>
+<li>點選登入按鈕 <br>
+預期結果: 登入成功，進入活動列表  <br>
+實際結果: 登入失敗，出現伺服器連接錯誤    </li>
+</ol>
+</li>
+<li>
+<p>嚴重性  <br>
+<em>Blocker</em>: 產生無法使用，要<em>立即</em>解決，像是產品無法安裝 <br>
+<em>Criticl</em>: 嚴重的問題，需要儘早解決 <br>
+<em>Major</em>: 重要的問題，需要在產品上線前解決 <br>
+<em>Minor</em>: 次要的問題，不一定要解決，有列入已知問題(kownn Issue)的空間 <br>
+<em>Trival</em>: 不直接影響使用者使用，像是打錯字，等等   </p>
+</li>
+<li>
+<p>問題發生的版本號   </p>
+</li>
+<li>
+<p>發生的頻率 <br>
+每次/常常/偶爾/很少</p>
+</li>
+<li>
+<p>附件: 錯誤畫面的截圖，相關Log檔案以及任何可以幫助分析問題的檔案</p>
+</li>
+</ol>
+<h3>一些原則</h3>
+<ol>
+<li>如果測試一次發現多個問題，不要把多個 bug 寫在同一筆issue裡，分開一筆一筆記錄，這樣才可以獨立被解決跟驗證(Verify)</li>
+<li>確認這個 bug 是否已經記錄過了？ 不要重覆發。</li>
+</ol>
+<h3>Bug Workflow</h3>
+<p>這是一張在網路上找到一個比較簡單的 bug workflow </p>
+<p><img alt="img" src="https://lh6.googleusercontent.com/-UHiozVdot50/U_MLiVr5MQI/AAAAAAAFNNM/0v8oFN4oTqg/w1280-h1124-no/flow-chart-new.gif"></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/bug-report/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+    <a class="prev" href="https://blog.codylab.com/author/cody-liu7.html">&larr; Older</a>
+
+    <a class="next" href="https://blog.codylab.com/author/cody-liu5.html">Newer &rarr;</a>
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

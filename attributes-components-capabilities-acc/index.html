@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>使用 Attributes-Components-Capabilities(ACC) 來制定敏捷測試計劃</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">使用 Attributes-Components-Capabilities(ACC) 來制定敏捷測試計劃</h1>
+      <p class="meta"><time datetime="2012-08-28T15:12:00+08:00" pubdate>2012 August 28 Tue</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><p>這套方法是記錄在<a href="http://www.amazon.com/Google-Tests-Software-James-Whittaker/dp/0321803027">《How Google Tests Software》</a> 一書之中，我覺得蠻不錯的，分享一下︰</p>
+<p>Attributes-Components-Capabilities(ACC) 是Google團隊使用的測試建模的方法，可以視為快速譔寫 Test Plan 的一種方式。據 Jame Whittaker 的講法，一份ACC的完成時間約為 10~30 分鐘，如果達不到，代表自己對於要測的系統不夠了解。</p>
+<p>目前 Google 己經把這個方法實現在 Google Test Analytics (GTA) 這套系統之上，更棒的是 GTA 目前己經 Open Source 出來了，而且有一個公開的<a href="https://test-analytics.appspot.com/">沙箱網站</a>，任何人都可以上去快速體驗一下ACC的魅力。</p>
+<h2>ACC 內容</h2>
+<p>ACC主要的內容就是依照產品的 <code>Attribute</code>(特性), <code>Component</code>(元件), <code>Capability</code> (能力) 的三者，分別依照順序，一步一步來分析我們到底要測什麼，該測什麼，什麼要先測等等問題。下面分別介紹ACC三者的意義︰</p>
+<ol>
+<li>
+<p>Attributes: 產品的特色，是產品的<strong>形容詞</strong>。例如︰快，安全，穩定，好用。這個清單說明為什麼顧客要用我們的產品，而不是其它的競爭者的。</p>
+</li>
+<li>
+<p>Components: 產品的元件，是產品的<strong>名詞</strong>。例如︰資料庫，通知系統，使用者..等等。這個清單列舉出整個系統中的元件，約10個左右為宜。</p>
+</li>
+<li>
+<p>Capability: 產品的功能，是產品的<strong>動詞</strong>。例如︰分享照片給朋友，新增好友，收到朋友訊息通知。</p>
+</li>
+</ol>
+<p>關於 Attribute 跟 Componet，這邊書中是舉Google+為例︰</p>
+<h3>Attribute :</h3>
+<ul>
+<li>Social: Empowers users to share information and what they’re up to.</li>
+<li>Expressive: User can express themselves through the features</li>
+<li>Easy: Intuitive. Easy to figure out how to do what you want to do</li>
+<li>Relevant: Show only information the user care about</li>
+<li>Extensible: Capable of integrating with Google properties and third-party site and application </li>
+<li>Private: User’s data won’t be shared.</li>
+</ul>
+<h3>Components :</h3>
+<ul>
+<li>Profile: Information and preferences for the logged in user</li>
+<li>People: Profiles that the user has connected with.</li>
+<li>Stream: A ranked stream of posts, comments, notifications, photos, and so on.</li>
+<li>Circles: Groups to put contacts into “friends”,”coworkers”, and so on.</li>
+<li>Notifications: Indicators for when you are mentioned in a post </li>
+<li>Interest or +1: Indication for user likes</li>
+<li>Posts: Buzz posts from the users and their contacts</li>
+<li>Comments: Comments on posts, photos, videos, and so on</li>
+<li>Photo: Photos uploaded by the users and their contacts</li>
+</ul>
+<p>當有了Attributes跟Components之後，接下來就是列出目前系統所所擁的功能。而這邊強調的是，每一個功能背後一定要找了一個而且是唯一一個的Attribute，來代表這個功能所要達到的目的。</p>
+<h3>Capabilities:</h3>
+<p>每一個Capability，說明了一個Compoent產生的動作如何達成一個Attribute，也就是Capability是讓Component跟Attribute產生連結。 所以ACC方法的流程就是我們先想 Attribute，然後再找 Components，最後再依照現有的 Capability 功能來找出對應的 Attribute 跟 Components 分別是什麼。</p>
+<p>在 Google 的ACC中，我們可以產生一個二維的表格。來展現Capability，以Google+為例，在此簡化表格，內容是依照目前Google+的功能列舉出來的︰</p>
+<p>|  Social | Easy  | Private
+----------|---------|-------|-------|
+Profile|分享給朋友自己的個資| 很容易更新自己的個資| 用户可以保密隱私個資
+People|使用者可以連結其它使用者   |     容易管理好友  |  用戶可以保密交友圈資料
+Photos|1.使用者可以分享照片給其它使用者2.照片可以加上其它使用者的資訊  |  1. 容易上傳照片 2. 容易從別的來源匯入照片 | 照片只給有權限的人公布</p>
+<p>橫軸是 Attribute，緃軸是 Compoent，而格子裡面就是 Capability </p>
+<p>基本上這個表格產生出來之後，基本上就完成了大部份的內容。接下來可以直接針對每一個Capability使用不同的測試案例設計方法來產生測試案例。另外也可以拿來做 Risk Analysis。</p>
+<h2>Risk analysis</h2>
+<p>在GTA中，Risk 由兩個因素組成︰Frequency of Failure 跟 Impact 兩者組成。每個 Capability 都可以自己設定該項目的掛掉機率跟掛掉影響。最後就可以產生一個 Risk Heat Map，這邊是我自己在網站上練習的結果，這可以讓我們知道那些Capability是最重要的，可以先開始測試。</p>
+<h2>ACC使用要點</h2>
+<ul>
+<li>要隨時更新，反應最新的現況</li>
+<li>要精準表達使用者到底想要什麼</li>
+<li>讓測試的重點（風險) 可以借由 Heat map來展現</li>
+</ul>
+<p>ACC可以視為一種Agile style的Test Plan設計方案，制定速度快，可做風險分析，是測試案例設計的一個好的起點。有現成OpenSource的系統︰GTA，可直接放到Google App Engine上使用。</p>
+<h3>延伸閱讀 :</h3>
+<ul>
+<li><a href="http://googletesting.blogspot.tw/2011/09/10-minute-test-plan.html">The 10 Minute Test Planby James Whittaker</a></li>
+<li><a href="http://www.cnblogs.com/liangshi/archive/2012/04/23/2465897.html">测试建模：Google ACC - liangshi - 博客园</a></li>
+</ul></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2012-08-28T15:12:00+08:00" pubdate>2012 August 28 Tue</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/google.html">google</a>
+    <a class="category" href="https://blog.codylab.com/tag/agile.html">agile</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+  <section>
+    <h1>Related Posts</h1>
+    <ul>
+      <li><a href="https://blog.codylab.com/how-google-test/">How Google Tests Software ?</a></li>
+      <li><a href="https://blog.codylab.com/continuous-delivery/">Continuous Delivery 持續交付 @ Agile Taichung 2015/9</a></li>
+      <li><a href="https://blog.codylab.com/automation-pyramid/">自動化軟體測試的金字塔</a></li>
+      <li><a href="https://blog.codylab.com/pretotype/">Pretotype - 把事情做對之前， 確保做了對的事</a></li>
+      <li><a href="https://blog.codylab.com/install-jenkins-on-centos-6/">Install Jenkins on CentOS 6.3</a></li>
+    </ul>
+  <section>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/attributes-components-capabilities-acc/';
+          var disqus_url = 'https://blog.codylab.com/attributes-components-capabilities-acc/';
+          var disqus_title = '使用 Attributes-Components-Capabilities(ACC) 來制定敏捷測試計劃';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

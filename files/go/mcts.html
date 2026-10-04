@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCTS 互動演示</title>
+<style>
+  :root {
+    --ink: #222;
+    --muted: #666;
+    --line: #ddd;
+    --accent: #2b6cb0;
+    --x: #2b6cb0;
+    --o: #c05621;
+    --grid: #555;
+    --select: #2b6cb0;
+    --expand: #6b46c1;
+    --simulate: #b7791f;
+    --backprop: #2f855a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 12px;
+    background: #fff;
+    color: var(--ink);
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 12px; }
+  .board-col { flex: 1 1 220px; max-width: 300px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .side-col { flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+  .full { flex: 1 1 100%; min-width: 0; }
+  .half { flex: 1 1 300px; min-width: 0; }
+  svg { width: 100%; height: auto; display: block; touch-action: manipulation; user-select: none; }
+  fieldset { border: 1px solid var(--line); border-radius: 8px; margin: 0; padding: 8px 10px 10px; min-width: 0; }
+  legend { font-size: 13px; color: var(--muted); padding: 0 4px; }
+  .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  button {
+    font: inherit; font-size: 14px; padding: 4px 10px; border: 1px solid #bbb; border-radius: 6px;
+    background: #f7f7f7; color: var(--ink); cursor: pointer;
+  }
+  button:hover { background: #eee; }
+  button:disabled { opacity: .45; cursor: default; background: #f7f7f7; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { background: #245a93; }
+  input[type=range] { flex: 1; min-width: 80px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .stats { font-variant-numeric: tabular-nums; }
+  .status { font-weight: 600; text-align: center; }
+  .chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 4px; margin-bottom: 8px; }
+  .chip {
+    text-align: center; font-size: 12px; padding: 3px 0; border-radius: 4px;
+    background: #f0f0f0; color: #888; border: 1px solid transparent; white-space: nowrap;
+  }
+  .chip.on { color: #fff; font-weight: 600; }
+  .chip[data-phase=select].on { background: var(--select); }
+  .chip[data-phase=expand].on { background: var(--expand); }
+  .chip[data-phase=simulate].on { background: var(--simulate); }
+  .chip[data-phase=backprop].on { background: var(--backprop); }
+  #phase { font-size: 14px; min-height: 9em; }
+  #phase h4 { margin: 0 0 4px; font-size: 15px; }
+  #phase ol, #phase ul { margin: 4px 0; padding-left: 1.4em; }
+  #phase li { margin: 1px 0; }
+  .num { font-variant-numeric: tabular-nums; }
+  #tree .node { cursor: pointer; }
+  #tree text { pointer-events: none; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; margin-top: 6px; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -1px; margin-right: 3px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 2px 4px; text-align: right; border-bottom: 1px solid #eee; white-space: nowrap; }
+  th { color: var(--muted); font-weight: normal; }
+  th:first-child, td:first-child { text-align: left; }
+  tr.pick td { background: #ebf4ff; }
+  #inspectHead { font-size: 14px; margin-bottom: 4px; }
+  .linkish { border: 0; background: none; padding: 0; color: var(--accent); font-size: 13px; text-decoration: underline; }
+  .linkish:hover { background: none; }
+  .mx { color: var(--x); font-weight: 600; }
+  .mo { color: var(--o); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="board-col">
+    <svg id="board" viewBox="0 0 240 240" role="img" aria-label="井字棋棋盤"></svg>
+    <div class="status" id="status"></div>
+    <div class="muted" id="boardNote" style="text-align:center;min-height:2.6em"></div>
+  </div>
+
+  <div class="side-col">
+    <fieldset>
+      <legend>模擬</legend>
+      <div class="chips">
+        <div class="chip" data-phase="select">① Selection</div>
+        <div class="chip" data-phase="expand">② Expansion</div>
+        <div class="chip" data-phase="simulate">③ Simulation</div>
+        <div class="chip" data-phase="backprop">④ Backprop</div>
+      </div>
+      <div class="row">
+        <button id="next" class="primary">下一步</button>
+        <button id="finish">完成這次</button>
+        <button id="play">▶ 自動</button>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <span class="muted">速度</span>
+        <input type="range" id="speed" min="1" max="10" value="5" aria-label="自動播放速度">
+      </div>
+      <div class="row" style="margin-top:6px">
+        <span class="muted">快轉</span>
+        <button data-batch="10">+10</button>
+        <button data-batch="100">+100</button>
+        <button data-batch="1000">+1000</button>
+        <button id="reset">重設搜尋</button>
+      </div>
+      <div class="stats muted" id="stats" style="margin-top:6px"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>探索常數 c</legend>
+      <div class="row">
+        <input type="range" id="c" min="0" max="3" step="0.05" value="1.41" aria-label="探索常數 c">
+        <span class="num" id="cVal" style="width:3em;text-align:right"></span>
+        <button id="cDefault" class="linkish">√2</button>
+      </div>
+      <div class="muted">UCT = 勝率 + c × √(ln N<sub>父</sub> ÷ N<sub>子</sub>)</div>
+    </fieldset>
+
+    <fieldset>
+      <legend>局面（點空格下子）</legend>
+      <div class="row">
+        <button id="undo">悔一手</button>
+        <button data-preset="empty">清空</button>
+        <button data-preset="winOrBlock">搶勝還是擋？</button>
+        <button data-preset="mustBlock">必須擋</button>
+        <button data-preset="edgeMistake">對手下錯一手</button>
+      </div>
+    </fieldset>
+  </div>
+
+  <fieldset class="full">
+    <legend>搜尋樹（點節點看細節）</legend>
+    <svg id="tree" viewBox="0 0 700 260" aria-label="搜尋樹"></svg>
+    <div class="legend muted">
+      <span>寬度 = 造訪次數 N</span>
+      <span><span class="swatch" style="background:hsl(120,55%,72%)"></span>對下這手的一方有利</span>
+      <span><span class="swatch" style="background:hsl(60,55%,78%)"></span>五五波</span>
+      <span><span class="swatch" style="background:hsl(0,55%,78%)"></span>不利</span>
+      <span><span class="swatch" style="border:2px solid #1a202c"></span>這次模擬的路徑</span>
+    </div>
+  </fieldset>
+
+  <fieldset class="half">
+    <legend>這一步在做什麼</legend>
+    <div id="phase"></div>
+  </fieldset>
+
+  <fieldset class="half">
+    <legend>節點細節</legend>
+    <div id="inspectHead"></div>
+    <table>
+      <thead><tr><th>著手</th><th>N</th><th>W</th><th>勝率</th><th>探索項</th><th>UCT</th></tr></thead>
+      <tbody id="inspectBody"></tbody>
+    </table>
+    <div class="muted" id="inspectNote" style="margin-top:4px"></div>
+  </fieldset>
+</div>
+
+<script>
+(function () {
+  var LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+  // Board index 0..8, row 0 at the top; named like Go coordinates (A–C, 3 at the top).
+  var NAME = ['A3', 'B3', 'C3', 'A2', 'B2', 'C2', 'A1', 'B1', 'C1'];
+  var X = 1, O = -1;
+  var PHASES = ['select', 'expand', 'simulate', 'backprop'];
+  var PHASE_NAME = { select: 'Selection', expand: 'Expansion', simulate: 'Simulation', backprop: 'Backpropagation' };
+
+  var rootBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var history = [];
+  var nodes, root, sims, sim, inspected;
+  var C = 1.41;
+  var timer = null;
+
+  // ---- game rules ----
+  function winner(b) {
+    for (var i = 0; i < LINES.length; i++) {
+      var l = LINES[i];
+      if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[0]] === b[l[2]]) return b[l[0]];
+    }
+    return b.indexOf(0) < 0 ? 0 : null;   // 0 = draw, null = still playing
+  }
+  function toMoveOf(b) {
+    var n = 0;
+    b.forEach(function (v) { if (v) n++; });
+    return n % 2 === 0 ? X : O;
+  }
+  function empties(b) {
+    var e = [];
+    b.forEach(function (v, i) { if (!v) e.push(i); });
+    return e;
+  }
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function mark(p) { return p === X ? 'X' : 'O'; }
+  function markHtml(p) { return '<span class="' + (p === X ? 'mx' : 'mo') + '">' + mark(p) + '</span>'; }
+  function resultText(r) { return r === 0 ? '和局' : mark(r) + ' 勝'; }
+  function resultHtml(r) { return r === 0 ? '和局' : markHtml(r) + ' 勝'; }
+  // Reward for the player who made the move into a node.
+  function reward(player, result) { return result === 0 ? 0.5 : result === player ? 1 : 0; }
+
+  // ---- MCTS ----
+  function makeNode(parent, move) {
+    var b = parent ? parent.board.slice() : rootBoard.slice();
+    var player = parent ? -parent.player : -toMoveOf(rootBoard);
+    if (parent) b[move] = player;
+    var n = {
+      id: nodes.length, parent: parent, move: move, player: player, board: b,
+      depth: parent ? parent.depth + 1 : 0, children: [], N: 0, W: 0
+    };
+    n.terminal = winner(b);
+    n.untried = n.terminal === null ? shuffle(empties(b)) : [];
+    nodes.push(n);
+    return n;
+  }
+
+  function explore(child, parent) {
+    return C * Math.sqrt(Math.log(parent.N) / child.N);
+  }
+  function uct(child, parent) {
+    return child.N === 0 ? Infinity : child.W / child.N + explore(child, parent);
+  }
+
+  function select(log) {
+    var node = root, path = [root];
+    while (node.terminal === null && node.untried.length === 0) {
+      var best = null, bestU = -Infinity, scores = [];
+      node.children.forEach(function (ch) {
+        var u = uct(ch, node);
+        scores.push({ ch: ch, u: u });
+        if (u > bestU) { bestU = u; best = ch; }
+      });
+      if (log) log.push({ node: node, pick: best, scores: scores });
+      node = best;
+      path.push(node);
+    }
+    return path;
+  }
+
+  function expand(leaf) {
+    var ch = makeNode(leaf, leaf.untried.pop());
+    leaf.children.push(ch);
+    return ch;
+  }
+
+  function rollout(node) {
+    var b = node.board.slice(), p = -node.player, moves = [], w = winner(b);
+    while (w === null) {
+      var e = empties(b), m = e[Math.floor(Math.random() * e.length)];
+      b[m] = p;
+      moves.push({ move: m, player: p });
+      p = -p;
+      w = winner(b);
+    }
+    return { moves: moves, result: w };
+  }
+
+  function backprop(path, result) {
+    path.forEach(function (n) { n.N++; n.W += reward(n.player, result); });
+  }
+
+  function simulateQuick() {
+    var path = select(null), leaf = path[path.length - 1], result;
+    if (leaf.terminal === null) {
+      var ch = expand(leaf);
+      path.push(ch);
+      result = rollout(ch).result;
+    } else {
+      result = leaf.terminal;
+    }
+    backprop(path, result);
+    sims++;
+  }
+
+  // Step-by-step simulation, one phase per call.
+  function advance() {
+    if (root.terminal !== null) return;
+    if (!sim || sim.phase === 'backprop') {
+      var log = [], path = select(log);
+      sim = { phase: 'select', log: log, path: path, leaf: path[path.length - 1], newNode: null, rollout: [], result: null };
+    } else if (sim.phase === 'select') {
+      if (sim.leaf.terminal === null) {
+        sim.newNode = expand(sim.leaf);
+        sim.path.push(sim.newNode);
+      }
+      sim.phase = 'expand';
+    } else if (sim.phase === 'expand') {
+      if (sim.newNode) {
+        var r = rollout(sim.newNode);
+        sim.rollout = r.moves;
+        sim.result = r.result;
+      } else {
+        sim.result = sim.leaf.terminal;
+      }
+      sim.phase = 'simulate';
+    } else if (sim.phase === 'simulate') {
+      sim.before = sim.path.map(function (n) { return { N: n.N, W: n.W }; });
+      backprop(sim.path, sim.result);
+      sims++;
+      sim.phase = 'backprop';
+    }
+  }
+
+  function finishCurrent() {
+    if (root.terminal !== null) return;
+    do { advance(); } while (sim.phase !== 'backprop');
+  }
+
+  function batch(k) {
+    if (root.terminal !== null) return;
+    if (sim && sim.phase !== 'backprop') finishCurrent();
+    sim = null;
+    for (var i = 0; i < k; i++) simulateQuick();
+  }
+
+  function resetSearch() {
+    stop();
+    nodes = [];
+    sims = 0;
+    sim = null;
+    root = makeNode(null, null);
+    inspected = root;
+  }
+
+  // ---- helpers for display ----
+  function fmtW(w) { return w % 1 ? w.toFixed(1) : String(w); }
+  function f2(x) { return x.toFixed(2); }
+  function pct(q) { return Math.round(q * 100) + '%'; }
+  function nodeLabel(n) { return n === root ? '根' : markHtml(n.player) + ' ' + NAME[n.move]; }
+  function pathLabel(n) {
+    var parts = [];
+    for (; n; n = n.parent) parts.unshift(nodeLabel(n));
+    return parts.join(' → ');
+  }
+  function bestChild(n) {
+    var best = null;
+    n.children.forEach(function (ch) { if (!best || ch.N > best.N) best = ch; });
+    return best;
+  }
+  function sortedChildren(n) {
+    return n.children.slice().sort(function (a, b) { return a.move - b.move; });
+  }
+
+  // ---- board ----
+  var boardSvg = document.getElementById('board');
+  var CELL = 64, M = 24;
+  function cc(i) { return M + i * CELL + CELL / 2; }   // centre of column/row i
+
+  function glyph(p, x, y, size, opacity) {
+    var s = size * CELL / 2, col = p === X ? 'var(--x)' : 'var(--o)', sw = Math.max(2.5, 7 * size);
+    if (p === X) {
+      return '<g stroke="' + col + '" stroke-width="' + sw + '" stroke-linecap="round" opacity="' + opacity + '">' +
+        '<line x1="' + (x - s) + '" y1="' + (y - s) + '" x2="' + (x + s) + '" y2="' + (y + s) + '"/>' +
+        '<line x1="' + (x + s) + '" y1="' + (y - s) + '" x2="' + (x - s) + '" y2="' + (y + s) + '"/></g>';
+    }
+    return '<circle cx="' + x + '" cy="' + y + '" r="' + s + '" fill="none" stroke="' + col + '" stroke-width="' + sw + '" opacity="' + opacity + '"/>';
+  }
+
+  function renderBoard() {
+    var h = [];
+    for (var i = 0; i < 3; i++) {
+      h.push('<text x="' + cc(i) + '" y="13" class="lbl">' + 'ABC'[i] + '</text>');
+      h.push('<text x="11" y="' + cc(i) + '" class="lbl">' + (3 - i) + '</text>');
+    }
+    // overlays under the grid
+    var showStats = !sim && sims > 0;
+    var byMove = {}, maxN = 0, best = bestChild(root);
+    root.children.forEach(function (ch) { byMove[ch.move] = ch; maxN = Math.max(maxN, ch.N); });
+    for (var p = 0; p < 9; p++) {
+      var x = p % 3, y = Math.floor(p / 3), px = M + x * CELL, py = M + y * CELL;
+      var ch = byMove[p];
+      if (showStats && ch && !rootBoard[p]) {
+        var a = 0.06 + 0.34 * ch.N / maxN;
+        h.push('<rect x="' + (px + 3) + '" y="' + (py + 3) + '" width="' + (CELL - 6) + '" height="' + (CELL - 6) + '" rx="5" fill="rgba(43,108,176,' + a + ')"' +
+          (ch === best ? ' stroke="var(--accent)" stroke-width="2.5"' : '') + ' pointer-events="none"/>');
+        h.push('<text x="' + cc(x) + '" y="' + (cc(y) - 7) + '" class="bn">' + ch.N + '</text>');
+        h.push('<text x="' + cc(x) + '" y="' + (cc(y) + 12) + '" class="bq">' + pct(ch.W / ch.N) + '</text>');
+      }
+    }
+    h.push('<g stroke="var(--grid)" stroke-width="2" stroke-linecap="round">');
+    for (var k = 1; k < 3; k++) {
+      h.push('<line x1="' + (M + k * CELL) + '" y1="' + (M + 4) + '" x2="' + (M + k * CELL) + '" y2="' + (M + 3 * CELL - 4) + '"/>');
+      h.push('<line x1="' + (M + 4) + '" y1="' + (M + k * CELL) + '" x2="' + (M + 3 * CELL - 4) + '" y2="' + (M + k * CELL) + '"/>');
+    }
+    h.push('</g>');
+    // stones on the real board
+    rootBoard.forEach(function (v, p) { if (v) h.push(glyph(v, cc(p % 3), cc(Math.floor(p / 3)), 0.62, 1)); });
+    // moves of the current simulation: tree moves solid, random moves faded
+    if (sim) {
+      var seq = [];
+      sim.path.slice(1).forEach(function (n) { seq.push({ move: n.move, player: n.player, tree: true, isNew: n === sim.newNode && sim.phase !== 'backprop' }); });
+      if (sim.phase === 'simulate' || sim.phase === 'backprop') {
+        sim.rollout.forEach(function (m) { seq.push({ move: m.move, player: m.player, tree: false }); });
+      }
+      seq.forEach(function (m, i) {
+        var x = cc(m.move % 3), y = cc(Math.floor(m.move / 3));
+        if (m.isNew) h.push('<rect x="' + (x - CELL / 2 + 4) + '" y="' + (y - CELL / 2 + 4) + '" width="' + (CELL - 8) + '" height="' + (CELL - 8) + '" rx="6" fill="none" stroke="var(--expand)" stroke-width="2" stroke-dasharray="5 3"/>');
+        h.push(glyph(m.player, x, y, 0.42, m.tree ? 0.95 : 0.35));
+        h.push('<text x="' + (x + CELL / 2 - 9) + '" y="' + (y - CELL / 2 + 11) + '" class="seq' + (m.tree ? '' : ' faded') + '">' + (i + 1) + '</text>');
+      });
+    }
+    // click targets on top of everything
+    for (var q = 0; q < 9; q++) {
+      h.push('<rect class="cell" data-p="' + q + '" x="' + (M + q % 3 * CELL) + '" y="' + (M + Math.floor(q / 3) * CELL) + '" width="' + CELL + '" height="' + CELL + '" fill="transparent"/>');
+    }
+    boardSvg.innerHTML =
+      '<style>.lbl{font:12px sans-serif;fill:#888;text-anchor:middle;dominant-baseline:central}' +
+      '.bn{font:600 18px ui-monospace,Menlo,Consolas,monospace;fill:#1a365d;text-anchor:middle;dominant-baseline:central;pointer-events:none}' +
+      '.bq{font:11px sans-serif;fill:#2c5282;text-anchor:middle;dominant-baseline:central;pointer-events:none}' +
+      '.seq{font:600 11px ui-monospace,Menlo,monospace;fill:#333;text-anchor:middle;dominant-baseline:central;pointer-events:none}' +
+      '.seq.faded{fill:#999;font-weight:normal}.cell{cursor:pointer}</style>' + h.join('');
+
+    var status = document.getElementById('status'), note = document.getElementById('boardNote');
+    if (root.terminal !== null) {
+      status.innerHTML = '對局結束：' + resultHtml(root.terminal);
+      note.textContent = '已經分出結果，沒有東西可以搜尋。悔一手或換個局面。';
+    } else {
+      status.innerHTML = '輪到 ' + markHtml(toMoveOf(rootBoard));
+      if (sim && (sim.phase === 'simulate' || sim.phase === 'backprop')) {
+        note.innerHTML = '深色 = 樹裡的著手，淡色 = 隨機下的；結果 ' + resultHtml(sim.result);
+      } else if (sim) {
+        note.textContent = '數字是這次模擬的落子順序';
+      } else if (sims > 0) {
+        note.textContent = '大數字 = 造訪次數 N，小數字 = 勝率；框起來的是造訪最多、也就是目前會下的那一手';
+      } else {
+        note.textContent = '';
+      }
+    }
+  }
+
+  boardSvg.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-p]');
+    if (!t || root.terminal !== null) return;
+    var p = +t.dataset.p;
+    if (rootBoard[p]) return;
+    rootBoard[p] = toMoveOf(rootBoard);
+    history.push(p);
+    resetSearch();
+    render();
+  });
+
+  // ---- tree ----
+  var treeSvg = document.getElementById('tree');
+  var TW = 700, GUT = 28, ROW = 26;
+
+  function weight(n) {
+    // A node that was just expanded has N = 0 until backprop; give it room so it is visible.
+    return n.N + (sim && sim.newNode === n && sim.phase !== 'backprop' ? 1 : 0);
+  }
+  function qColor(n) {
+    if (n === root) return '#e2e8f0';
+    if (n.N === 0) return '#f4f4f4';
+    return 'hsl(' + Math.round(120 * n.W / n.N) + ',55%,' + (n.W / n.N > 0.75 ? 72 : 78) + '%)';
+  }
+
+  function renderTree() {
+    var rows = empties(rootBoard).length + 1;
+    var H = rows * ROW + 2;
+    treeSvg.setAttribute('viewBox', '0 0 ' + TW + ' ' + H);
+    var out = [], onPath = {}, toMove = toMoveOf(rootBoard);
+    if (sim) sim.path.forEach(function (n) { onPath[n.id] = true; });
+
+    for (var d = 0; d < rows; d++) {
+      var y = d * ROW + 1;
+      out.push('<rect x="' + GUT + '" y="' + y + '" width="' + (TW - GUT) + '" height="' + (ROW - 3) + '" fill="#fafafa"/>');
+      var lbl = d === 0 ? '根' : mark(d % 2 ? toMove : -toMove);
+      var col = d === 0 ? '#888' : (d % 2 ? toMove : -toMove) === X ? 'var(--x)' : 'var(--o)';
+      out.push('<text x="' + (GUT / 2) + '" y="' + (y + ROW / 2 - 1) + '" fill="' + col + '" style="font:600 12px sans-serif;text-anchor:middle;dominant-baseline:central">' + lbl + '</text>');
+    }
+
+    var pathRects = [];
+    (function draw(n, x, w) {
+      if (w < 0.6) return;
+      var y = n.depth * ROW + 1, rw = Math.max(0.6, w - 1), h = ROW - 3;
+      var title = n === root
+        ? '根節點（目前局面）\nN = ' + n.N
+        : mark(n.player) + ' 下 ' + NAME[n.move] + '\nN = ' + n.N + '，W = ' + fmtW(n.W) +
+          (n.N ? '\n勝率 ' + pct(n.W / n.N) + '（對 ' + mark(n.player) + ' 而言）' : '\n剛展開，還沒回傳') +
+          (n.terminal !== null ? '\n終局：' + resultText(n.terminal) : '');
+      var stroke = '';
+      if (sim && sim.newNode === n && sim.phase !== 'backprop') stroke = ' stroke="var(--expand)" stroke-width="2" stroke-dasharray="4 2"';
+      else if (n === inspected) stroke = ' stroke="var(--accent)" stroke-width="2"';
+      out.push('<g class="node" data-id="' + n.id + '"><title>' + title + '</title>' +
+        '<rect x="' + x + '" y="' + y + '" width="' + rw + '" height="' + h + '" rx="2" fill="' + qColor(n) + '"' + stroke + '/>');
+      if (rw > 24) {
+        var t = n === root ? '根' : NAME[n.move];
+        if (n === root) { if (rw > 60) t += ' N=' + n.N; }
+        else if (rw > 74) t += ' ' + fmtW(n.W) + '/' + n.N;
+        if (n.terminal !== null && n !== root && rw > 40) t += n.terminal === 0 ? ' ＝' : ' ★';
+        out.push('<text x="' + (x + rw / 2) + '" y="' + (y + h / 2) + '" style="font:11px ui-monospace,Menlo,Consolas,monospace;text-anchor:middle;dominant-baseline:central;fill:#1a202c">' + t + '</text>');
+      }
+      out.push('</g>');
+      if (onPath[n.id]) pathRects.push('<rect x="' + x + '" y="' + y + '" width="' + rw + '" height="' + h + '" rx="2" fill="none" stroke="#1a202c" stroke-width="2.5" pointer-events="none"/>');
+
+      var kids = sortedChildren(n), sum = 0;
+      kids.forEach(function (ch) { sum += weight(ch); });
+      var denom = Math.max(weight(n), sum);
+      if (!denom) return;
+      var cx = x;
+      kids.forEach(function (ch) {
+        var cw = w * weight(ch) / denom;
+        draw(ch, cx, cw);
+        cx += cw;
+      });
+    })(root, GUT, TW - GUT);
+
+    treeSvg.innerHTML = out.join('') + pathRects.join('');
+  }
+
+  treeSvg.addEventListener('click', function (e) {
+    var g = e.target.closest('[data-id]');
+    if (!g) return;
+    inspected = nodes[+g.dataset.id];
+    renderTree();
+    renderInspect();
+  });
+
+  // ---- explanation of the current phase ----
+  function renderPhase() {
+    var el = document.getElementById('phase'), h = '';
+    document.querySelectorAll('.chip').forEach(function (c) { c.classList.toggle('on', !!sim && c.dataset.phase === sim.phase); });
+
+    if (root.terminal !== null) {
+      el.innerHTML = '<p class="muted">這個局面已經結束了。</p>';
+      return;
+    }
+    if (!sim) {
+      if (sims === 0) {
+        h = '<p>按<b>「下一步」</b>開始第一次模擬，一次走一個階段。</p>' +
+          '<p class="muted">每次模擬都會做 ① 選擇 → ② 擴展 → ③ 隨機下完 → ④ 回傳結果，樹就一點一點長出來。看懂之後，用「+100」「+1000」快轉，觀察樹的形狀。</p>';
+      } else {
+        var best = bestChild(root);
+        h = '<p>已完成 <b class="num">' + sims + '</b> 次模擬。</p>' +
+          '<p>根節點底下造訪最多的是 <b>' + markHtml(best.player) + ' ' + NAME[best.move] + '</b>（' + best.N + ' 次、勝率 ' + pct(best.W / best.N) + '），這就是 MCTS 最後會下的一手。</p>' +
+          '<p class="muted">注意樹的寬度：好的著手被試得多，所以越長越寬、越長越深；差的著手只被試了幾次就很少再去。按「下一步」可以再看一次完整流程。</p>';
+      }
+      el.innerHTML = h;
+      return;
+    }
+
+    var phase = sim.phase;
+    h = '<h4 style="color:var(--' + phase + ')">' + (PHASES.indexOf(phase) + 1) + ' · ' + PHASE_NAME[phase] + '</h4>';
+
+    if (phase === 'select') {
+      if (!sim.log.length) {
+        h += '<p>根節點還有 <b>' + root.untried.length + '</b> 個著手沒試過。只要還有沒展開的著手，就先停下來展開它，所以這次停在根。</p>';
+      } else {
+        h += '<p>從根往下走，每一層挑 <b>UCT</b> 最高的子節點：</p><ol>';
+        sim.log.forEach(function (s) {
+          var ch = s.pick, q = ch.W / ch.N, e = explore(ch, s.node);
+          var others = s.scores.filter(function (x) { return x.ch !== ch; }).sort(function (a, b) { return b.u - a.u; });
+          h += '<li>在 ' + nodeLabel(s.node) + '：選 <b>' + NAME[ch.move] + '</b>，' +
+            '<span class="num">' + f2(q) + ' + ' + f2(e) + ' = ' + f2(q + e) + '</span>' +
+            (others.length ? '<span class="muted">（次高 ' + NAME[others[0].ch.move] + ' ' + f2(others[0].u) + '）</span>' : '') + '</li>';
+        });
+        h += '</ol>';
+        if (sim.leaf.terminal !== null) {
+          h += '<p>走到終局（' + resultHtml(sim.leaf.terminal) + '），不用再往下。</p>';
+        } else {
+          h += '<p>停在 ' + nodeLabel(sim.leaf) + '：它還有 <b>' + sim.leaf.untried.length + '</b> 個著手沒展開。</p>';
+        }
+      }
+      h += '<p class="muted">點樹上的節點，右邊會列出每個子節點的 UCT 怎麼算。</p>';
+    } else if (phase === 'expand') {
+      if (sim.newNode) {
+        h += '<p>在 ' + nodeLabel(sim.leaf) + ' 底下加一個新節點：<b>' + nodeLabel(sim.newNode) + '</b>（虛線框）。</p>' +
+          '<p class="muted">每次模擬只加一個節點，所以樹是慢慢長大的。' +
+          (sim.leaf.untried.length ? sim.leaf.untried.length + ' 個著手還沒展開，之後經過這裡會繼續加。' : '這個節點的著手都展開完了，之後經過這裡就會改用 UCT 往下選。') + '</p>';
+      } else {
+        h += '<p>這個節點已經是終局，沒有東西可以展開，跳過。</p>';
+      }
+    } else if (phase === 'simulate') {
+      if (sim.newNode) {
+        h += '<p>從新節點開始，雙方<b>隨機</b>下到終局：</p><p class="num">' +
+          (sim.rollout.length ? sim.rollout.map(function (m) { return markHtml(m.player) + ' ' + NAME[m.move]; }).join(' → ') : '（新節點本身就是終局）') +
+          '</p><p>結果：<b>' + resultHtml(sim.result) + '</b></p>' +
+          '<p class="muted">隨機下的棋不會被存進樹裡，只用來得到一個勝負結果。棋盤上淡色的就是這些隨機著手。</p>';
+      } else {
+        h += '<p>已經是終局，不用隨機模擬，直接用結果：<b>' + resultHtml(sim.result) + '</b></p>';
+      }
+    } else {
+      h += '<p>把 ' + resultHtml(sim.result) + ' 沿路徑往回更新。每個節點都從<b>下這手的一方</b>來看：贏 +1、和 +0.5、輸 +0。</p><ul>';
+      sim.path.forEach(function (n, i) {
+        var b = sim.before[i];
+        h += '<li>' + nodeLabel(n) + '：<span class="num">N ' + b.N + '→' + n.N +
+          (n === root ? '' : '，W ' + fmtW(b.W) + '→' + fmtW(n.W)) + '</span></li>';
+      });
+      h += '</ul>';
+    }
+    el.innerHTML = h;
+  }
+
+  // ---- node details ----
+  function renderInspect() {
+    var n = inspected, head = document.getElementById('inspectHead');
+    var body = document.getElementById('inspectBody'), note = document.getElementById('inspectNote');
+    var mover = -n.player;
+    head.innerHTML = pathLabel(n) + (n !== root ? ' <button class="linkish" id="toRoot">回到根</button>' : '') +
+      '<div class="muted">' + (n.terminal !== null ? '終局：' + resultHtml(n.terminal) : '輪到 ' + markHtml(mover) + '，勝率是從 ' + markHtml(mover) + ' 的角度看') + '，N = ' + n.N + '</div>';
+    var tr = document.getElementById('toRoot');
+    if (tr) tr.onclick = function () { inspected = root; renderTree(); renderInspect(); };
+
+    var rows = n.children.map(function (ch) {
+      var e = ch.N && n.N ? explore(ch, n) : Infinity;
+      return { ch: ch, q: ch.N ? ch.W / ch.N : null, e: e, u: ch.N ? ch.W / ch.N + e : Infinity };
+    }).sort(function (a, b) { return b.u - a.u || b.ch.N - a.ch.N; });
+    var pick = n.untried.length === 0 && n.terminal === null && rows.length ? rows[0].ch : null;
+    var best = bestChild(n);
+    body.innerHTML = rows.map(function (r) {
+      return '<tr' + (r.ch === pick ? ' class="pick"' : '') + '><td>' + markHtml(r.ch.player) + ' ' + NAME[r.ch.move] +
+        (r.ch === pick ? ' ◀' : '') + '</td><td' + (r.ch === best ? ' style="font-weight:600"' : '') + '>' + r.ch.N + '</td><td>' + fmtW(r.ch.W) +
+        '</td><td>' + (r.q === null ? '—' : f2(r.q)) + '</td><td>' + (isFinite(r.e) ? f2(r.e) : '∞') +
+        '</td><td>' + (isFinite(r.u) ? f2(r.u) : '∞') + '</td></tr>';
+    }).join('') || '<tr><td colspan="6" class="muted" style="text-align:left">還沒有子節點</td></tr>';
+
+    var parts = [];
+    if (n.untried.length) {
+      parts.push('未展開：' + n.untried.slice().sort().map(function (m) { return NAME[m]; }).join('、') +
+        '。還有未展開的著手時，Selection 會停在這裡先做 Expansion。');
+    } else if (pick) {
+      parts.push('◀ = 下次經過這裡時 Selection 會選的著手（UCT 最高）。');
+    }
+    if (best) parts.push('粗體 N = 造訪最多。');
+    note.textContent = parts.join(' ');
+  }
+
+  // ---- controls ----
+  var nextBtn = document.getElementById('next');
+  function render() {
+    var done = root.terminal !== null;
+    var nextPhase = !sim || sim.phase === 'backprop' ? 'select' : PHASES[PHASES.indexOf(sim.phase) + 1];
+    nextBtn.textContent = '下一步：' + PHASE_NAME[nextPhase].replace('Backpropagation', 'Backprop');
+    nextBtn.disabled = done;
+    document.getElementById('finish').disabled = done;
+    document.getElementById('play').disabled = done;
+    document.querySelectorAll('[data-batch]').forEach(function (b) { b.disabled = done; });
+    document.getElementById('undo').disabled = !history.length;
+    document.getElementById('stats').textContent = '模擬次數 ' + sims + ' · 樹節點 ' + nodes.length;
+    renderBoard();
+    renderTree();
+    renderPhase();
+    renderInspect();
+  }
+
+  nextBtn.onclick = function () { stop(); advance(); render(); };
+  document.getElementById('finish').onclick = function () { stop(); finishCurrent(); render(); };
+  document.querySelectorAll('[data-batch]').forEach(function (b) {
+    b.onclick = function () { stop(); batch(+b.dataset.batch); render(); };
+  });
+  document.getElementById('reset').onclick = function () { resetSearch(); render(); };
+
+  var playBtn = document.getElementById('play');
+  function interval() { return 1300 - 120 * +document.getElementById('speed').value; }
+  function tick() {
+    if (root.terminal !== null) { stop(); return; }
+    advance(); render();
+    timer = setTimeout(tick, interval());
+  }
+  function stop() { clearTimeout(timer); timer = null; playBtn.textContent = '▶ 自動'; }
+  playBtn.onclick = function () {
+    if (timer) { stop(); return; }
+    playBtn.textContent = '❚❚ 暫停';
+    tick();
+  };
+
+  var cInput = document.getElementById('c');
+  function setC(v) {
+    C = v;
+    cInput.value = v;
+    document.getElementById('cVal').textContent = v.toFixed(2);
+  }
+  cInput.addEventListener('input', function () { setC(+cInput.value); renderInspect(); });
+  document.getElementById('cDefault').onclick = function () { setC(1.41); renderInspect(); };
+
+  document.getElementById('undo').onclick = function () {
+    if (!history.length) return;
+    rootBoard[history.pop()] = 0;
+    resetSearch();
+    render();
+  };
+
+  // X moves first; each preset has equal counts so X is to move.
+  var PRESETS = {
+    empty: { x: [], o: [] },
+    winOrBlock: { x: ['A3', 'B3'], o: ['A1', 'B1'] },   // X wins at once on C3; O threatens C1
+    mustBlock: { x: ['A3', 'C1'], o: ['B2', 'B3'] },    // O threatens B1
+    edgeMistake: { x: ['A3'], o: ['B3'] }               // O answered a corner on the adjacent edge; X can force a win
+  };
+  function loadPreset(name) {
+    rootBoard.fill(0);
+    history = [];
+    var pr = PRESETS[name];
+    for (var i = 0; i < Math.max(pr.x.length, pr.o.length); i++) {
+      if (pr.x[i]) { var px = NAME.indexOf(pr.x[i]); rootBoard[px] = X; history.push(px); }
+      if (pr.o[i]) { var po = NAME.indexOf(pr.o[i]); rootBoard[po] = O; history.push(po); }
+    }
+    resetSearch();
+    render();
+  }
+  document.querySelectorAll('[data-preset]').forEach(function (b) {
+    b.onclick = function () { loadPreset(b.dataset.preset); };
+  });
+
+  // Keep the embedding iframe as tall as the page.
+  if (window.frameElement && window.ResizeObserver) {
+    new ResizeObserver(function () {
+      window.frameElement.style.height = document.documentElement.offsetHeight + 'px';
+    }).observe(document.body);
+  }
+
+  setC(1.41);
+  loadPreset('winOrBlock');
+})();
+</script>
+</body>
+</html>

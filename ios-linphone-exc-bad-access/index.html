@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>使用 linphone 函式庫發生 exc_bad_access 的除錯經驗</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">使用 linphone 函式庫發生 exc_bad_access 的除錯經驗</h1>
+      <p class="meta"><time datetime="2016-07-01T00:00:00+08:00" pubdate>2016 July 01 Fri</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><p><img alt="exc_bad_access" src="http://i.imgur.com/epeolml.png"></p>
+<p>在叫用 linphone 的函式庫時，發生 <code>exc_bad_access</code>的錯誤，因為這個錯誤往往發生的地方跟掛掉的地方是不一樣的，所以比較難除錯。</p>
+<h2>EXC_BAD_ACCESS</h2>
+<p>是因為對已經釋放的記憶體進行了非法操作，程式會直接 Crash，無法用 error handle  catch 來處理。</p>
+<p><img alt="exc_bad_access" src="https://i.imgur.com/Z1198IW.png"></p>
+<h2>Crash 片段</h2>
+<p><img alt="zombie" src="https://i.imgur.com/CUtZpok.png"></p>
+<p>記錄發生 crash 的地方不只有一處，共同的特色就是都是掛在 linphone 的函式庫:</p>
+<p>發生位置1 <code>linphone_core_iterate()</code>: </p>
+<div class="highlight"><pre><span></span><code><span class="err">@</span><span class="n">objc</span><span class="w"> </span><span class="k">func</span><span class="w"> </span><span class="n">iterate</span><span class="p">(){</span>
+<span class="w">    </span><span class="n">let</span><span class="w"> </span><span class="n">lc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LinphoneManager</span><span class="o">.</span><span class="n">getLc</span><span class="p">()</span>
+<span class="w">    </span><span class="k">if</span><span class="w">  </span><span class="n">lc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nil</span><span class="p">{</span>
+<span class="w">        </span><span class="n">linphone_core_iterate</span><span class="p">(</span><span class="n">lc</span><span class="p">);</span><span class="w"> </span><span class="o">/*</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="n">iterate</span><span class="w"> </span><span class="n">initiates</span><span class="w"> </span><span class="n">registration</span><span class="w"> </span><span class="o">*/</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>發生位置2 <code>linphone_core_iterate()</code>: </p>
+<div class="highlight"><pre><span></span><code>if let phone = phoneNumber, lc = LinphoneManager.lc {
+    nameLabel.text = calleeName!
+    linphone_core_invite(lc, phone)
+}
+</code></pre></div>
+
+<h2>透 Debug build 測試</h2>
+<p>因為預設從 linphone 網站下載的 iphone sdk 是沒有 debug symbol 的，所以在發生 crash 的時侯，只能看到看組合語言: 
+<img alt="acc" src="https://i.imgur.com/YQQIst3.png">
+<img alt="EXC_I386_GPFLT" src="https://i.imgur.com/eWVoO0y.png"></p>
+<p>雖然有 linphone 的函式名稱，但是對於問題的幫助不大。所以我就直接 build 一個 有 debug symbol 的 liblinphone-sdk，build debug sdk 步驟記錄在<a href="https://blog.codylab.com/ios-build-linphone-iphone-sdk/">另一篇</a>。</p>
+<p>經過有 debug build 的協助之後， crash 的資訊從原本的組合語言變成了 c 語言，地點是在<code>submodules/linphone/coreapi/vtables.c</code>檔案: </p>
+<p><img alt="NOTIFY_IF_EXIST" src="https://i.imgur.com/fZj7CMw.png"></p>
+<p>NOTIFY_IF_EXIST 是一個 macro，執行 event 的 notify: </p>
+<div class="highlight"><pre><span></span><code><span class="gh">#</span>define NOTIFY_IF_EXIST(function_name, ...) \
+    MSList* iterator; \
+    VTableReference <span class="gs">*ref; \</span>
+<span class="gs">    bool_t has_cb = FALSE; \</span>
+<span class="gs">    for (iterator=lc-&gt;vtable_refs; iterator!=NULL; iterator=iterator-&gt;next)\</span>
+<span class="gs">        if ((ref=(VTableReference*</span>)iterator-&gt;data)-&gt;valid &amp;&amp; (lc-&gt;current_vtable=ref-&gt;vtable)-&gt;function_name) {\
+            lc-&gt;current_vtable-&gt;function_name(__VA_ARGS__);\
+            has_cb = TRUE;\
+        }\
+    if (has_cb) ms_message("Linphone core [%p] notifying [%s]",lc,#function_name)
+</code></pre></div>
+
+<p>我開始思考，這邊有什麼變數是已經釋放了？於是我找到了關鍵字<code>current_vtable</code>，回頭看到自己的 LinphoneCoreTable 是放在 class property 中: </p>
+<p><img alt="bug" src="https://i.imgur.com/QgmGnhw.png"></p>
+<p>哈，賓果！推斷是因為 linphone 函式使用到這個已經釋放的 object，把程式修改成用 struct static 專門來放 global variables:</p>
+<p><img alt="struct" src="https://i.imgur.com/vHtX5Z5.png"></p>
+<p>再次執行！ Problem Solved !!</p>
+<h2>結論</h2>
+<p>我本身比較少 C/C++ 的除錯經驗，因為這個 bug 足足花了15個小時才找到問題，把除錯的經驗記錄於此。除錯過程中，盡量讓自己有更多的資訊可以下判斷，像是掛載 debug symbol 就是一例。在 swift 呼叫 c 的 library 時，有些物件的 life cycle 要特別留意，是不是可能會讓外部的 library 呼叫到自己已經釋放的 object。下次遇到這個問題，應該要先把跟外部函式庫有關聯的<strong>變數</strong>列出來，一一檢視是否釋放的時機過早。我想效率會比較好。</p>
+<h2>註1: 嘗試過的解法</h2>
+<p>在用 debug symbol 前，其實嘗試了許多無用的解法:</p>
+<ul>
+<li>Linphone core 物件是 nil？  -&gt; 不是這個原因</li>
+<li>懷疑可能是 liblinphone 的 bug，故升級 liblinphone 的版本到從3.9.1升級到最新版3.13.9 -&gt; 無效</li>
+<li>把 linphonecore 從 class static properties 改成 struct static variable -&gt; 無效</li>
+<li>使用 <code>XCode Profiler</code> -&gt; 看不出問題</li>
+<li>使用 <code>linphone_core_invite</code> 相關的函式放到 background thread -&gt; 無效</li>
+<li>DismissViewControllerAnimated() 造成 EXC_Bad_ACCESS <a href="http://goo.gl/5f3V2Z">ref</a> -&gt; 無效</li>
+<li>嘗試把 debug optimization level 調成 -Os，讓 debug，release 的情況一致
+<img alt="level" src="https://i.imgur.com/JOvis5fl.png"></li>
+<li>嘗試 build 一個簡單的 linphone sample proejct </li>
+</ul>
+<h2>註2: NSZombie</h2>
+<p><img alt="NSZombie1" src="https://i.imgur.com/rKF5g9p.png"></p>
+<p><img alt="NSZombie2" src="https://i.imgur.com/A8YyocF.png"></p>
+<p>NSZombie 原本是設計讓你除錯用的，卻因為我把這個功能開啟，反而造成本地端不會 Crash，上傳到 testflight 的 release 版本就會 crash。在這個 Case 中， NSZombie 沒有辦法找到問題，也許是因為 Crash 的點的是發生在外部函式庫中？</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2016-07-01T00:00:00+08:00" pubdate>2016 July 01 Fri</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+  <section>
+    <h1>Related Posts</h1>
+    <ul>
+      <li><a href="https://blog.codylab.com/ios-build-linphone-iphone-sdk/">Build liblinphone-sdk for iOS</a></li>
+      <li><a href="https://blog.codylab.com/ios-haneke/">Using Haneke for Image Cache in Swift</a></li>
+      <li><a href="https://blog.codylab.com/ios-liblinphone-setup/">在iOS/Swift中使用 liblinphone 函式庫</a></li>
+    </ul>
+  <section>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/ios-linphone-exc-bad-access/';
+          var disqus_url = 'https://blog.codylab.com/ios-linphone-exc-bad-access/';
+          var disqus_title = '使用 linphone 函式庫發生 exc_bad_access 的除錯經驗';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

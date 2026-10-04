@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Vagrant 筆記</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Vagrant 筆記</h1>
+      <p class="meta"><time datetime="2015-05-01T00:00:00+08:00" pubdate>2015 May 01 Fri</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><h2>安裝 Vagrant (以 VritualBox 為例)</h2>
+<ol>
+<li>VirtualBox </li>
+<li>VirtualBox Extension Pack 
+(Oracle_VM_VirtualBox_Extension_Pack-4.3.26-98988.vbox-extpack)</li>
+<li>Vagrant (vagrant_1.7.2.dmg)</li>
+</ol>
+<h2>新增一個 VM</h2>
+<p><strong>官方 Box 列表</strong>要知道有那些 Vagrant box 的話，可以到此<a href="https://atlas.hashicorp.com/boxes/search">瀏覽</a></p>
+<p>新增一個 VM </p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>mkdir<span class="w"> </span>&lt;project_name&gt;
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>&lt;project_name&gt;
+$<span class="w"> </span>vagrant<span class="w"> </span>init<span class="w"> </span><span class="o">[</span>box-name<span class="o">]</span>
+</code></pre></div>
+
+<p>例子: 
+    $ vagrant init ubuntu/vivid64 </p>
+<h1>Vagrant Box</h1>
+<p>列出已下載的 vagrant box list:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>box<span class="w"> </span>list
+</code></pre></div>
+
+<p>新增 box 到 Vagrant，以 ubuntu 15.04 為例: </p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>box<span class="w"> </span>add<span class="w"> </span>ubuntu/vivid64
+</code></pre></div>
+
+<p>手機修改 <code>Vagrantfile</code> 指定使用那一個 VM Box </p>
+<div class="highlight"><pre><span></span><code><span class="nv">Vagrant</span>.<span class="nv">configure</span><span class="ss">(</span><span class="s2">"2"</span><span class="ss">)</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="nv">config</span><span class="o">|</span>
+<span class="w">  </span><span class="nv">config</span>.<span class="nv">vm</span>.<span class="nv">box</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ubuntu/vivid64"</span>
+<span class="k">end</span>
+</code></pre></div>
+
+<h1>啟動</h1>
+<p>啟動指定名稱</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>up<span class="w"> </span>&lt;NAME&gt;
+</code></pre></div>
+
+<p>也可以全部啟動: </p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>up
+</code></pre></div>
+
+<h1>登入</h1>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>ssh
+</code></pre></div>
+
+<p>若有多個 VM，就要指定名稱</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>ssh<span class="w"> </span>&lt;NAME&gt;
+</code></pre></div>
+
+<p>Guest <code>/vagrant</code> 目錄 會和 Host 的 Vagrant project 目錄互連</p>
+<h1>查看</h1>
+<p>查看 project 目前 vagrant machine 的狀態</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>status
+</code></pre></div>
+
+<h1>休眠/關機</h1>
+<p>把 VM 休眠:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>spend
+</code></pre></div>
+
+<p>把 VM 關機:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>halt
+</code></pre></div>
+
+<p>把 VM 刪除: </p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vagrant<span class="w"> </span>destroy<span class="w"> </span>--force
+</code></pre></div>
+
+<h1>Provision</h1>
+<div class="highlight"><pre><span></span><code><span class="o">$</span><span class="w"> </span><span class="n">vagrant</span><span class="w"> </span><span class="n">up</span><span class="w"> </span>
+<span class="o">$</span><span class="w"> </span><span class="n">vagrant</span><span class="w"> </span><span class="n">reload</span><span class="w"> </span><span class="o">--</span><span class="n">provision</span>
+</code></pre></div>
+
+<h1>Vagrantfile</h1>
+<div class="highlight"><pre><span></span><code>Synced_Folder
+
+    node.vm.synced_folder ".", SYNCED_FOLDER
+</code></pre></div>
+
+<h2>參考教學文件</h2>
+<ul>
+<li><a href="https://docs.vagrantup.com/v2/">Getting start官方版</a></li>
+<li><a href="http://goo.gl/8BwvKO">Vagrant Tutorial（1）雲端研發人員，你也需要虛擬機！ by William Yeh | CodeData</a></li>
+</ul></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2015-05-01T00:00:00+08:00" pubdate>2015 May 01 Fri</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+  <section>
+    <h1>Related Posts</h1>
+    <ul>
+      <li><a href="https://blog.codylab.com/azure-django/">Notes of using Django in Azure App Service</a></li>
+      <li><a href="https://blog.codylab.com/azure-django-deploy-setup/">Notes of using Django in Azure App Service</a></li>
+      <li><a href="https://blog.codylab.com/azure-env/">Set environment variable in Azure App Services</a></li>
+      <li><a href="https://blog.codylab.com/vmware-nested-esxi-promiscuous/">解決 Geust VM 在 Nested ESXi 網路無法連外的問題</a></li>
+      <li><a href="https://blog.codylab.com/redis/">Redis 筆記</a></li>
+    </ul>
+  <section>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/vagrant/';
+          var disqus_url = 'https://blog.codylab.com/vagrant/';
+          var disqus_title = 'Vagrant 筆記';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

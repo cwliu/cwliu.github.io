@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - Linux</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/linux.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>Using Microsoft communicator in Ubuntu with pidgin-sipe plugin</title><link href="https://blog.codylab.com/ubuntu-pidgin-ms-office-communicator/" rel="alternate"></link><published>2014-01-21T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2014-01-21:/ubuntu-pidgin-ms-office-communicator/</id><content type="html">&lt;p&gt;We can install &lt;code&gt;pidgin-sipe&lt;/code&gt; to use Microsoft communicator in Ubuntu. Here are the steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Install sipe plugin&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;sudo apt-get install pidgin-sipe&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Add account with the new "Office Communicator" type&lt;/li&gt;
+&lt;/ol&gt;
+&lt;!--
+- How to Disable Pidgin Notifications in Ubuntu - How-To Geek - http://goo.gl/ffZFN
+- How to Enable Tray Icon : unity - How do I enable the pidgin system tray icon? - Ask Ubuntu - http://goo.gl/YCwDe
+--&gt;</content><category term="Linux"></category><category term="Linux"></category><category term="Ubuntu"></category></entry><entry><title>How to build M2Crypto to support AES 256 in CTR mode</title><link href="https://blog.codylab.com/m2crypto-build/" rel="alternate"></link><published>2013-12-13T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-12-13:/m2crypto-build/</id><summary type="html">&lt;p&gt;M2Cryto library is out of date. The latest version was released on 2011, so there are some new features provided by OpenSSL are missing. For example, If you want to support AES 256 CTR, you need to build M2Crypto by yourself.&lt;/p&gt;
+&lt;h2&gt;Download M2Crypto source code&lt;/h2&gt;
+&lt;p&gt;Download the M2Crypto 0.21.1 from &lt;a href="https://pypi.python.org/pypi/M2Crypto"&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Install necessary packages&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;build-essential&lt;span class="w"&gt; &lt;/span&gt;python-dev&lt;span class="w"&gt; &lt;/span&gt;swig&lt;span class="w"&gt; &lt;/span&gt;libssl-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Modify M2Crypto-0.21.1/SWIG/_evp.i&lt;/h2&gt;
+&lt;p&gt;Near:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nf"&gt;%rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;aes_256_ofb&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;EVP_aes_256_ofb&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;extern&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;EVP_CIPHER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;EVP_aes_256_ofb&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Add these two lines:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nf"&gt;%rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;aes_256_ctr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;EVP_aes_256_ctr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;extern&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;EVP_CIPHER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;EVP_aes_256_ctr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Modify M2Crypto-0.21.1/SWIG/_ssl.i&lt;/h2&gt;
+&lt;p&gt;Remove these …&lt;/p&gt;</summary><content type="html">&lt;p&gt;M2Cryto library is out of date. The latest version was released on 2011, so there are some new features provided by OpenSSL are missing. For example, If you want to support AES 256 CTR, you need to build M2Crypto by yourself.&lt;/p&gt;
+&lt;h2&gt;Download M2Crypto source code&lt;/h2&gt;
+&lt;p&gt;Download the M2Crypto 0.21.1 from &lt;a href="https://pypi.python.org/pypi/M2Crypto"&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Install necessary packages&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;build-essential&lt;span class="w"&gt; &lt;/span&gt;python-dev&lt;span class="w"&gt; &lt;/span&gt;swig&lt;span class="w"&gt; &lt;/span&gt;libssl-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Modify M2Crypto-0.21.1/SWIG/_evp.i&lt;/h2&gt;
+&lt;p&gt;Near:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nf"&gt;%rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;aes_256_ofb&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;EVP_aes_256_ofb&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;extern&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;EVP_CIPHER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;EVP_aes_256_ofb&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Add these two lines:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nf"&gt;%rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;aes_256_ctr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;EVP_aes_256_ctr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;extern&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;EVP_CIPHER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;EVP_aes_256_ctr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Modify M2Crypto-0.21.1/SWIG/_ssl.i&lt;/h2&gt;
+&lt;p&gt;Remove these two lines, SSLv2 is removed from newer OpenSSL versions.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nf"&gt;%rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sslv2_method&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;SSLv2_method&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;extern&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;SSL_METHOD&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;SSLv2_method&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Modify M2Crypto-0.21.1/setup.py&lt;/h2&gt;
+&lt;p&gt;Modify &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;m2crypto = Extension(name = 'M2Crypto.__m2crypto',
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;to &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;m2crypto = Extension(name = '__m2crypto',
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Build and Install&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$python setup.py build 
+$sudo python setup.py install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;!--
+0. Upgrade OpenSSL to 1.0.1e
+
+    $ sudo apt-get remove openssl libssl-dev
+    $ tar -xvf openssl-w.x.yz.tar.gz
+    $ cd openssl-w.x.yz
+    $ ./config --prefix=/usr
+    $ sudo make install
+    $ sudo apt-get install libssl-dev
+
+4. M2Crypto-0.21.1/SWIG/setup.py
++       self.openssl = '/opt/openssl'
+--&gt;</content><category term="Linux"></category><category term="OpenSSL"></category></entry><entry><title>安裝ThinkFan風扇控制軟體</title><link href="https://blog.codylab.com/thinkpad-thinkfan/" rel="alternate"></link><published>2013-12-05T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-12-05:/thinkpad-thinkfan/</id><summary type="html">&lt;h2&gt;安裝 Thinkfan&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;thinkfan
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;開啟風扇控制權&lt;/h2&gt;
+&lt;p&gt;系統預設並不容許直接控制風扇速度，所以需要特別設定&lt;code&gt;thinkpad-acpi&lt;/code&gt;的config值: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"options thinkpad_acpi fan_control=1"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;tee&lt;span class="w"&gt; &lt;/span&gt;/etc/modprobe.d/thinkpad_acpi.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;重新載入&lt;code&gt;thinkpad_acpi&lt;/code&gt; driver 套用新的設定值&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;modprobe&lt;span class="w"&gt; &lt;/span&gt;-rv&lt;span class="w"&gt; &lt;/span&gt;thinkpad_acpi
+$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;modprobe&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;thinkpad_acpi
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;修改 thinkfan 設定檔&lt;/h2&gt;
+&lt;p&gt;thinkfan 設定檔在 &lt;code&gt;/etc/thinkfan.conf&lt;/code&gt;，主要可以設定的要用那些sensor以及設定溫度與轉速的規則。首先先找到溫度量測的檔案:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;find&lt;span class="w"&gt; &lt;/span&gt;/sys/devices&lt;span class="w"&gt; &lt;/span&gt;-type&lt;span class="w"&gt; &lt;/span&gt;f&lt;span class="w"&gt; &lt;/span&gt;-name&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"temp*_input"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;以x220為例，一共找到四個檔:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;/sys/devices/virtual/hwmon/hwmon0/temp1_input
+/sys/devices/platform/coretemp.0/temp3_input
+/sys/devices/platform/coretemp.0/temp1_input
+/sys/devices/platform/coretemp.0/temp2_input
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;把這四行寫入到 &lt;code&gt;/etc/thinkfan.conf&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sensor /sys/devices/virtual/hwmon/hwmon0/temp1_input
+sensor /sys/devices/platform/coretemp.0/temp3_input
+sensor /sys …&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;h2&gt;安裝 Thinkfan&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;thinkfan
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;開啟風扇控制權&lt;/h2&gt;
+&lt;p&gt;系統預設並不容許直接控制風扇速度，所以需要特別設定&lt;code&gt;thinkpad-acpi&lt;/code&gt;的config值: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"options thinkpad_acpi fan_control=1"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;tee&lt;span class="w"&gt; &lt;/span&gt;/etc/modprobe.d/thinkpad_acpi.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;重新載入&lt;code&gt;thinkpad_acpi&lt;/code&gt; driver 套用新的設定值&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;modprobe&lt;span class="w"&gt; &lt;/span&gt;-rv&lt;span class="w"&gt; &lt;/span&gt;thinkpad_acpi
+$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;modprobe&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;thinkpad_acpi
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;修改 thinkfan 設定檔&lt;/h2&gt;
+&lt;p&gt;thinkfan 設定檔在 &lt;code&gt;/etc/thinkfan.conf&lt;/code&gt;，主要可以設定的要用那些sensor以及設定溫度與轉速的規則。首先先找到溫度量測的檔案:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;find&lt;span class="w"&gt; &lt;/span&gt;/sys/devices&lt;span class="w"&gt; &lt;/span&gt;-type&lt;span class="w"&gt; &lt;/span&gt;f&lt;span class="w"&gt; &lt;/span&gt;-name&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"temp*_input"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;以x220為例，一共找到四個檔:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;/sys/devices/virtual/hwmon/hwmon0/temp1_input
+/sys/devices/platform/coretemp.0/temp3_input
+/sys/devices/platform/coretemp.0/temp1_input
+/sys/devices/platform/coretemp.0/temp2_input
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;把這四行寫入到 &lt;code&gt;/etc/thinkfan.conf&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sensor /sys/devices/virtual/hwmon/hwmon0/temp1_input
+sensor /sys/devices/platform/coretemp.0/temp3_input
+sensor /sys/devices/platform/coretemp.0/temp1_input
+sensor /sys/devices/platform/coretemp.0/temp2_input
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這樣ThinkFan就會取這四個sensor最高溫度來監度&lt;/p&gt;
+&lt;h2&gt;得到目前風扇的速度&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;cat&lt;span class="w"&gt; &lt;/span&gt;/proc/acpi/ibm/fan
+status:&lt;span class="w"&gt;     &lt;/span&gt;enabled
+speed:&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="m"&gt;4464&lt;/span&gt;
+level:&lt;span class="w"&gt;      &lt;/span&gt;auto
+commands:&lt;span class="w"&gt;   &lt;/span&gt;level&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;level&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&amp;lt;level&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;is&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;-7,&lt;span class="w"&gt; &lt;/span&gt;auto,&lt;span class="w"&gt; &lt;/span&gt;disengaged,&lt;span class="w"&gt; &lt;/span&gt;full-speed&lt;span class="o"&gt;)&lt;/span&gt;
+commands:&lt;span class="w"&gt;   &lt;/span&gt;enable,&lt;span class="w"&gt; &lt;/span&gt;disable
+commands:&lt;span class="w"&gt;   &lt;/span&gt;watchdog&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;timeout&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&amp;lt;timeout&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;is&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;off&lt;span class="o"&gt;)&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;-120&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;seconds&lt;span class="o"&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;從中也可以了解到如何手動控制風扇，例如手動控制風扇用速度&lt;code&gt;7&lt;/code&gt;來跑:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;level&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;7&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;tee&lt;span class="w"&gt; &lt;/span&gt;/proc/acpi/ibm/fan
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;前景執行 thinkfan&lt;/h2&gt;
+&lt;p&gt;想知道 thinkfan 執行的過程，可以試著跑前景模式，並每一秒更新一次：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;thinkfan&lt;span class="w"&gt; &lt;/span&gt;-n&lt;span class="w"&gt; &lt;/span&gt;-s&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="nv"&gt;sleeptime&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;tmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;49&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;last_tmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;49&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;biased_tmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;49&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;fan&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"level 0"&lt;/span&gt;
+&lt;span class="nv"&gt;sleeptime&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;tmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;51&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;last_tmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;49&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;biased_tmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;51&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;fan&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"level 1"&lt;/span&gt;
+&lt;span class="nv"&gt;sleeptime&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;tmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;50&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;last_tmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;51&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;biased_tmax&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;50&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;fan&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"level 0"&lt;/span&gt;
+...&lt;span class="w"&gt; &lt;/span&gt;略
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.cnblogs.com/henryau/archive/2012/03/03/ubuntu_thinkfan.html"&gt;[原创] Thinkfan安装配置使用 - HenrYau - 博客园&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://overtag.dk/wordpress/2012/03/to-all-my-thinkpad-friends-running-linux/"&gt;To all my Thinkpad friends running Linux | Ben Jao Ming&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;備註: Thinkpad X220 在不同 Level 的轉速&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Level&lt;/th&gt;
+&lt;th&gt;RPM&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;2000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;3000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;3500&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;3500&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;4000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;4000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;4500&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8+&lt;/td&gt;
+&lt;td&gt;6000 (全速)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;!-- 
+## lm-sensors
+
+如果想知道目前CPU溫度，可以額外安裝 lm-sensors
+
+    $ sudo apt-get install lm-sensors
+
+第一次可以先執行`sensors-detect`來掃系統有那些sensor可用。
+
+    $ sudo sensors-detect
+
+以x220為例，掃到了`coretemp`，最後一個問題他會問你要不要把`coretemp`加到`/etc/modules`，這樣開機就會自動載入溫度監控程式，`sensors`指令可以看到目前有的sensors，也包括溫度:
+
+    $ sensors
+    acpitz-virtual-0
+    Adapter: Virtual device
+    temp1:        +56.0°C  (crit = +99.0°C)
+
+    thinkpad-isa-0000
+    Adapter: ISA adapter
+    fan1:        3474 RPM
+
+    coretemp-isa-0000
+    Adapter: ISA adapter
+    Physical id 0:  +57.0°C  (high = +86.0°C, crit = +100.0°C)
+    Core 0:         +57.0°C  (high = +86.0°C, crit = +100.0°C)
+   2013/05/12 22:34:48  Core 1:         +57.0°C  (high = +86.0°C, crit = +100.0°C)
+
+
+## 參考的 config 
+
+(0,     0,      66)
+(1,     56,     75)
+(2,     68,     78)
+(3,     71,     81)
+(5,     74,     84)
+(7,     77,     87)
+(127,   80,     32767)
+
+--&gt;</content><category term="Linux"></category><category term="Linux"></category><category term="Thinkpad"></category></entry><entry><title>Using vim as a man-page viewer under Linux</title><link href="https://blog.codylab.com/vim-man-viewer/" rel="alternate"></link><published>2013-12-03T08:25:59+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-12-03:/vim-man-viewer/</id><content type="html">&lt;p&gt;If you use bash, just add the following script in your &lt;code&gt;~/.bashrc&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;PAGER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"/bin/sh -c &lt;/span&gt;&lt;span class="se"&gt;\"&lt;/span&gt;&lt;span class="s2"&gt;unset PAGER;col -b -x | &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;    vim -R -c 'set ft=man nomod nolist' -c 'map q :q&amp;lt;CR&amp;gt;' &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;    -c 'map &amp;lt;SPACE&amp;gt; &amp;lt;C-D&amp;gt;' -c 'map b &amp;lt;C-U&amp;gt;' &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;    -c 'nmap K :Man &amp;lt;C-R&amp;gt;=expand(&lt;/span&gt;&lt;span class="se"&gt;\\\"&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;cword&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\\\"&lt;/span&gt;&lt;span class="s2"&gt;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;' -&lt;/span&gt;&lt;span class="se"&gt;\"&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Compare with the original &lt;code&gt;Main&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Main" src="https://lh6.googleusercontent.com/-awZYEgbmllOy78HxlrJZW9bEOn2tWHCHodmYq_2hdGC=w995-h551-no"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Main&lt;/code&gt; in VIM has good looking with syntaxheight.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Man in VIM" src="https://lh5.googleusercontent.com/-gsOASyvKbp8/Up1EIBUmSoI/AAAAAAAFGjI/rmvTKeyt59I/w928-h566-no/man-vim.png"&gt;&lt;/p&gt;
+&lt;h2&gt;Reference:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://vim.wikia.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix"&gt;Using vim as a man-page viewer under Unix - Vim Tips Wiki&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Linux"></category><category term="Ubuntu"></category><category term="vim"></category><category term="productivity"></category><category term="bash"></category></entry><entry><title>Linux在充放電切換時執行特定指令</title><link href="https://blog.codylab.com/linux-powersaving-run-script/" rel="alternate"></link><published>2013-12-02T08:18:24+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-12-02:/linux-powersaving-run-script/</id><summary type="html">&lt;p&gt;Linux筆電在充放電的時侯可以執行特定指令。例如我們想增加電池的使用時間，可以在電池放電的時侯，把一些較消耗資源的背景程式先暫時暫停，等插回AC電源的時侯再重新開始。這邊以暫停&lt;a href="https://www.insynchq.com/"&gt;Insync&lt;/a&gt;為例:&lt;/p&gt;
+&lt;h2&gt;方法一 /etc/pm/power.d&lt;/h2&gt;
+&lt;p&gt;我們可以放script放到&lt;code&gt;/etc/pm/power.d&lt;/code&gt;來達成，當進入電池模式的時侯會帶&lt;code&gt;true&lt;/code&gt;參數，而離開電池模式的時侯會帶&lt;code&gt;false&lt;/code&gt;參數，只要新增一個檔案，例如&lt;code&gt;/etc/pm/power.d/00-powersaving&lt;/code&gt;加入以下內容，實際指令就依照自己的需求修改:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;case $1 in
+    true)
+        echo "Enable screen power saving"
+        sudo -u cody insync pause_syncing
+    ;;
+    false)
+        echo "Disable screen power saving"
+        sudo -u cody insync pause_syncing
+    ;;
+esac
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;最後記得再加上執行權限&lt;code&gt;sudo chmod +x /etc/pm/power.d/00-powersaving&lt;/code&gt;&lt;/p&gt;
+&lt;h2&gt;方法二 /etc/acpi/power.sh&lt;/h2&gt;
+&lt;p&gt;Linux 有一個指令 &lt;code&gt;on_ac_power&lt;/code&gt;，如果回傳&lt;code&gt;0&lt;/code&gt;代表是AC，如果是用電池的話，則回傳&lt;code&gt;1&lt;/code&gt;，例如：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;On AC Power&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;on_ac_power&lt;span class="w"&gt; &lt;/span&gt;
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$?&lt;/span&gt;
+&lt;span class="m"&gt;0&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;On Battery&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;on_ac_power&lt;span class="w"&gt; &lt;/span&gt;
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$?&lt;/span&gt;
+&lt;span class="m"&gt;1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;所以透過這個指令，我們就可以修改&lt;code&gt;/etc/acpi/power …&lt;/code&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;Linux筆電在充放電的時侯可以執行特定指令。例如我們想增加電池的使用時間，可以在電池放電的時侯，把一些較消耗資源的背景程式先暫時暫停，等插回AC電源的時侯再重新開始。這邊以暫停&lt;a href="https://www.insynchq.com/"&gt;Insync&lt;/a&gt;為例:&lt;/p&gt;
+&lt;h2&gt;方法一 /etc/pm/power.d&lt;/h2&gt;
+&lt;p&gt;我們可以放script放到&lt;code&gt;/etc/pm/power.d&lt;/code&gt;來達成，當進入電池模式的時侯會帶&lt;code&gt;true&lt;/code&gt;參數，而離開電池模式的時侯會帶&lt;code&gt;false&lt;/code&gt;參數，只要新增一個檔案，例如&lt;code&gt;/etc/pm/power.d/00-powersaving&lt;/code&gt;加入以下內容，實際指令就依照自己的需求修改:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;case $1 in
+    true)
+        echo "Enable screen power saving"
+        sudo -u cody insync pause_syncing
+    ;;
+    false)
+        echo "Disable screen power saving"
+        sudo -u cody insync pause_syncing
+    ;;
+esac
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;最後記得再加上執行權限&lt;code&gt;sudo chmod +x /etc/pm/power.d/00-powersaving&lt;/code&gt;&lt;/p&gt;
+&lt;h2&gt;方法二 /etc/acpi/power.sh&lt;/h2&gt;
+&lt;p&gt;Linux 有一個指令 &lt;code&gt;on_ac_power&lt;/code&gt;，如果回傳&lt;code&gt;0&lt;/code&gt;代表是AC，如果是用電池的話，則回傳&lt;code&gt;1&lt;/code&gt;，例如：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;On AC Power&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;on_ac_power&lt;span class="w"&gt; &lt;/span&gt;
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$?&lt;/span&gt;
+&lt;span class="m"&gt;0&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;On Battery&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;on_ac_power&lt;span class="w"&gt; &lt;/span&gt;
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$?&lt;/span&gt;
+&lt;span class="m"&gt;1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;所以透過這個指令，我們就可以修改&lt;code&gt;/etc/acpi/power.sh&lt;/code&gt;把下列 script 加到最前面來達到效果&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;on_ac_power&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;then&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;# On AC&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;-u&lt;span class="w"&gt; &lt;/span&gt;cody&lt;span class="w"&gt; &lt;/span&gt;insync&lt;span class="w"&gt; &lt;/span&gt;resume_syncing
+&lt;span class="k"&gt;else&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="c1"&gt;# On Batter&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;-u&lt;span class="w"&gt; &lt;/span&gt;cody&lt;span class="w"&gt; &lt;/span&gt;insync&lt;span class="w"&gt; &lt;/span&gt;pause_syncing
+&lt;span class="k"&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;上面兩個方法都可以達到要求，但是實際測試&lt;code&gt;/etc/acpi/power.sh&lt;/code&gt;在切換時會重覆執行很多次，所以我個人較偏好方法一。&lt;/p&gt;
+&lt;h3&gt;Referece:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://askubuntu.com/questions/55904/how-can-i-run-my-script-automatically-on-ac-switching"&gt;11.04 - how can I run my script automatically on ac switching - Ask Ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://wiki.archlinux.org/index.php/pm-utils#Change_brightness_depending_on_AC_state"&gt;pm-utils - ArchWiki&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Linux"></category><category term="Thinkpad"></category><category term="command"></category></entry><entry><title>Update ThinkPad BIOS in Linux with a USB disk</title><link href="https://blog.codylab.com/thinkpad-bios/" rel="alternate"></link><published>2013-11-30T23:27:26+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-11-30:/thinkpad-bios/</id><summary type="html">&lt;p&gt;In this post, I recorded my ThinkPad x220 BIOS update steps. In Windows, we can use &lt;a href="http://support.lenovo.com/en_US/detail.page?LegacyDocID=MIGR-77150"&gt;BIOS Update Utility&lt;/a&gt; provided by Lenovo, but it's only available in Windows platformas. For Ubuntu user like me, we can still update BIOS with a USB disk.&lt;/p&gt;
+&lt;h3&gt;Download BIOS Update Bootable CD&lt;/h3&gt;
+&lt;p&gt;The latest version is 1.39(2013/11), Go to lenovo support site:&lt;a href="http://support.lenovo.com/en_US/downloads/detail.page?&amp;amp;LegacyDocID=MIGR-77151"&gt;BIOS Update Bootable CD for Windows 8 (32-bit, 64-bit), 7 (32-bit, 64-bit), Vista (32-bit, 64-bit), XP - ThinkPad X220, X220i, X220 Tablet, X220i Tablet&lt;/a&gt;, download 8duj25us.iso(31.6 MB)    &lt;/p&gt;
+&lt;h3&gt;Download &lt;code&gt;geteltorito.pl﻿&lt;/code&gt; to generate boot image&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;wget&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;'﻿﻿http://www …&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;In this post, I recorded my ThinkPad x220 BIOS update steps. In Windows, we can use &lt;a href="http://support.lenovo.com/en_US/detail.page?LegacyDocID=MIGR-77150"&gt;BIOS Update Utility&lt;/a&gt; provided by Lenovo, but it's only available in Windows platformas. For Ubuntu user like me, we can still update BIOS with a USB disk.&lt;/p&gt;
+&lt;h3&gt;Download BIOS Update Bootable CD&lt;/h3&gt;
+&lt;p&gt;The latest version is 1.39(2013/11), Go to lenovo support site:&lt;a href="http://support.lenovo.com/en_US/downloads/detail.page?&amp;amp;LegacyDocID=MIGR-77151"&gt;BIOS Update Bootable CD for Windows 8 (32-bit, 64-bit), 7 (32-bit, 64-bit), Vista (32-bit, 64-bit), XP - ThinkPad X220, X220i, X220 Tablet, X220i Tablet&lt;/a&gt;, download 8duj25us.iso(31.6 MB)    &lt;/p&gt;
+&lt;h3&gt;Download &lt;code&gt;geteltorito.pl﻿&lt;/code&gt; to generate boot image&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;wget&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;'﻿﻿http://www.uni-koblenz.de/~krienke/ftp/noarch/geteltorito/geteltorito.pl﻿'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Generate bootable image from geteltorito.pl&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;perl&lt;span class="w"&gt; &lt;/span&gt;geteltorito.pl&lt;span class="w"&gt; &lt;/span&gt;﻿﻿8duj10uc.iso&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;biosupdate.img
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Copy the image to the usb thumdrive&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;dd&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;biosupdate.img&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;of&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/dev/&amp;lt;your_usb_disk&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;bs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;512K
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Reboot&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="img" src="https://lh3.googleusercontent.com/mj81RJGN3NOwp3fwgG3LJRTxSz7UVPjhT84QOWaC6zHk=w995-h259-no"&gt;&lt;br&gt;
+Choose &lt;code&gt;Update system program&lt;/code&gt; and follow the instructions.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="img" src="https://lh3.googleusercontent.com/gMqX63HkWAabxpysYXVkBmmzCSC63C_VsmRVuTHGn0C9=w995-h312-no"&gt;&lt;br&gt;
+After upgrading, we can verify the version in BIOS. (UEFI: 1.39 / ECP: 1.24)&lt;/p&gt;
+&lt;h4&gt;Reference:&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.floccinaucinihilipilification.net/blog/2011/10/2/updating-the-bios-of-a-thinkpad-x220-using-linux.html"&gt;The Floccinaucinihilipilification Homepage - The Floccinaucinihilipilification Blog - Updating the BIOS of a Thinkpad X220 using Linux&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Linux"></category><category term="thinkpad"></category></entry><entry><title>Bash Shell 快速鍵 (emacs-style)</title><link href="https://blog.codylab.com/bash-shell-shortcut/" rel="alternate"></link><published>2013-11-30T10:57:25+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-11-30:/bash-shell-shortcut/</id><summary type="html">&lt;h2&gt;執行/中斷/輸入&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl-C: 終止正在執行的程式&lt;/li&gt;
+&lt;li&gt;Ctrl-L: 清除Terminal畫面，同clear指令&lt;/li&gt;
+&lt;li&gt;Ctrl-Z: 將該工作放到背景中&lt;code&gt;暫停&lt;/code&gt;, 使用&lt;code&gt;jobs&lt;/code&gt;看工作號碼(job number), &lt;code&gt;fg&lt;/code&gt;&lt;number&gt; 取回&lt;/li&gt;
+&lt;li&gt;Ctrl-J: Enter，不用離開鍵盤，還不錯&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;進階&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl-D: 離開 Shell&lt;/li&gt;
+&lt;li&gt;Ctrl-x, Ctrl-e 開啟vim，可一起執行多個指令&lt;/li&gt;
+&lt;li&gt;Ctrl-V TAB: 輸入 TAB，而不是命令列擴展&lt;/li&gt;
+&lt;li&gt;Ctrl-V: 加上要輸入特殊字元, ex: Ctrl-V Ctrl-D 會出現 ^D&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;移動&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl-A: 回到此行最前面(同&lt;code&gt;Home&lt;/code&gt;鍵)&lt;/li&gt;
+&lt;li&gt;Ctrl-E: 到此行的最後面(同&lt;code&gt;End&lt;/code&gt;鍵)&lt;/li&gt;
+&lt;li&gt;Ctrl-F: 游標向後移動一格(不想要用arrow key時可多加利用)&lt;/li&gt;
+&lt;li&gt;Ctrl-B: 游標向前移動一個(不想要用arrow key時可多加利用)&lt;/li&gt;
+&lt;li&gt;Alt-B: Back(left) one word&lt;/li&gt;
+&lt;li&gt;Alt-F: Forward(right) one word&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;查找&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl-N: 找下個指令(同下箭頭)&lt;/li&gt;
+&lt;li&gt;Ctrl-P: 找上個指令(同上箭頭)&lt;/li&gt;
+&lt;li&gt;TAB: 擴展要輸入的檔案到命令列上(上/下箭頭: 開始搜尋過去的命令)&lt;/li&gt;
+&lt;li&gt;Ctrl-R: 打關鍵字搜尋過去的命令, 搭配 Ctrl-r/Ctrl+Shift+r，可來回尋找&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;進階&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl-I: 同 Tab&lt;/li&gt;
+&lt;li&gt;Ctrl-S: 暫停輸出到畫面上，讓stdout定格(搭配Ctrl-Q使用)&lt;/li&gt;
+&lt;li&gt;Ctrl-Q …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;h2&gt;執行/中斷/輸入&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl-C: 終止正在執行的程式&lt;/li&gt;
+&lt;li&gt;Ctrl-L: 清除Terminal畫面，同clear指令&lt;/li&gt;
+&lt;li&gt;Ctrl-Z: 將該工作放到背景中&lt;code&gt;暫停&lt;/code&gt;, 使用&lt;code&gt;jobs&lt;/code&gt;看工作號碼(job number), &lt;code&gt;fg&lt;/code&gt;&lt;number&gt; 取回&lt;/li&gt;
+&lt;li&gt;Ctrl-J: Enter，不用離開鍵盤，還不錯&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;進階&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl-D: 離開 Shell&lt;/li&gt;
+&lt;li&gt;Ctrl-x, Ctrl-e 開啟vim，可一起執行多個指令&lt;/li&gt;
+&lt;li&gt;Ctrl-V TAB: 輸入 TAB，而不是命令列擴展&lt;/li&gt;
+&lt;li&gt;Ctrl-V: 加上要輸入特殊字元, ex: Ctrl-V Ctrl-D 會出現 ^D&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;移動&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl-A: 回到此行最前面(同&lt;code&gt;Home&lt;/code&gt;鍵)&lt;/li&gt;
+&lt;li&gt;Ctrl-E: 到此行的最後面(同&lt;code&gt;End&lt;/code&gt;鍵)&lt;/li&gt;
+&lt;li&gt;Ctrl-F: 游標向後移動一格(不想要用arrow key時可多加利用)&lt;/li&gt;
+&lt;li&gt;Ctrl-B: 游標向前移動一個(不想要用arrow key時可多加利用)&lt;/li&gt;
+&lt;li&gt;Alt-B: Back(left) one word&lt;/li&gt;
+&lt;li&gt;Alt-F: Forward(right) one word&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;查找&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl-N: 找下個指令(同下箭頭)&lt;/li&gt;
+&lt;li&gt;Ctrl-P: 找上個指令(同上箭頭)&lt;/li&gt;
+&lt;li&gt;TAB: 擴展要輸入的檔案到命令列上(上/下箭頭: 開始搜尋過去的命令)&lt;/li&gt;
+&lt;li&gt;Ctrl-R: 打關鍵字搜尋過去的命令, 搭配 Ctrl-r/Ctrl+Shift+r，可來回尋找&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;進階&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ctrl-I: 同 Tab&lt;/li&gt;
+&lt;li&gt;Ctrl-S: 暫停輸出到畫面上，讓stdout定格(搭配Ctrl-Q使用)&lt;/li&gt;
+&lt;li&gt;Ctrl-Q: 回復輸出到畫面上(恢復Ctrl+S的輸出)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;編輯指令&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Alt-d: 刪除游標之後的一個單字&lt;/li&gt;
+&lt;li&gt;Ctrl-D: 移除游標後的一個字元，如果全部刪除的話，就會離開 shell&lt;/li&gt;
+&lt;li&gt;Ctrl-H: 移除游標前的一個字元，同 backspace&lt;/li&gt;
+&lt;li&gt;Ctrl-K: 清除游標之後的所有文字&lt;/li&gt;
+&lt;li&gt;Ctrl-U: 清除游標之前的所有文字&lt;/li&gt;
+&lt;li&gt;Ctrl-W: 刪除游標之前的最後一個單字&lt;/li&gt;
+&lt;li&gt;Ctrl-T: 相近兩個字元互換位置, 例如 daet 會修正為 date&lt;/li&gt;
+&lt;li&gt;ESC-T: 相近最後兩個 "字" 互換位置，例 bee cat 會修正為 cat bee，與 Ctrl+T 類似&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Reference&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://blog.longwin.com.tw/2006/09/bash_hot_key_2006/"&gt;Bash Shell 快速鍵 - Tsung's Blog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://teohm.github.io/blog/2012/01/04/shortcuts-to-move-faster-in-bash-command-line/"&gt;Shortcuts to move faster in Bash command line - teohm.dev&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Linux"></category><category term="bash"></category></entry><entry><title>Set hardware clock time</title><link href="https://blog.codylab.com/cmd-hwclock.md/" rel="alternate"></link><published>2013-11-26T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-11-26:/cmd-hwclock.md/</id><content type="html">&lt;h2&gt;Display hardware clock time&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;hwclock
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Set hardware clock to current time&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;hwclock&lt;span class="w"&gt; &lt;/span&gt;-w
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Set the System Time from the Hardware Clock.&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;hwclock&lt;span class="w"&gt; &lt;/span&gt;-s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.thegeekstuff.com/2013/08/hwclock-examples/"&gt;7 Linux hwclock Command Examples to Set Hardware Clock Date Time&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Linux"></category><category term="command"></category></entry><entry><title>Install IBM Active Protection System Linux Driver (HDAPS)</title><link href="https://blog.codylab.com/thinkpad-ubuntu-hdaps/" rel="alternate"></link><published>2013-11-25T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-11-25:/thinkpad-ubuntu-hdaps/</id><content type="html">&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;update
+$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;tp-smapi-dkms&lt;span class="w"&gt; &lt;/span&gt;hdapsd
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;'tp_smapi'&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;tee&lt;span class="w"&gt; &lt;/span&gt;-a&lt;span class="w"&gt; &lt;/span&gt;/etc/modules
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;'hdapsd'&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;tee&lt;span class="w"&gt; &lt;/span&gt;-a&lt;span class="w"&gt; &lt;/span&gt;/etc/modules
+$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;modprobe&lt;span class="w"&gt; &lt;/span&gt;tp_smapi
+$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;/etc/init.d/hdapsd&lt;span class="w"&gt; &lt;/span&gt;restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Verify if it works&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;hdapsd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;it should display "parking" on console if you move your laptop &lt;/p&gt;
+&lt;h2&gt;Modify config: /etc/default/hdapsd&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;sensitivity: default is 15. higher value means less sensitive.&lt;/li&gt;
+&lt;li&gt;disk: the disk that hdapsd should monitor&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Reference :&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://samiux.blogspot.tw/2011/07/howto-lenovo-active-protection-system.html"&gt;Samiux's Blog: HOWTO : Lenovo Active Protection System (HDAPS) on Ubuntu 11.04&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.thinkwiki.org/wiki/HDAPS"&gt;HDAPS - ThinkWiki&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Linux"></category><category term="ThinkPad"></category><category term="Ubuntu"></category></entry><entry><title>Upgrade openssl from source code on Ubuntu</title><link href="https://blog.codylab.com/openssl-upgrade/" rel="alternate"></link><published>2013-11-08T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-11-08:/openssl-upgrade/</id><content type="html">&lt;h2&gt;Remove previous openssl installation&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;remove&lt;span class="w"&gt; &lt;/span&gt;openssl&lt;span class="w"&gt; &lt;/span&gt;libssl-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Install openssl 1.0.1c from source&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;tar&lt;span class="w"&gt; &lt;/span&gt;-xvf&lt;span class="w"&gt; &lt;/span&gt;openssl-w.x.yz.tar.gz
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;openssl-w.x.yz
+$&lt;span class="w"&gt; &lt;/span&gt;./config&lt;span class="w"&gt; &lt;/span&gt;--prefix&lt;span class="o"&gt;=&lt;/span&gt;/usr
+$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;make&lt;span class="w"&gt; &lt;/span&gt;install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="Linux"></category><category term="openssl"></category><category term="ubuntu"></category></entry><entry><title>sed的s指令筆記</title><link href="https://blog.codylab.com/sed-substitute-s-command/" rel="alternate"></link><published>2013-04-26T11:11:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-04-26:/sed-substitute-s-command/</id><summary type="html">&lt;h2&gt;s Command&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;s&lt;/strong&gt;(substitue) 指令是 sed 中最常用的，可以把文件中的字串替換掉。基本的syntax &lt;code&gt;s/RegEx/SubEx/&lt;/code&gt;，例如 &lt;code&gt;s/Old/New/&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;'this is old'&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;input.txt
+$&lt;span class="w"&gt; &lt;/span&gt;sed&lt;span class="w"&gt; &lt;/span&gt;s/old/new/&lt;span class="w"&gt; &lt;/span&gt;input.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這個sed指令可以把文件中的old字串換成new&lt;/p&gt;
+&lt;h2&gt;sed 執行流程&lt;/h2&gt;
+&lt;p&gt;sed不像一般程式語言有 variable 的概念，但是sed有兩個特別的buffer(or workspace)可以讓sed執行較複雜的工作。這兩個buffer稱為&lt;strong&gt;Pattern space&lt;/strong&gt;和&lt;strong&gt;Hold space&lt;/strong&gt;。sed執行是從input stream中，每次執行一行，流程大致如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;sed從input stream讀一行的內容&lt;/li&gt;
+&lt;li&gt;把換行符號(trailing newlines)移除&lt;/li&gt;
+&lt;li&gt;把它放到&lt;strong&gt;pattern sapce&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;執行指令(上面的例子就是&lt;strong&gt;s&lt;/strong&gt; command把old取代成new)&lt;/li&gt;
+&lt;li&gt;把換行符號(trailing newlines)補回來&lt;/li&gt;
+&lt;li&gt;sed 把結果印到 output steam&lt;/li&gt;
+&lt;li&gt;如果還有input的話，就繼續執行step1，否則就結束&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;而pattern space在每一個迴圈都會清除，但是hold space則不會，可參考‘h’, ‘H’, ‘x’, ‘g’, ‘G’指令。&lt;/p&gt;
+&lt;h2&gt;s 指令的其它選項&lt;/h2&gt;
+&lt;p&gt;-e: sed script，可以連接多個 sed script，如果只有一個 sed script 則 -e 可以省略。例如:
+    $ echo 1234567890 …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;s Command&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;s&lt;/strong&gt;(substitue) 指令是 sed 中最常用的，可以把文件中的字串替換掉。基本的syntax &lt;code&gt;s/RegEx/SubEx/&lt;/code&gt;，例如 &lt;code&gt;s/Old/New/&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;'this is old'&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;input.txt
+$&lt;span class="w"&gt; &lt;/span&gt;sed&lt;span class="w"&gt; &lt;/span&gt;s/old/new/&lt;span class="w"&gt; &lt;/span&gt;input.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這個sed指令可以把文件中的old字串換成new&lt;/p&gt;
+&lt;h2&gt;sed 執行流程&lt;/h2&gt;
+&lt;p&gt;sed不像一般程式語言有 variable 的概念，但是sed有兩個特別的buffer(or workspace)可以讓sed執行較複雜的工作。這兩個buffer稱為&lt;strong&gt;Pattern space&lt;/strong&gt;和&lt;strong&gt;Hold space&lt;/strong&gt;。sed執行是從input stream中，每次執行一行，流程大致如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;sed從input stream讀一行的內容&lt;/li&gt;
+&lt;li&gt;把換行符號(trailing newlines)移除&lt;/li&gt;
+&lt;li&gt;把它放到&lt;strong&gt;pattern sapce&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;執行指令(上面的例子就是&lt;strong&gt;s&lt;/strong&gt; command把old取代成new)&lt;/li&gt;
+&lt;li&gt;把換行符號(trailing newlines)補回來&lt;/li&gt;
+&lt;li&gt;sed 把結果印到 output steam&lt;/li&gt;
+&lt;li&gt;如果還有input的話，就繼續執行step1，否則就結束&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;而pattern space在每一個迴圈都會清除，但是hold space則不會，可參考‘h’, ‘H’, ‘x’, ‘g’, ‘G’指令。&lt;/p&gt;
+&lt;h2&gt;s 指令的其它選項&lt;/h2&gt;
+&lt;p&gt;-e: sed script，可以連接多個 sed script，如果只有一個 sed script 則 -e 可以省略。例如:
+    $ echo 1234567890 | sed -e 's/1/x/' -e 's/5/x/'
+另外也可以用&lt;code&gt;;&lt;/code&gt;來連結多個 sed script
+    $ echo 1234567890 | sed -e 's/1/x/;s/5/x/'&lt;/p&gt;
+&lt;p&gt;-f: 把結果輸出到另一個檔案&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;'s/1/x/\ns/5/x/'&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;/tmp/my.sed
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1234567890&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sed&lt;span class="w"&gt; &lt;/span&gt;-f&lt;span class="w"&gt; &lt;/span&gt;/tmp/my.sed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;-i: in place 直接在該檔操作&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sed&lt;span class="w"&gt; &lt;/span&gt;-i&lt;span class="w"&gt; &lt;/span&gt;s/Bad/Good/&lt;span class="w"&gt; &lt;/span&gt;input.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;-n: 不要輸出結果到 output stream &lt;/p&gt;
+&lt;h2&gt;flags for s command&lt;/h2&gt;
+&lt;p&gt;s指令提供了一些flags可以讓執行可以有更多變化，常見的 flag有:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;i: ignore case &lt;/li&gt;
+&lt;li&gt;g: global, 同一行中的所有match都替換&lt;/li&gt;
+&lt;li&gt;n(數字): 只換第n個match&lt;/li&gt;
+&lt;li&gt;p: print the result if match，常跟 -n(silent)一起用，只顯示有更動的內容&lt;/li&gt;
+&lt;li&gt;w: write result to file if match，後面要指檔案名稱&lt;/li&gt;
+&lt;li&gt;e(Execute PatSpace to PatSpace),m(Multi-Line mode matching)少用，略過。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h5&gt;範例&lt;/h5&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt; $ echo old old | sed s/old/new/g
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;同一行的全部配對都替換掉&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;old&lt;span class="w"&gt; &lt;/span&gt;old&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sed&lt;span class="w"&gt; &lt;/span&gt;s/old/new/2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;只替換第2個match，如果沒有加這個flag的話，預設就會是第一個match會被換掉&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"12345\nabcde"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sed&lt;span class="w"&gt; &lt;/span&gt;-n&lt;span class="w"&gt; &lt;/span&gt;s/a/x/p
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;只output有更動行的內容&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"this is bad"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sed&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;'s/bad/good/w out.txt'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;把結果輸出到 out.txt&lt;/p&gt;
+&lt;h2&gt;有關 Delimiter&lt;/h2&gt;
+&lt;p&gt;除了最常見的&lt;code&gt;/&lt;/code&gt;之外，也可以使用&lt;code&gt;:&lt;/code&gt;,&lt;code&gt;|&lt;/code&gt;,&lt;code&gt;_&lt;/code&gt;等分隔符。這在內文剛好出現分隔符的時侯，就可以派上用場。例如可以把&lt;code&gt;$ echo /A/ | sed 's/\/A\//\/B\//'&lt;/code&gt;改寫成 &lt;code&gt;$ echo /A/ | sed 's:/A/:/B/:'&lt;/code&gt;就顯得清楚多了。&lt;/p&gt;
+&lt;h2&gt;Reference:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.amazon.com/Definitive-Guide-sed-Reference-ebook/dp/B00BH662PI/ref=sr_1_3?ie=UTF8&amp;amp;qid=1366946178&amp;amp;sr=8-3&amp;amp;keywords=sed"&gt;Definitive Guide to sed: Tutorial and Reference: Daniel Goldman, Paolo Bonzini: Amazon.com: Kindle Store&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.sealinger.com/archives/297/"&gt;了解sed的工作原理（pattern space 和 hold space） - Walk in Mindfields&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.gnu.org/software/sed/manual/html_node/Execution-Cycle.html#Execution-Cycle"&gt;Execution Cycle - sed, a stream editor&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Linux"></category><category term="sed"></category><category term="command"></category></entry><entry><title>使用 iconv 轉換檔案編碼</title><link href="https://blog.codylab.com/cmd-iconv-big5-to-utf-8.md/" rel="alternate"></link><published>2013-01-01T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-01-01:/cmd-iconv-big5-to-utf-8.md/</id><content type="html">&lt;p&gt;iconv 可以轉換編碼, 例如想把 big5 檔換轉到 utf8: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;iconv&lt;span class="w"&gt; &lt;/span&gt;-f&lt;span class="w"&gt; &lt;/span&gt;big5&lt;span class="w"&gt; &lt;/span&gt;-t&lt;span class="w"&gt; &lt;/span&gt;utf8&lt;span class="w"&gt; &lt;/span&gt;big5_input.txt&lt;span class="w"&gt; &lt;/span&gt;-o&lt;span class="w"&gt; &lt;/span&gt;utf8_output
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="Linux"></category><category term="command"></category></entry><entry><title>在 Ubuntu 修改 ThinkPad 的充電設定</title><link href="https://blog.codylab.com/thinkpad-battery-ubuntu/" rel="alternate"></link><published>2012-08-07T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2012-08-07:/thinkpad-battery-ubuntu/</id><summary type="html">&lt;p&gt;在 Windows 中我們們可以很容易從 &lt;code&gt;Power Manager Battery Maintenance setting&lt;/code&gt;來改變充放電的設定，我習慣低於65%開始充電，然後充到90%就停止。在Ubuntu中，稍微麻煩一些，因為目前沒有GUI的介面來達到這件事。在Ubuntu Brainstorm有提出這個需求，希望未來的版本可以直接從OS層級來解決這個問題。但還好目前有一個專門的API叫&lt;a href="http://www.thinkwiki.org/wiki/Tp_smapi"&gt;Tp smapi&lt;/a&gt;來達到我的需求。在Ubuntu 12.04下的安裝方法如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;tp-smapi-dkms
+$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;modprobe&lt;span class="w"&gt; &lt;/span&gt;tp_smapi
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;成功之後，在 &lt;em&gt;/sys/devices/platform/smapi/ _就會多了很多跟電源設定相關的檔案。而我最在意的莫過於 _stop_charge_thresh&lt;/em&gt;，&lt;em&gt;start_charge_thresh&lt;/em&gt; 跟_ cycle count_。例如說我想知道電池的cycle count 是多少：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;cat&lt;span class="w"&gt; &lt;/span&gt;/sys/devices/platform/smapi/BAT0/cycle_count&lt;span class="w"&gt; &lt;/span&gt;
+&lt;span class="m"&gt;130&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這台在幾乎天天使用的情況下，從出廠到現在15個月，cycle count 達到 130，不曉得算不算高。希望還能再撐個15個月 :) 查了一下官方的 &lt;a href="http://www.thinkwiki.org/wiki/Tp_smapi"&gt;wiki&lt;/a&gt;，目前Tp smapi 對 x220只支援 stop_charge_thresh 而不支援 start_charge_thresh。冏。算了，之後應該會支援吧。目前就先防過充就好。設定的方式如下，例如我想充到95%就停止：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo sh -c 'echo 95 &amp;gt; /sys/devices/platform/smapi/BAT0/stop_charge_thresh'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;稍微實驗了一下，插上電源之後，就真的只充到我想要的 95%&lt;/p&gt;
+&lt;p&gt;另一個設定則是插上電源之後幾分才開始充電，以避免頻繁的充電&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo sh …&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;在 Windows 中我們們可以很容易從 &lt;code&gt;Power Manager Battery Maintenance setting&lt;/code&gt;來改變充放電的設定，我習慣低於65%開始充電，然後充到90%就停止。在Ubuntu中，稍微麻煩一些，因為目前沒有GUI的介面來達到這件事。在Ubuntu Brainstorm有提出這個需求，希望未來的版本可以直接從OS層級來解決這個問題。但還好目前有一個專門的API叫&lt;a href="http://www.thinkwiki.org/wiki/Tp_smapi"&gt;Tp smapi&lt;/a&gt;來達到我的需求。在Ubuntu 12.04下的安裝方法如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;apt-get&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;tp-smapi-dkms
+$&lt;span class="w"&gt; &lt;/span&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;modprobe&lt;span class="w"&gt; &lt;/span&gt;tp_smapi
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;成功之後，在 &lt;em&gt;/sys/devices/platform/smapi/ _就會多了很多跟電源設定相關的檔案。而我最在意的莫過於 _stop_charge_thresh&lt;/em&gt;，&lt;em&gt;start_charge_thresh&lt;/em&gt; 跟_ cycle count_。例如說我想知道電池的cycle count 是多少：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;cat&lt;span class="w"&gt; &lt;/span&gt;/sys/devices/platform/smapi/BAT0/cycle_count&lt;span class="w"&gt; &lt;/span&gt;
+&lt;span class="m"&gt;130&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這台在幾乎天天使用的情況下，從出廠到現在15個月，cycle count 達到 130，不曉得算不算高。希望還能再撐個15個月 :) 查了一下官方的 &lt;a href="http://www.thinkwiki.org/wiki/Tp_smapi"&gt;wiki&lt;/a&gt;，目前Tp smapi 對 x220只支援 stop_charge_thresh 而不支援 start_charge_thresh。冏。算了，之後應該會支援吧。目前就先防過充就好。設定的方式如下，例如我想充到95%就停止：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo sh -c 'echo 95 &amp;gt; /sys/devices/platform/smapi/BAT0/stop_charge_thresh'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;稍微實驗了一下，插上電源之後，就真的只充到我想要的 95%&lt;/p&gt;
+&lt;p&gt;另一個設定則是插上電源之後幾分才開始充電，以避免頻繁的充電&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo sh -c 'echo 2 &amp;gt; /sys/devices/platform/smapi/BAT0/inhibit_charge_minutes'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.thinkwiki.org/wiki/Tp_smapi"&gt;Tp smapi - ThinkWiki&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!--
+
+echo 15 &gt; /sys/devices/platform/smapi/BAT0/inhibit_charge_minutes
+[start_change_thres in X220 · Issue #2 · ginkel/tp_smapi](https://github.com/ginkel/tp_smapi/issues/2)
+
+--&gt;</content><category term="Linux"></category><category term="thinkpad"></category><category term="ubuntu"></category></entry></feed>

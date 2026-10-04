@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>使用 south 來做 Django database migration</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">使用 south 來做 Django database migration</h1>
+      <p class="meta"><time datetime="2014-08-16T00:00:00+08:00" pubdate>2014 August 16 Sat</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><p>一般在 Django 底下更動 model 的時侯，必須使用 <code>syncdb</code> 這個指令，把修改的 model 同步到 database 之中，但是有個限制，就是只有新的 model 才會被更新，已經存在的 model 就不會更動，此時就需要<code>south</code>的幫忙。在 django 1.7 之後，這個 library 正式被整進到 django 之中。不過目前我手頭上的專案還是以 1.6 為主，所以還是要筆記一下。</p>
+<h2>初始化 south</h2>
+<p>安裝完 south 之後，第一次先執行 <code>syncdb</code> 把 south 相關的<code>south_migrationhistory</code> 新增到資料庫中。</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>./manage.py<span class="w"> </span>syncdb
+</code></pre></div>
+
+<h2>開始 migration</h2>
+<p>首先要介紹的是  <code>schemamigration &lt;APP_NAME&gt; --initial</code>，這個指令會在 app 資料夾下面產生一個 <code>migrations</code> 資料夾。如果是第一次執行的話，裡面的檔名會是 0001_initial.py 開頭，裡面會記錄如何從無到有，把資料表建立起來。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">forwards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orm</span><span class="p">):</span>
+    <span class="c1"># Adding model 'UserModel'</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span><span class="sa">u</span><span class="s1">'dusers_dmodel'</span><span class="p">,</span> <span class="p">(</span>
+        <span class="p">(</span><span class="sa">u</span><span class="s1">'id'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gf</span><span class="p">(</span><span class="s1">'django.db.models.fields.AutoField'</span><span class="p">)(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+</code></pre></div>
+
+<p>此時可以執行 syncdb 做一下確認</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>python<span class="w"> </span>manage.py<span class="w"> </span>syncdb
+<span class="go">....</span>
+<span class="go">Synced:</span>
+<span class="go"> &gt; django.contrib.admin</span>
+<span class="go">....</span>
+<span class="go">Not synced (use migrations):</span>
+<span class="go"> - southtut</span>
+<span class="gp gp-VirtualEnv">(use ./manage.py migrate to migrate these)</span>
+</code></pre></div>
+
+<p>就會發現 app(southtut) 會放到 Not synced。也就是說從此 syncdb 這個指令就不會再去管 southtut 這個 app 了。此時可能會有兩個情況，如果之前已經先執行過 syncdb，而 database 跟 model 已經完全一致的情況下，我們就必須額外跟 south 說，我們已經同步好了，你不需要幫我們做 migration。這時需要用<code>--fake</code>這個指令。來告訴 south，目前我們的 db 是在 migrations 資料夾的那一個版本。</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate<span class="w"> </span>rango<span class="w"> </span><span class="m">0001</span><span class="w"> </span>--fake
+</code></pre></div>
+
+<p>另一個情況是我們沒有對這個 app 同步過，這時就不能用 syncdb 來做，要改用 </p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate<span class="w"> </span>rango
+</code></pre></div>
+
+<p>這時在 south_migrationhistory 這個資料表就會記錄目前這個 app 已經同步到那一個版本</p>
+<p>id |  app_name  |   migration      |            applied
+ ---+------------+------------------+-------------------------------
+  1 | dusers     | 0001_initial     | 2014-08-15 10:24:45.694512+08</p>
+<p>所以第一次使用的時侯是用 <code>--initial</code>，接下來只要有改變，就可以用<code>--auto</code>。在 model 有修改之後，執行以下指令來建立跟上一個版本的差異資訊到 rango/migrations 資料夾中。</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>./manage.py<span class="w"> </span>schemamigration<span class="w"> </span>rango<span class="w"> </span>--auto
+</code></pre></div>
+
+<p>過程當中會詢問你如果有新的欄位，是否要填入一預設值。</p>
+<p>最後再使用<code>migrate &lt;APP_NAME&gt;</code>，正式修改資料庫schema，並把新的資料填入資料庫:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>./manage.py<span class="w"> </span>migrate<span class="w"> </span><span class="o">[</span>APP_NAME<span class="o">]</span>
+</code></pre></div>
+
+<h2>回復到之前的版本</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate<span class="w"> </span>photo<span class="w"> </span><span class="m">0002</span>
+</code></pre></div>
+
+<h2>查看目前那些版本還沒有做 migrate</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate<span class="w"> </span>--list
+</code></pre></div>
+
+<h2>備註</h2>
+<p>如果發生 django.db.utils.DatabaseError: table "XXXXX" already exists，代表目前資料庫的 schema 跟 south_migrationhistory 裡面所記錄的不同。</p>
+<p>可以執行:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate<span class="w"> </span>dodo<span class="w"> </span>--fake
+</code></pre></div>
+
+<p>來告訴 south 說，目前資料庫的狀態已經是 migration 資料夾裡面最新的版本了，不需要替我做 migration 的動作。</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2014-08-16T00:00:00+08:00" pubdate>2014 August 16 Sat</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/python.html">Python</a>
+    <a class="category" href="https://blog.codylab.com/tag/django.html">Django</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+  <section>
+    <h1>Related Posts</h1>
+    <ul>
+      <li><a href="https://blog.codylab.com/python-pyenv-management/">使用 Pyenv 管理多個 Python 版本</a></li>
+      <li><a href="https://blog.codylab.com/python-creationflags/">在Python中如何Async的方式呼叫外部程式</a></li>
+      <li><a href="https://blog.codylab.com/python-class-private-module-private-different/">[Python] Class Private 跟 Module Private 的差別</a></li>
+      <li><a href="https://blog.codylab.com/python-print-usage/">Python 多種 Print 函式的用法</a></li>
+      <li><a href="https://blog.codylab.com/django-update-model/">Django 修改 Model 之後要如何更新到 Database</a></li>
+    </ul>
+  <section>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/django-south/';
+          var disqus_url = 'https://blog.codylab.com/django-south/';
+          var disqus_title = '使用 south 來做 Django database migration';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

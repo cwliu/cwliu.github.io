@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Bash Shell 快速鍵 (emacs-style)</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Bash Shell 快速鍵 (emacs-style)</h1>
+      <p class="meta"><time datetime="2013-11-30T10:57:25+08:00" pubdate>2013 November 30 Sat</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><h2>執行/中斷/輸入</h2>
+<ul>
+<li>Ctrl-C: 終止正在執行的程式</li>
+<li>Ctrl-L: 清除Terminal畫面，同clear指令</li>
+<li>Ctrl-Z: 將該工作放到背景中<code>暫停</code>, 使用<code>jobs</code>看工作號碼(job number), <code>fg</code><number> 取回</li>
+<li>Ctrl-J: Enter，不用離開鍵盤，還不錯</li>
+</ul>
+<p>進階</p>
+<ul>
+<li>Ctrl-D: 離開 Shell</li>
+<li>Ctrl-x, Ctrl-e 開啟vim，可一起執行多個指令</li>
+<li>Ctrl-V TAB: 輸入 TAB，而不是命令列擴展</li>
+<li>Ctrl-V: 加上要輸入特殊字元, ex: Ctrl-V Ctrl-D 會出現 ^D</li>
+</ul>
+<h2>移動</h2>
+<ul>
+<li>Ctrl-A: 回到此行最前面(同<code>Home</code>鍵)</li>
+<li>Ctrl-E: 到此行的最後面(同<code>End</code>鍵)</li>
+<li>Ctrl-F: 游標向後移動一格(不想要用arrow key時可多加利用)</li>
+<li>Ctrl-B: 游標向前移動一個(不想要用arrow key時可多加利用)</li>
+<li>Alt-B: Back(left) one word</li>
+<li>Alt-F: Forward(right) one word</li>
+</ul>
+<h2>查找</h2>
+<ul>
+<li>Ctrl-N: 找下個指令(同下箭頭)</li>
+<li>Ctrl-P: 找上個指令(同上箭頭)</li>
+<li>TAB: 擴展要輸入的檔案到命令列上(上/下箭頭: 開始搜尋過去的命令)</li>
+<li>Ctrl-R: 打關鍵字搜尋過去的命令, 搭配 Ctrl-r/Ctrl+Shift+r，可來回尋找</li>
+</ul>
+<p>進階</p>
+<ul>
+<li>Ctrl-I: 同 Tab</li>
+<li>Ctrl-S: 暫停輸出到畫面上，讓stdout定格(搭配Ctrl-Q使用)</li>
+<li>Ctrl-Q: 回復輸出到畫面上(恢復Ctrl+S的輸出)</li>
+</ul>
+<h2>編輯指令</h2>
+<ul>
+<li>Alt-d: 刪除游標之後的一個單字</li>
+<li>Ctrl-D: 移除游標後的一個字元，如果全部刪除的話，就會離開 shell</li>
+<li>Ctrl-H: 移除游標前的一個字元，同 backspace</li>
+<li>Ctrl-K: 清除游標之後的所有文字</li>
+<li>Ctrl-U: 清除游標之前的所有文字</li>
+<li>Ctrl-W: 刪除游標之前的最後一個單字</li>
+<li>Ctrl-T: 相近兩個字元互換位置, 例如 daet 會修正為 date</li>
+<li>ESC-T: 相近最後兩個 "字" 互換位置，例 bee cat 會修正為 cat bee，與 Ctrl+T 類似</li>
+</ul>
+<h3>Reference</h3>
+<ul>
+<li><a href="http://blog.longwin.com.tw/2006/09/bash_hot_key_2006/">Bash Shell 快速鍵 - Tsung's Blog</a></li>
+<li><a href="http://teohm.github.io/blog/2012/01/04/shortcuts-to-move-faster-in-bash-command-line/">Shortcuts to move faster in Bash command line - teohm.dev</a></li>
+</ul></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2013-11-30T10:57:25+08:00" pubdate>2013 November 30 Sat</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/bash.html">bash</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+  <section>
+    <h1>Related Posts</h1>
+    <ul>
+      <li><a href="https://blog.codylab.com/vim-man-viewer/">Using vim as a man-page viewer under Linux</a></li>
+    </ul>
+  <section>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/bash-shell-shortcut/';
+          var disqus_url = 'https://blog.codylab.com/bash-shell-shortcut/';
+          var disqus_title = 'Bash Shell 快速鍵 (emacs-style)';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

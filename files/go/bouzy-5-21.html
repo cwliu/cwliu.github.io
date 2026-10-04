@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bouzy's 5/21 互動演示</title>
+<style>
+  :root {
+    --ink: #222;
+    --muted: #666;
+    --line: #ddd;
+    --accent: #2b6cb0;
+    --wood: #dcb35c;
+    --grid: #5a4320;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 12px;
+    background: #fff;
+    color: var(--ink);
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 12px; }
+  .board-col { flex: 1 1 330px; min-width: 0; }
+  .side-col { flex: 1 1 230px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+  svg { width: 100%; height: auto; display: block; touch-action: manipulation; user-select: none; }
+  .cell { cursor: pointer; }
+  .num { font: 600 11px ui-monospace, Menlo, Consolas, monospace; text-anchor: middle; dominant-baseline: central; pointer-events: none; paint-order: stroke; stroke-width: 3px; stroke-linejoin: round; }
+  .label { font: 11px sans-serif; fill: var(--grid); text-anchor: middle; dominant-baseline: central; }
+  .hover-ring { fill: none; stroke: var(--accent); stroke-width: 2.5; pointer-events: none; }
+  fieldset { border: 1px solid var(--line); border-radius: 8px; margin: 0; padding: 8px 10px 10px; }
+  legend { font-size: 13px; color: var(--muted); padding: 0 4px; }
+  .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  button {
+    font: inherit; font-size: 14px; padding: 4px 10px; border: 1px solid #bbb; border-radius: 6px;
+    background: #f7f7f7; color: var(--ink); cursor: pointer;
+  }
+  button:hover { background: #eee; }
+  button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  input[type=range] { width: 100%; }
+  .step-title { font-weight: 600; font-size: 16px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  #info { min-height: 4.5em; font-size: 14px; }
+  #info b { font-variant-numeric: tabular-nums; }
+  .stats { font-variant-numeric: tabular-nums; }
+  label.chk { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="board-col">
+    <svg id="board" viewBox="0 0 400 400" role="img" aria-label="9×9 棋盤"></svg>
+  </div>
+
+  <div class="side-col">
+    <fieldset>
+      <legend>步驟</legend>
+      <div class="step-title" id="stepTitle"></div>
+      <input type="range" id="step" min="0" max="26" value="0" aria-label="步驟">
+      <div class="row">
+        <button id="prev" aria-label="上一步">◀</button>
+        <button id="play">▶ 播放</button>
+        <button id="next" aria-label="下一步">▶</button>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <span class="muted">速度</span>
+        <input type="range" id="speed" min="1" max="10" value="5" style="flex:1" aria-label="播放速度">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>擺子（點棋盤）</legend>
+      <div class="row" id="tools">
+        <button data-tool="1" aria-pressed="true">● 黑</button>
+        <button data-tool="-1" aria-pressed="false">○ 白</button>
+        <button data-tool="0" aria-pressed="false">擦除</button>
+        <button data-preset="empty">清空</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>預設局面</legend>
+      <div class="row">
+        <button data-preset="single">單顆子</button>
+        <button data-preset="facing">兩子對峙</button>
+        <button data-preset="corner">角落小盤面</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>顯示</legend>
+      <label class="chk"><input type="checkbox" id="showNum"> 顯示數字</label>
+      <div class="stats muted" id="stats" style="margin-top:4px"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>格點計算</legend>
+      <div id="info" class="muted">滑鼠移到格點上，看這一步怎麼算出來。</div>
+    </fieldset>
+  </div>
+</div>
+
+<script>
+(function () {
+  var N = 9;
+  var DILATIONS = 5, EROSIONS = 21, STEPS = DILATIONS + EROSIONS;
+  // Initial stone value, as in Bouzy (2003) and Zobrist (1969).
+  var STONE = 64;
+  var COLS = 'ABCDEFGHJ';
+
+  var CELL = 40, MARGIN = 40;
+  var SVGNS = 'http://www.w3.org/2000/svg';
+
+  var stones = new Array(N * N).fill(0);
+  var steps = [];      // steps[k] = { v: number[], why: string[] }
+  var step = 0;
+  var tool = 1;
+  var hover = -1;
+  var timer = null;
+
+  var neighbors = [];
+  for (var p = 0; p < N * N; p++) {
+    var x = p % N, y = Math.floor(p / N), nb = [];
+    if (x > 0) nb.push(p - 1);
+    if (x < N - 1) nb.push(p + 1);
+    if (y > 0) nb.push(p - N);
+    if (y < N - 1) nb.push(p + N);
+    neighbors.push(nb);
+  }
+
+  function fmt(v) { return v > 0 ? '+' + v : v < 0 ? '−' + (-v) : '0'; }
+
+  function dilate(prev) {
+    var v = [], why = [];
+    for (var p = 0; p < N * N; p++) {
+      var pos = 0, neg = 0;
+      neighbors[p].forEach(function (q) { if (prev[q] > 0) pos++; else if (prev[q] < 0) neg++; });
+      if (prev[p] >= 0 && neg === 0 && pos > 0) {
+        v[p] = prev[p] + pos; why[p] = '+' + pos + '：四鄰有 ' + pos + ' 個正值';
+      } else if (prev[p] <= 0 && pos === 0 && neg > 0) {
+        v[p] = prev[p] - neg; why[p] = '−' + neg + '：四鄰有 ' + neg + ' 個負值';
+      } else {
+        v[p] = prev[p];
+        if (pos === 0 && neg === 0) why[p] = '不變：四鄰都是 0';
+        else if (prev[p] > 0) why[p] = '不變：四鄰有負值，不膨脹';
+        else if (prev[p] < 0) why[p] = '不變：四鄰有正值，不膨脹';
+        else why[p] = '不變：四鄰正負都有，雙方相持';
+      }
+    }
+    return { v: v, why: why };
+  }
+
+  function erode(prev) {
+    var v = [], why = [];
+    for (var p = 0; p < N * N; p++) {
+      var x = prev[p], k = 0;
+      if (x > 0) {
+        neighbors[p].forEach(function (q) { if (prev[q] <= 0) k++; });
+        v[p] = Math.max(0, x - k);
+        if (k === 0) why[p] = '不變：四鄰都是正值';
+        else why[p] = '−' + (x - v[p]) + '：四鄰有 ' + k + ' 個 ≤ 0' + (x - k < 0 ? '（減到 0 為止）' : '');
+      } else if (x < 0) {
+        neighbors[p].forEach(function (q) { if (prev[q] >= 0) k++; });
+        v[p] = Math.min(0, x + k);
+        if (k === 0) why[p] = '不變：四鄰都是負值';
+        else why[p] = '+' + (v[p] - x) + '：四鄰有 ' + k + ' 個 ≥ 0' + (x + k > 0 ? '（加到 0 為止）' : '');
+      } else {
+        v[p] = 0; why[p] = '不變：值為 0，不侵蝕';
+      }
+    }
+    return { v: v, why: why };
+  }
+
+  function compute() {
+    var init = stones.map(function (s) { return s * STONE; });
+    steps = [{ v: init, why: init.map(function (x, p) {
+      return stones[p] > 0 ? '黑子：+' + STONE : stones[p] < 0 ? '白子：−' + STONE : '空點：0';
+    }) }];
+    for (var i = 0; i < DILATIONS; i++) steps.push(dilate(steps[steps.length - 1].v));
+    for (var j = 0; j < EROSIONS; j++) steps.push(erode(steps[steps.length - 1].v));
+  }
+
+  function stepName(k) {
+    if (k === 0) return '0 · 初始化';
+    if (k <= DILATIONS) return k + ' · 膨脹 ' + k + ' / ' + DILATIONS;
+    return k + ' · 侵蝕 ' + (k - DILATIONS) + ' / ' + EROSIONS + (k === STEPS ? '（完成）' : '');
+  }
+
+  // ---- SVG board ----
+  var svg = document.getElementById('board');
+  function el(name, attrs, parent) {
+    var e = document.createElementNS(SVGNS, name);
+    for (var a in attrs) e.setAttribute(a, attrs[a]);
+    (parent || svg).appendChild(e);
+    return e;
+  }
+  function cx(i) { return MARGIN + i * CELL; }
+
+  var defs = el('defs', {});
+  defs.innerHTML =
+    '<radialGradient id="stoneB" cx="35%" cy="30%" r="70%">' +
+      '<stop offset="0" stop-color="#666"/><stop offset=".45" stop-color="#222"/><stop offset="1" stop-color="#000"/>' +
+    '</radialGradient>' +
+    '<radialGradient id="stoneW" cx="35%" cy="30%" r="75%">' +
+      '<stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#eee"/><stop offset="1" stop-color="#bdbdbd"/>' +
+    '</radialGradient>' +
+    '<filter id="stoneShadow" x="-30%" y="-30%" width="160%" height="160%">' +
+      '<feDropShadow dx="1.2" dy="1.8" stdDeviation="1.2" flood-color="#000" flood-opacity=".4"/>' +
+    '</filter>';
+  el('rect', { x: 0, y: 0, width: 400, height: 400, rx: 6, fill: 'var(--wood)' });
+  var shadeLayer = el('g', {});
+  var gridLayer = el('g', { stroke: 'var(--grid)', 'stroke-width': 1 });
+  for (var i = 0; i < N; i++) {
+    el('line', { x1: cx(0), y1: cx(i), x2: cx(N - 1), y2: cx(i) }, gridLayer);
+    el('line', { x1: cx(i), y1: cx(0), x2: cx(i), y2: cx(N - 1) }, gridLayer);
+    el('text', { x: cx(i), y: 16, class: 'label' }).textContent = COLS[i];
+    el('text', { x: 16, y: cx(i), class: 'label' }).textContent = N - i;
+  }
+  [[2, 2], [6, 2], [4, 4], [2, 6], [6, 6]].forEach(function (s) {
+    el('circle', { cx: cx(s[0]), cy: cx(s[1]), r: 3, fill: 'var(--grid)' }, gridLayer);
+  });
+  var stoneLayer = el('g', {});
+  var numLayer = el('g', {});
+  var ring = el('rect', { class: 'hover-ring', width: CELL - 4, height: CELL - 4, rx: 4, visibility: 'hidden' });
+  var hitLayer = el('g', {});
+
+  var shades = [], stoneEls = [], nums = [];
+  for (var p = 0; p < N * N; p++) {
+    var x = p % N, y = Math.floor(p / N);
+    shades.push(el('rect', { x: cx(x) - CELL / 2, y: cx(y) - CELL / 2, width: CELL, height: CELL }, shadeLayer));
+    stoneEls.push(el('circle', { cx: cx(x), cy: cx(y), r: CELL / 2 - 1.5, filter: 'url(#stoneShadow)' }, stoneLayer));
+    nums.push(el('text', { x: cx(x), y: cx(y), class: 'num' }, numLayer));
+    var hit = el('rect', { x: cx(x) - CELL / 2, y: cx(y) - CELL / 2, width: CELL, height: CELL, fill: 'transparent', class: 'cell' }, hitLayer);
+    hit.dataset.p = p;
+  }
+
+  hitLayer.addEventListener('pointerover', function (e) {
+    if (e.target.dataset.p === undefined) return;
+    hover = +e.target.dataset.p; renderInfo();
+  });
+  svg.addEventListener('pointerleave', function () { hover = -1; renderInfo(); });
+  hitLayer.addEventListener('click', function (e) {
+    if (e.target.dataset.p === undefined) return;
+    var p = +e.target.dataset.p;
+    stones[p] = (tool !== 0 && stones[p] === tool) ? 0 : tool;
+    hover = p;
+    compute(); render();
+  });
+
+  function alphaFor(v) {
+    if (v === 0) return 0;
+    // log scale so small territory values stay visible next to ±64 stones
+    return 0.12 + 0.68 * Math.min(1, Math.log2(1 + Math.abs(v)) / Math.log2(1 + 64));
+  }
+
+  function render() {
+    var cur = steps[step].v;
+    var showNum = document.getElementById('showNum').checked;
+    var blackArea = 0, whiteArea = 0;
+    for (var p = 0; p < N * N; p++) {
+      var v = cur[p], s = stones[p];
+      // shade stone points by what they gained beyond the stone value, so they blend with their neighbours
+      var a = alphaFor(s ? v - s * STONE : v);
+      shades[p].setAttribute('fill', v > 0 ? 'rgba(20,20,20,' + a + ')' : v < 0 ? 'rgba(255,255,255,' + a + ')' : 'transparent');
+      stoneEls[p].setAttribute('visibility', s ? 'visible' : 'hidden');
+      stoneEls[p].setAttribute('fill', s > 0 ? 'url(#stoneB)' : 'url(#stoneW)');
+      nums[p].textContent = showNum ? (v > 0 ? '+' + v : v < 0 ? '−' + (-v) : (s ? '' : '0')) : '';
+      var dark = s > 0 || (s === 0 && v > 0 && a > 0.45);
+      nums[p].setAttribute('fill', dark ? '#fff' : '#222');
+      nums[p].setAttribute('stroke', dark ? 'rgba(0,0,0,.6)' : 'rgba(255,255,255,.6)');
+      if (!s && v > 0) blackArea++;
+      if (!s && v < 0) whiteArea++;
+    }
+    document.getElementById('stepTitle').textContent = stepName(step);
+    document.getElementById('step').value = step;
+    document.getElementById('stats').textContent = step === STEPS
+      ? '結果：黑地 ' + blackArea + ' 點、白地 ' + whiteArea + ' 點'
+      : '正值空點 ' + blackArea + '、負值空點 ' + whiteArea;
+    renderInfo();
+  }
+
+  function renderInfo() {
+    var info = document.getElementById('info');
+    if (hover < 0) {
+      ring.setAttribute('visibility', 'hidden');
+      info.className = 'muted';
+      info.textContent = '滑鼠移到格點上，看這一步怎麼算出來。';
+      return;
+    }
+    var x = hover % N, y = Math.floor(hover / N);
+    ring.setAttribute('x', cx(x) - CELL / 2 + 2);
+    ring.setAttribute('y', cx(y) - CELL / 2 + 2);
+    ring.setAttribute('visibility', 'visible');
+    var cur = steps[step].v[hover];
+    var html = '<b>' + COLS[x] + (N - y) + '</b>　值 <b>' + fmt(cur) + '</b><br>';
+    if (step > 0) html += fmt(steps[step - 1].v[hover]) + ' → ' + fmt(cur) + '<br>';
+    html += steps[step].why[hover];
+    info.className = '';
+    info.innerHTML = html;
+  }
+
+  // ---- controls ----
+  var stepInput = document.getElementById('step');
+  function setStep(k) { step = Math.max(0, Math.min(STEPS, k)); render(); }
+  stepInput.addEventListener('input', function () { stop(); setStep(+stepInput.value); });
+  document.getElementById('prev').onclick = function () { stop(); setStep(step - 1); };
+  document.getElementById('next').onclick = function () { stop(); setStep(step + 1); };
+  document.getElementById('showNum').onchange = render;
+
+  var playBtn = document.getElementById('play');
+  function interval() { return 1100 - 100 * +document.getElementById('speed').value; }
+  function tick() {
+    if (step >= STEPS) { stop(); return; }
+    setStep(step + 1);
+    timer = setTimeout(tick, interval());
+  }
+  function stop() { clearTimeout(timer); timer = null; playBtn.textContent = '▶ 播放'; }
+  playBtn.onclick = function () {
+    if (timer) { stop(); return; }
+    if (step >= STEPS) setStep(0);
+    playBtn.textContent = '❚❚ 暫停';
+    timer = setTimeout(tick, interval());
+  };
+
+  document.getElementById('tools').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-tool]'); if (!b) return;
+    tool = +b.dataset.tool;
+    this.querySelectorAll('button[data-tool]').forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+  });
+
+  // [col, row] with row 0 at the top
+  var PRESETS = {
+    single: { b: [[4, 4]], w: [] },
+    facing: { b: [[2, 4]], w: [[6, 4]] },
+    corner: { b: [[1, 6], [2, 6], [2, 7], [3, 5]], w: [[5, 6], [5, 7], [4, 4], [6, 5]] },
+    empty: { b: [], w: [] }
+  };
+  function loadPreset(name) {
+    stones.fill(0);
+    PRESETS[name].b.forEach(function (c) { stones[c[1] * N + c[0]] = 1; });
+    PRESETS[name].w.forEach(function (c) { stones[c[1] * N + c[0]] = -1; });
+    stop(); compute(); setStep(0);
+  }
+  document.querySelectorAll('button[data-preset]').forEach(function (b) {
+    b.addEventListener('click', function () { loadPreset(b.dataset.preset); });
+  });
+
+  loadPreset('facing');
+})();
+</script>
+</body>
+</html>

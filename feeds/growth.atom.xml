@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - growth</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/growth.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>不廢話 App 成長指南 筆記</title><link href="https://blog.codylab.com/app-guide-admob/" rel="alternate"></link><published>2015-12-02T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2015-12-02:/app-guide-admob/</id><content type="html">&lt;p&gt;&lt;img alt="growth" src="http://i.imgur.com/7MVdEQSl.jpg"&gt;&lt;/p&gt;
+&lt;h2&gt;成長的秘密&lt;/h2&gt;
+&lt;p&gt;讓少數的使用者熱愛你的產品，而不是擁有一堆對這個產品漠不關心的使用者&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;It’s better to make something a small number of people love than something a large number of people don’t care about.”
+-Paul Buchheit&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在擴展產品之前，你必須專注在&lt;code&gt;user engagment&lt;/code&gt;，讓這個 App 會吸引使用者的注意。&lt;/p&gt;
+&lt;p&gt;&lt;img alt="cover" src="http://i.imgur.com/sEDT2Y2l.png"&gt;&lt;/p&gt;
+&lt;h2&gt;成長指標&lt;/h2&gt;
+&lt;p&gt;首先要找到一個適合的 App 的成長指標，可透過下列的兩個問題來尋找:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;那一個指標可以證明這個 App 的確有解決使用者的問題？&lt;/li&gt;
+&lt;li&gt;這個指標的發生的頻率多久才是對使用者有意義的？&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;例如: 遊戲(天) &amp;lt; 天氣(天) &amp;lt; 手電筒(月) &amp;lt; 旅行(月)&lt;/p&gt;
+&lt;p&gt;你就不應該期待一個平常的使用者會每天都開手電筒的 App.&lt;/p&gt;
+&lt;h2&gt;持續改善&lt;/h2&gt;
+&lt;p&gt;當找到使用者參與指標(User engagement metric)的之後，
+就可以用這些資料來改善 App。一般來說可以從 Google Analytics 和 Mixpanel 開始。當產品做了一些修正的時侯，持續關注使用者參與指標，確保 App 是往正確的道路上&lt;/p&gt;
+&lt;p&gt;如果想更深入了解，可參考:&lt;a href="https://services.google.com/fb/forms/admobappgrowthguide/?utm_source=blog&amp;amp;utm_medium=blog-post&amp;amp;utm_campaign=NET-User-Engagement-Campaign"&gt;AdMob No-Nonsense Guide to Growing Your Mobile App&lt;/a&gt;&lt;/p&gt;</content><category term="growth"></category><category term="Growth"></category></entry><entry><title>使用 GA 自定廣告活動區分流量來源</title><link href="https://blog.codylab.com/google-analytics-advertising-url/" rel="alternate"></link><published>2015-09-09T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2015-09-09:/google-analytics-advertising-url/</id><summary type="html">&lt;p&gt;Google Analytics(GA) 提供了&lt;a href="https://goo.gl/y18EMz"&gt;自訂廣告活動&lt;/a&gt;功能，可以追蹤廣告在不同媒介成效如何。以 Asus 為例，我們可以看到 ASUS 的粉絲團就有埋 GA 的自定廣告活動:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="asus store" src="http://i.imgur.com/S5VcLmKl.png"&gt;&lt;/p&gt;
+&lt;p&gt;裡面 goo.gl 的短網址背後的網址其實是:&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://store.asus.com/tw/item/201508AM130002265"&gt;http://store.asus.com/tw/item/201508AM130002265&lt;/a&gt;?
+utm_campaign=outlet&amp;amp;utm_source=AsusStoreFB&amp;amp;utm_medium=social&amp;amp;utm_content=150909_VX207DE&lt;/p&gt;
+&lt;p&gt;裡面可以看到幾個參數:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;utm_campaign=outlet&lt;/li&gt;
+&lt;li&gt;utm_source=AsusStoreFB&lt;/li&gt;
+&lt;li&gt;utm_medium=social&lt;/li&gt;
+&lt;li&gt;utm_content=150909_VX207DE&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;campaign&lt;/code&gt; 是這個廣告活動的名稱，而 &lt;code&gt;source/medium&lt;/code&gt; 則依需求使用，&lt;code&gt;utm_content&lt;/code&gt;，ASUS 這邊則是設定產品的型號，這些欄位之後在 GA 都是可以獨立查詢的主維度。&lt;/p&gt;
+&lt;p&gt;再舉個例子，如果我想推出一個廣告，分別想把產品頁面，分別使用 QR-Code 或是 Link 的方式散佈出去。比較快又穩妥的方法是可以用GA的 &lt;a href="https://support.google.com/analytics/answer/1033867"&gt;URL builder&lt;/a&gt; 小工具分別產生下列兩個連結:&lt;/p&gt;
+&lt;p&gt;http://&lt;YOUR_WEB_SITE&gt;/?utm_source=Facebook%20&amp;amp;utm_medium=Link&amp;amp;utm_campaign=Test%20Ad%20Link&lt;/p&gt;
+&lt;p&gt;http://&lt;YOUR_WEB_SITE&gt;/??utm_source=Email%20&amp;amp;utm_medium=QR%20Code&amp;amp;utm_campaign=Test%20Ad%20Link&lt;/p&gt;
+&lt;p&gt;在這邊我只需設定四個必填的欄位: 網址，來源，媒介，跟名稱。使用者透過這個連結訪問的結果就可以顯示在 GA 的報表上了，如下圖:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="GA" src="http://i.imgur.com/NWHAA0Gl.png"&gt;&lt;/p&gt;
+&lt;p&gt;也可以直接選廣告活動(Campaign)，就可以看到這次廣告的整體流量 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Google Analytics(GA) 提供了&lt;a href="https://goo.gl/y18EMz"&gt;自訂廣告活動&lt;/a&gt;功能，可以追蹤廣告在不同媒介成效如何。以 Asus 為例，我們可以看到 ASUS 的粉絲團就有埋 GA 的自定廣告活動:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="asus store" src="http://i.imgur.com/S5VcLmKl.png"&gt;&lt;/p&gt;
+&lt;p&gt;裡面 goo.gl 的短網址背後的網址其實是:&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://store.asus.com/tw/item/201508AM130002265"&gt;http://store.asus.com/tw/item/201508AM130002265&lt;/a&gt;?
+utm_campaign=outlet&amp;amp;utm_source=AsusStoreFB&amp;amp;utm_medium=social&amp;amp;utm_content=150909_VX207DE&lt;/p&gt;
+&lt;p&gt;裡面可以看到幾個參數:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;utm_campaign=outlet&lt;/li&gt;
+&lt;li&gt;utm_source=AsusStoreFB&lt;/li&gt;
+&lt;li&gt;utm_medium=social&lt;/li&gt;
+&lt;li&gt;utm_content=150909_VX207DE&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;campaign&lt;/code&gt; 是這個廣告活動的名稱，而 &lt;code&gt;source/medium&lt;/code&gt; 則依需求使用，&lt;code&gt;utm_content&lt;/code&gt;，ASUS 這邊則是設定產品的型號，這些欄位之後在 GA 都是可以獨立查詢的主維度。&lt;/p&gt;
+&lt;p&gt;再舉個例子，如果我想推出一個廣告，分別想把產品頁面，分別使用 QR-Code 或是 Link 的方式散佈出去。比較快又穩妥的方法是可以用GA的 &lt;a href="https://support.google.com/analytics/answer/1033867"&gt;URL builder&lt;/a&gt; 小工具分別產生下列兩個連結:&lt;/p&gt;
+&lt;p&gt;http://&lt;YOUR_WEB_SITE&gt;/?utm_source=Facebook%20&amp;amp;utm_medium=Link&amp;amp;utm_campaign=Test%20Ad%20Link&lt;/p&gt;
+&lt;p&gt;http://&lt;YOUR_WEB_SITE&gt;/??utm_source=Email%20&amp;amp;utm_medium=QR%20Code&amp;amp;utm_campaign=Test%20Ad%20Link&lt;/p&gt;
+&lt;p&gt;在這邊我只需設定四個必填的欄位: 網址，來源，媒介，跟名稱。使用者透過這個連結訪問的結果就可以顯示在 GA 的報表上了，如下圖:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="GA" src="http://i.imgur.com/NWHAA0Gl.png"&gt;&lt;/p&gt;
+&lt;p&gt;也可以直接選廣告活動(Campaign)，就可以看到這次廣告的整體流量:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="GA" src="http://i.imgur.com/CVGfXIy.png"&gt;&lt;/p&gt;
+&lt;p&gt;今天上了張秉祖老師的GA課程學到了這個技巧，老師一直在課堂上強調要活用 GA 包含三件事:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;正確安裝追蹤程式碼&lt;/li&gt;
+&lt;li&gt;有效區分流量來源&lt;/li&gt;
+&lt;li&gt;制定合理的目標，並持續追踨&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;GA 雖然免費，但其實是一個蠻複雜的系統，大部份的人以為GA就只要安裝追蹤程式碼就可以快樂看報表了。但其實這樣還遠遠不夠，像是執行的廣告行銷，就要務必確保不同的管道進來的流量能夠被區隔，這樣才看得出來那邊的預算是有效的，那邊的預算是浪費的。而老師也提到每個公司都應該要制定目標組合，例如要到達那一個頁面、事件代表達成目標，有了這些目標，就可以做更細的分析來評估在怎樣的條件下達成目標的效果比較好，進而降低行銷的成本，甚至可以建立一個以數據為決策基礎的組織文化。&lt;/p&gt;</content><category term="growth"></category><category term="Marketing"></category></entry></feed>

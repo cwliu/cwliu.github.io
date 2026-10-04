@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cody Blog</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/bash-shell-shortcut/">Bash Shell 快速鍵 (emacs-style)</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-30T10:57:25+08:00" pubdate>2013 November 30 Sat</time></p>
+</header>
+
+  <div class="entry-content"><h2>執行/中斷/輸入</h2>
+<ul>
+<li>Ctrl-C: 終止正在執行的程式</li>
+<li>Ctrl-L: 清除Terminal畫面，同clear指令</li>
+<li>Ctrl-Z: 將該工作放到背景中<code>暫停</code>, 使用<code>jobs</code>看工作號碼(job number), <code>fg</code><number> 取回</li>
+<li>Ctrl-J: Enter，不用離開鍵盤，還不錯</li>
+</ul>
+<p>進階</p>
+<ul>
+<li>Ctrl-D: 離開 Shell</li>
+<li>Ctrl-x, Ctrl-e 開啟vim，可一起執行多個指令</li>
+<li>Ctrl-V TAB: 輸入 TAB，而不是命令列擴展</li>
+<li>Ctrl-V: 加上要輸入特殊字元, ex: Ctrl-V Ctrl-D 會出現 ^D</li>
+</ul>
+<h2>移動</h2>
+<ul>
+<li>Ctrl-A: 回到此行最前面(同<code>Home</code>鍵)</li>
+<li>Ctrl-E: 到此行的最後面(同<code>End</code>鍵)</li>
+<li>Ctrl-F: 游標向後移動一格(不想要用arrow key時可多加利用)</li>
+<li>Ctrl-B: 游標向前移動一個(不想要用arrow key時可多加利用)</li>
+<li>Alt-B: Back(left) one word</li>
+<li>Alt-F: Forward(right) one word</li>
+</ul>
+<h2>查找</h2>
+<ul>
+<li>Ctrl-N: 找下個指令(同下箭頭)</li>
+<li>Ctrl-P: 找上個指令(同上箭頭)</li>
+<li>TAB: 擴展要輸入的檔案到命令列上(上/下箭頭: 開始搜尋過去的命令)</li>
+<li>Ctrl-R: 打關鍵字搜尋過去的命令, 搭配 Ctrl-r/Ctrl+Shift+r，可來回尋找</li>
+</ul>
+<p>進階</p>
+<ul>
+<li>Ctrl-I: 同 Tab</li>
+<li>Ctrl-S: 暫停輸出到畫面上，讓stdout定格(搭配Ctrl-Q使用)</li>
+<li>Ctrl-Q …</li></ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/bash-shell-shortcut/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/cmd-hwclock.md/">Set hardware clock time</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-26T00:00:00+08:00" pubdate>2013 November 26 Tue</time></p>
+</header>
+
+  <div class="entry-content"><h2>Display hardware clock time</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>hwclock
+</code></pre></div>
+
+<h2>Set hardware clock to current time</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>hwclock<span class="w"> </span>-w
+</code></pre></div>
+
+<h2>Set the System Time from the Hardware Clock.</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>hwclock<span class="w"> </span>-s
+</code></pre></div>
+
+<ul>
+<li><a href="http://www.thegeekstuff.com/2013/08/hwclock-examples/">7 Linux hwclock Command Examples to Set Hardware Clock Date Time</a></li>
+</ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/cmd-hwclock.md/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/thinkpad-ubuntu-hdaps/">Install IBM Active Protection System Linux Driver (HDAPS)</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-25T00:00:00+08:00" pubdate>2013 November 25 Mon</time></p>
+</header>
+
+  <div class="entry-content"><h2>Installation</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>tp-smapi-dkms<span class="w"> </span>hdapsd
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">'tp_smapi'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/modules
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">'hdapsd'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/modules
+$<span class="w"> </span>sudo<span class="w"> </span>modprobe<span class="w"> </span>tp_smapi
+$<span class="w"> </span>sudo<span class="w"> </span>/etc/init.d/hdapsd<span class="w"> </span>restart
+</code></pre></div>
+
+<h2>Verify if it works</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>hdapsd
+</code></pre></div>
+
+<p>it should display "parking" on console if you move your laptop </p>
+<h2>Modify config: /etc/default/hdapsd</h2>
+<ul>
+<li>sensitivity: default is 15. higher value means less sensitive.</li>
+<li>disk: the disk that hdapsd should monitor</li>
+</ul>
+<h2>Reference :</h2>
+<ul>
+<li><a href="http://samiux.blogspot.tw/2011/07/howto-lenovo-active-protection-system.html">Samiux's Blog: HOWTO : Lenovo Active Protection System (HDAPS) on Ubuntu 11.04</a></li>
+<li><a href="http://www.thinkwiki.org/wiki/HDAPS">HDAPS - ThinkWiki</a></li>
+</ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/thinkpad-ubuntu-hdaps/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/sun-moon-lake-marathon/">2013第一屆日月潭環湖馬拉松賽-29K超半馬心得</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-17T00:00:00+08:00" pubdate>2013 November 17 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p><img alt="日月潭" src="http://i.imgur.com/y4UZ1mx.jpg"></p>
+<p><img alt="img" src="https://lh5.googleusercontent.com/-ieNr8pxYwHs/UpB9hTonPbI/AAAAAAAFGZE/H0WMcub1YaA/w995-h563-no/IMAG1276.jpg"></p>
+<p>距離上次田中馬初馬的挑戰，休息一個星期之後緊接的就是2013日月潭環湖馬拉松。我這次參加的是<strong>29公里超半馬挑戰組</strong>。雖然說這是第一屆，但據我所知日月潭也常有其它單位會在此舉辦路跑，因為路線景色實在是太讚了。主辦單位是<strong>全國EMBA校園馬拉松接力賽組會</strong>，這場給跑友門的感覺就是超級貴，全馬報名費要<strong>1500</strong>，超半馬也要<strong>1200</strong>，比往常的賽事多了500元左右。不過因為是南投在地，又覺得可以跑完日月潭環湖一周是一件很酷的事情，所以我還是給他報名下去了。起點跟終點都是在向山遊客中心</p>
+<p><img alt="img" src="https://lh4.googleusercontent.com/-YvCflS5NTSU/UpB7jE-pdsI/AAAAAAAFGV4/cy-VtA8-HYg/w350/IMAG1196.jpg">
+<img alt="img" src="https://lh5.googleusercontent.com/-qRCEcTCy9VM/UpB7k3wmskI/AAAAAAAFGWA/p0bCW_4DuFQ/w350/IMAG1197.jpg"> 
+跟戰友Alvin起跑前跟熱氣球拍照。</p>
+<p><img alt="img" src="https://lh4.googleusercontent.com/-HOmnKovYxdg/UpB7_y3s2wI/AAAAAAAFGWQ/Wz-I4612NzI/w995-h563-no/IMAG1219.jpg">
+全馬組出發!</p>
+<p><img alt="img" src="https://lh5.googleusercontent.com/-1xxAAyN0XLU/UpB8D9QtHbI/AAAAAAAFGWc/T8POei6rtEE/w995-h563-no/IMAG1221.jpg">
+15分鐘後，超半馬組也出發了！</p>
+<p><img alt="img" src="https://lh5.googleusercontent.com/-RqcGdvgiRV4/UpB8PsAeL6I/AAAAAAAFGWk/iv8EJSwwHvk/w995-h563-no/IMAG1224.jpg">
+日月潭之前來過很多次，但從來沒有那麼早來過，萬萬沒想到清晨的日月潭那麼厲害。太陽躲在山後，讓山景非常有層次。讓剛起跑的我非常讚歎！忍不住拍了好幾張照片
+<img alt="img" src="https://lh4.googleusercontent.com/-qbQn1IhJw0c/UpB8aa8-a9I/AAAAAAAFGXA/nkPp1ilfTes/w995-h563-no/IMAG1231.jpg">
+<img alt="img" src="https://lh4.googleusercontent.com/-82Ij1WmKuxo/UpB8WqWN2xI/AAAAAAAFGWs/s9Dqpmk7Ug0/w995-h563-no/IMAG1227.jpg">
+很多跑友也都停下腳步拍照留念</p>
+<p><img alt="img" src="https://lh5.googleusercontent.com/-9boBF_MNXNE/UpB8ZTZvKqI/AAAAAAAFGW4/lGWyUlths60/w995-h563-no/IMAG1228.jpg">
+漂亮的湖光山色
+<img alt="img" src="https://lh4.googleusercontent.com/-7SkuYuKfyI8/UpYVGB1c3WI/AAAAAAAFGfY/vCfPlxtraUM/w400/">
+<img alt="img" src="https://lh3.googleusercontent.com/-ADM2SZB9hQg/UpB8bP8S1CI/AAAAAAAFGXE/VK-REoc6AJQ/w995-h563-no/IMAG1234.jpg">
+<img alt="img" src="https://lh4.googleusercontent.com/-NZaivyb7BFU/UpB8gH3n87I/AAAAAAAFGXM/vKgAYgmG5ko/w995-h563-no/IMAG1244.jpg">
+美好的晨跑時光，就在太陽高高昇起後告個段落。我的右膝蓋從7K左右開始抗議。當下就知道這是田中初馬時所受的傷，還沒有完全復原。膝蓋的內側每跑一步就有刺痛感。我趕緊調整跑步的姿勢，讓右腳可以好受一點。並開始期待等下的補給站有肌樂可以止痛一下，可惜路過好幾個補給站都沒有肌樂，只能摸摸鼻子繼續跑下去，終於在16K玄奘寺補給站，看到有止痛噴劑，趕緊拿來噴了好幾下。希望在師父加持之下可以撐下去。這邊也有特色補給品：香菇茶葉蛋 
+<img alt="img" src="https://lh5.googleusercontent.com/-RHh15aF7B4Y/UpB_xGMdBLI/AAAAAAAFGZk/yF-M79O_q2s/w320-h566-no/IMAG1245.jpg"></p>
+<p>賽事的後半段，大多是緩下坡，我原本以為可以開始加速。但雙腳膝蓋開始輪流罷工。雙腿也愈來愈僵硬，此時只能硬撐下去，但速度愈來愈慢，甚至痛到只能步行。找到機會就抬腿拉拉筋。</p>
+<p><img alt="img" src="https://lh4.googleusercontent.com/-c935fdDTMxc/UpB81etyXXI/AAAAAAAFGZY/1vA1410q6H0/w995-h563-no/IMAG1252.jpg">
+過了20K，完全就是拖著雙腳在走，膝蓋一彎就痛。</p>
+<p><img alt="img" src="https://lh4.googleusercontent.com/-7evZdhw8CSQ/UpB8261EJzI/AAAAAAAFGZY/peACXug59rE/w995-h563-no/IMAG1251.jpg">
+突然後面出現了警察伯伯緩慢前進。驚！這不是第一名才會有的尊榮前導車嗎？XD 原來這場賽事的交通管制是警察會把跟我們同方向的汽車擋下來緩慢的行進。而有多慢呢？大概就是我那時前進10分速，因此大部份的跑者都可以享受到沒有什麼車流的完美賽道。但是被擋下來的在地人或遊客可就不開心了，甚至有人還對警察咆哮大罵。之後警察才勉強加速一些，而這群車隊也就離我而去了。</p>
+<p><img alt="img" src="https://lh5.googleusercontent.com/--KZ4lxlERvU/UpB9OzuJe8I/AAAAAAAFGZY/I6lfcb3NuUA/w995-h563-no/IMAG1255.jpg">
+終於到最後的3K，真的是快解脫了。全半跟超半馬也是在此分開。全馬還要左轉台21線，補足13公里到全馬的42公里。當下我真的很慶幸我只需要再跑3K就可以收工。最後的3K是個魔鬼上坡路段。</p>
+<p><img alt="img" src="https://lh3.googleusercontent.com/vMJVZobsmXmGWKdWOfV4Inq1aj9JDSHBhrqLtgvQ4JPH=w995-h563-no">
+還好沿途開始出現大量的暨大同學志工，幫我們加油打氣。</p>
+<p><img alt="img" src="https://lh4.googleusercontent.com/-0-880U9e0Xs/UpB9W4DH3KI/AAAAAAAFGZY/Ky9c0-Vdfg0/w377-h566-no/DSC_1347.JPG"></p>
+<p>這時就是一步一步的堅持，雖然只能龜速前進。慢慢吃掉最後的3K。但當開始聽到熱鬧的會場麥克風聲音時，我知道離會場已經很近。志工們也列隊跟我擊掌加油！令人非常的感動,，最後也順利的回到終點。</p>
+<p><img alt="img" src="https://lh3.googleusercontent.com/-HGecqkx29Cw/UpB9ZzVHy4I/AAAAAAAFGZY/nUh0b8Ayzsc/w995-h563-no/IMAG1261.jpg">
+最後到終點時，全馬計時錶已經來到4小時半。</p>
+<p><img alt="img" src="https://lh6.googleusercontent.com/-Oss42kdCLFI/UpB9bQGYUMI/AAAAAAAFGZY/WzaailbqDm0/w995-h563-no/IMAG1262.jpg">
+終點有志工妹妹幫忙掛上獎牌。獎牌不同於一般的金屬材質，這場是特別的琉璃材質</p>
+<p>這次超半馬也是特別有意義，因為這場是我的好同事Alvin的初馬。他因為膝蓋受傷的關係，已經錯過了好幾場已經報名的全馬賽事，只能選擇棄賽 …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/sun-moon-lake-marathon/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/tianzhong-marathon/">2013田中馬拉松-初馬42.195公里挑戰</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-10T00:00:00+08:00" pubdate>2013 November 10 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p><img alt="img" src="https://lh6.googleusercontent.com/-E0QYTCPMU5g/UoCFTik77BI/AAAAAAAFGRw/3EATFZKgfmI/w1240/IMAG1088.jpg"></p>
+<p>今年也參加了近十場路跑活動， 但是這些都是之前設定為了我的初馬:<strong>田中馬拉松</strong>所做的準備。七月底報名看到同事Alvin在搶報名馬拉松，只是一股湊熱鬧的心態也就跟著報名，那時侯頂多在碧湖公園練習跑個10公里。三個月訓練下來雖然有半馬21K跟超半馬23K賽事的經歷，但是前陣子卻因為意外而導致掌骨骨折。讓自己有個藉口可以鬆懈，中斷練習了二個星期。而自己也大意沒有確實練習長距離30K的LSD。路跑當天還是硬著頭皮上場，面對這場人生初馬。</p>
+<p><img alt="img" src="https://lh4.googleusercontent.com/-WPX1JxZWjEo/UoCFSBXX2YI/AAAAAAAFGRM/Jj4BRJ-rEO8/w995-h563-no/IMAG1079.jpg">
+出發!</p>
+<p><img alt="img" src="https://lh6.googleusercontent.com/-bHsieN1fN08/UoCFSmwfBtI/AAAAAAAFGRU/b8G86H75YB8/w995-h563-no/IMAG1083.jpg">
+剛開始出發就被海軍陸戰隊的管樂演奏給感動，</p>
+<p><img alt="img" src="https://lh4.googleusercontent.com/k0b9T9mp3jkimoE35dd8xwLWlI6m-yTI7ClrWCISbVow=w995-h563-no">
+補給大部份都是水果。</p>
+<p><img alt="img" src="https://lh5.googleusercontent.com/-sj4r29YjAis/UoCFWB_cKII/AAAAAAAFGZY/Ax8ZHu-AEzM/w995-h563-no/IMAG1101.jpg"></p>
+<p>田中馬的最大特色，就是全鎮鄉民總動員幫選手加油。
+<img alt="img" src="https://lh5.googleusercontent.com/-OIbOv3qM9iQ/UoCFcGfjrrI/AAAAAAAFGZY/wz6td352wd4/w995-h564-no/VIDEO0030_0000000000.jpg">
+沿途也都可以看到民眾自製加油看板幫忙加油打氣。</p>
+<p>但其實這場初馬跑的非常吃力，已經嚴重超過我可以負荷的程度。經過天堂路跟好漢坡的洗禮之後，僅存肌力完全被吃光光。開始整路步兵。</p>
+<p><img alt="img" src="https://lh4.googleusercontent.com/-WwWGZXMzb9Y/UoCFXR6GHzI/AAAAAAAFGZY/SljRrwBQJUY/w995-h563-no/IMAG1106.jpg"></p>
+<p>到了30多K時，發現後面慢慢的人也就逐漸地變少了。志工也開始騎機車在四周巡迴尋找撐不下的跑者。我就憑著一點點堅持，就算跑不動了，我還是希望可以完成這場初馬。我花了七點多小時才抵達終點，足足比表定的關門時間還晚了快一個小時。很感謝補給站熱情的志工，裁判的耐心等待。完成了這場關門初馬。</p>
+<p><img alt="img" src="https://lh4.googleusercontent.com/-22djMOo2bcA/UoCFam7NBXI/AAAAAAAFGZY/INc5SOVpKgc/w995-h563-no/IMAG1120_1.jpg"></p>
+<p><img alt="img" src="https://lh6.googleusercontent.com/-SA1q48Wlp6I/UoCFcgm2EuI/AAAAAAAFGZY/sd10tj9MoAY/w320-h566-no/%25E5%2588%259D%25E9%25A6%25AC%25E7%258D%258E.jpg"></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/tianzhong-marathon/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/openssl-upgrade/">Upgrade openssl from source code on Ubuntu</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-08T00:00:00+08:00" pubdate>2013 November 08 Fri</time></p>
+</header>
+
+  <div class="entry-content"><h2>Remove previous openssl installation</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>remove<span class="w"> </span>openssl<span class="w"> </span>libssl-dev
+</code></pre></div>
+
+<h2>Install openssl 1.0.1c from source</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>tar<span class="w"> </span>-xvf<span class="w"> </span>openssl-w.x.yz.tar.gz
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>openssl-w.x.yz
+$<span class="w"> </span>./config<span class="w"> </span>--prefix<span class="o">=</span>/usr
+$<span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
+</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/openssl-upgrade/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/xinyi-grape-marathon/">2013信義葡萄馬拉松-初超半馬23.2KM心得</a>
+      </h1>
+      <p class="meta"><time datetime="2013-10-18T00:00:00+08:00" pubdate>2013 October 18 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>信義葡萄馬拉松今年2013是第三屆舉辦，因為前兩年的好口碑，加上台灣近年風行瘋跑步活動，所以這場葡萄馬報名一下子就被秒殺了。葡萄馬是我最近參加幾場的路賽最在地化的一場。之前有參與幾場路跑活動，感覺像是外來的客人跟這邊借場地辦活動。但是葡萄馬就完全感覺不同，跑葡萄馬可以感受到整個鄉動員起來的感覺，很棒!!</p>
+<p><img alt="img" src="img https://lh3.googleusercontent.com/-gA10OgoyQfo/UmETnA_tM9I/AAAAAAAFFuc/RHq8hkI4Jck/w995-h563-no/IMAG0367.jpg"> </p>
+<p>![img](img https://lh3.googleusercontent.com/-dX1S8JgA8Z0/UmETgrq_WhI/AAAAAAAFFsM/gGOX1Mk-xXc/w1024/2013100712280700001.JPG　%}
+轉錄自<a href="http://www.shini.gov.tw/AlbumListC1321.aspx?Class=582b54c2-1166-4e2f-906d-fe2e14a66acb&amp;">信義鄉公所</a></p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-2ZPoU2Atxjs/UmEToThtrCI/AAAAAAAFFvM/9HqLAGb9BmY/w995-h563-no/IMAG0374.jpg"> 
+現場大約有二十餘頭的烤乳豬。讓跑者跑完可以享用。這些食物都是用號碼布領取的，所以也不用怕跑太慢會吃不到 XD。</p>
+<p><img alt="img" src="img https://lh3.googleusercontent.com/-r2RRB-D4bqk/UmET49XdakI/AAAAAAAFF0Q/iTnh2IUTDtc/w1024-no/IMAG0443.jpg">
+雖然沒有室內的寄物處，不過主辦單位有準備大塑膠袋讓大家的包包不會濕掉。</p>
+<p><img alt="img" src="img https://lh3.googleusercontent.com/-sHUvFBAzCWE/UmETjZ8aHLI/AAAAAAAFFto/SF2s6eFLmL4/w600/2013%25E4%25BF%25A1%25E7%25BE%25A9%25E8%2591%25A1%25E8%2590%2584%25E9%25A6%25AC%25E6%258B%2589%25E6%259D%25BE%25E5%258D%258A%25E9%25A6%25AC%25E8%25B7%25AF%25E7%25B7%259A.jpg">
+半馬的路線圖</p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-MmMLYjjDdK8/UmEY-R0wqdI/AAAAAAAFF7Q/lJPyeD7Dm_U/w725-h297-no/%25E5%258D%258A%25E9%25A6%25AC%25E9%25AB%2598%25E5%25BA%25A6%25E5%259C%2596.png">
+半馬的高度圖</p>
+<p>基本上路線是前半段都是緩上坡，過了一半之後就開始緩下坡，最後2K會再有個挑戰最後意志力的上坡。</p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-3w9TnaD4xZw/UmETqWU8GDI/AAAAAAAFFvo/wrqvmEYOm0s/w1024-no/IMAG0379.jpg">
+起跑點</p>
+<p><img alt="img" src="img https://lh5.googleusercontent.com/-e8vq6wakWk0/UmETosAd3XI/AAAAAAAFFvI/emvedmbwukg/w995-h563-no/IMAG0377.jpg"></p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-Da3C8vDiAZI/UmETqqj_RmI/AAAAAAAFFvw/-_aacKAR1x4/w1024-h312-no/IMAG0382.jpg">
+布農族的長輩用獵槍鳴槍起跑</p>
+<p><img alt="img" src="img https://lh3.googleusercontent.com/-louRFS8MShE/UmETsAKQpfI/AAAAAAAFFwE/enRSFP_rkUg/w1024/IMAG0388.jpg"> 
+剛開始出發都還是很平坦的大馬路</p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-IhV-Zm6sjhg/UmETsXoqD_I/AAAAAAAFFwA/8LDjPAuwjUw/w1024/IMAG0391.jpg">
+沿路可以看到很多葡萄園
+<img alt="img" src="img https://lh6.googleusercontent.com/-fSDPYlaZdUw/UmETuB4K-tI/AAAAAAAFFwo/I9M-1oIFe3A/w1024/IMAG0395.jpg">
+目前看都還綠綠的，11月過後才算盛產</p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-OwEEtA6mHmM/UmETtCNk7qI/AAAAAAAFFwU/BDr94MXpfF8/w1024/IMAG0393.jpg">
+超半馬跟全馬在這邊分開了，路上都有白色的標記</p>
+<p><img alt="img" src="img https://lh6.googleusercontent.com/-K_EUPfa83Zw/UmETumU5GbI/AAAAAAAFFws/G35HUA7tuOo/w1024/IMAG0396.jpg">
+馬路開始愈來愈小條，往山裡面跑了</p>
+<p><img alt="img" src="img https://lh6.googleusercontent.com/-q-2gPTlgOvo/UmETu9P49kI/AAAAAAAFFw8/9eRbATJc2S4/w1024/IMAG0401.jpg">
+不知不覺就愈跑愈高，往下看下面的跑者就跟螞蟻一樣小</p>
+<p>我發現馬拉松有每場都會遇到一些人會帶狗一起跑，葡萄馬也不例外。
+<img alt="img" src="img http://lh4.googleusercontent.com/t5iP17ZEl6-l1QReYval-T2eMXbKTzVLmLnC3LEDdeQe=w1204">
+<img alt="img" src="img http://lh6.googleusercontent.com/4A1AxslGNeWY5YRHnUMWVSbPQfnDAhGWGLIG5oV0JSCP=w1024"> 
+小黃跟小白</p>
+<p>跑路的中途補給也是很厲害的，葡萄、梅子、蕃茄、香蕉等等</p>
+<p><img alt="img" src="img https://lh5.googleusercontent.com/Htb6OEoeQ639i3xlYVEMEacvU0KRHNsaDZ9oJZe4PC1i=w1024">
+轉錄自<a href="http://www.shini.gov.tw/AlbumListC1321.aspx?Class=582b54c2-1166-4e2f-906d-fe2e14a66acb&amp;">信義鄉公所</a></p>
+<p>不過，像我這種慢行人員，實際吃到的是這樣: 
+<img alt="img" src="img https://lh3.googleusercontent.com/wJt2mBFQXPCO1Gaq-qcVy5AaPbc6TI_R9QKiozghymBE=w800"> </p>
+<p>不過還是吃得很開心。每次進站都是裝一杯葡萄，邊跑邊吃，吃到下一站。</p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-7Cy24fvLHZw/UmETs7xBAeI/AAAAAAAFFwc/p4yDw9KWDbc/w1204/IMAG0392.jpg">
+好吃的葡萄</p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-9yXBmHnAFJs/UmETxxB-DdI/AAAAAAAFFx8/FjexMOEfh2M/w1024/IMAG0412.jpg">
+跑到最高點往下照的景色</p>
+<p><img alt="img" src="img http://lh6.googleusercontent.com/-xkyK5UplWn4/UmEUNAXrQNI/AAAAAAAFF4o/lBtnK0ECLpA/w1024/ZOE_0031_1.jpg">
+小朋友在路邊加油</p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-LGCyPyAlezw/UmETz8d2xfI/AAAAAAAFFyc/QWmiZFDBsDM/w1024/IMAG0417.jpg">
+後半段都是緩下坡，所以跑起來就比較輕鬆一些</p>
+<p><img alt="img" src="img https://lh5.googleusercontent.com/-eZPVT6JTZN0/UmET1WR9K_I/AAAAAAAFFy4/LLx5zVzqCZg/w1024/IMAG0422.jpg"> 
+最後2K的時侯，全馬的Richard也回來了，之前苗栗馬Richard也是跑第一名。目前的實力，跑完半馬，全馬的前段班也差不多回來了。</p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-kHsxlJ2E7Ow/UmETkiuo_dI/AAAAAAAFFts/YvYayks0aiQ/w1024/AllSport03.png"> 
+<img alt="img" src="img http://lh4.googleusercontent.com/SIci1BHagju1mDwjck3qVXhGaEHrzm7-9ZfayWtC3VuW=w1024">
+最終抵達終點前的照片</p>
+<p><img alt="img" src="img https://lh4.googleusercontent.com/-lZ2K9nKMdSY/UmET3htMUBI/AAAAAAAFFzw/OhAsajwzD7s/w1024/IMAG0439.jpg">
+終點的補給，飲料，熱粥，山豬肉，梅子汁，仙草茶，水，舒跑，毛巾</p>
+<p><img alt="img" src="img https://lh5.googleusercontent.com/-FxhbxMG-Hjc/UmFfzfJBqmI/AAAAAAAFF84/vNDRkXc_65o/w1024-h280-no/IMAG0771.jpg">
+成績 03:02:04, 總排名 667/1181</p>
+<p><img alt="img" src="img https://lh5.googleusercontent.com/-DObaClaCjHI/UmFfw-mgwSI/AAAAAAAFF8w/FzG4di43ShI/w399-h547-no/StXUH63S99dCF6NBDYVM92RY.jpg">
+<img alt="img" src="img https://lh4.googleusercontent.com/-xrioL3qjZBo/UmET47Skc_I/AAAAAAAFF0U/7RkbjNXVVDQ/w1024/IMAG0445.jpg">
+<img alt="img" src="img https://lh6.googleusercontent.com/-Tb-wzZVISzg/UmET5fTkifI/AAAAAAAFF0c/uLtrCF1lieE/w1024/IMAG0447.jpg">
+最後再喝一杯馬拉桑手工啤酒(100元/杯)，完美的Ending。</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/xinyi-grape-marathon/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/python-generate-xunit-report-for-jenkins/">Python generate xUnit report for Jenkins</a>
+      </h1>
+      <p class="meta"><time datetime="2013-07-18T00:00:00+08:00" pubdate>2013 July 18 Thu</time></p>
+</header>
+
+  <div class="entry-content"><p>在日常使用的Test Framework所產出的Test Report並不是標準的 JUnit 格式。所以這使得想要回傳Test Result到Jenkins的時侯，沒辦法把 Test Result 顯示在Jenkins的Build的結果上面。然而產生JUnit report的功能在一般的Test Framework像是nose跟py.test都有，像是nose就有一個plugins是專門在處理這個問題，或者是py.test可以直接使用<code>py.test --junitxml=path</code>來產生。可惜我的工具沒有。所以只好自己弄一個了。在此記錄要如何完成這個任務。</p>
+<p>上網 Google了一下有關JUnit XML format到底長怎樣，找到Stackoverflow<a href="http://stackoverflow.com/questions/4922867/junit-xml-format-specification-that-hudson-supports">這篇</a>有討論，基本上可以解決90%的疑問。有關XML的定義可以從.xsd檔中找到，而JUnit的.xsd檔，<a href="https://svn.jenkins-ci.org/trunk/hudson/dtkit/dtkit-format/dtkit-junit-model/src/main/resources/com/thalesgroup/dtkit/junit/model/xsd/junit-4.xsd">這邊</a>可以下載。我使用<a href="http://www.wmhelp.com/xmlpad3.htm">XMLPad</a>來打開，再掛載xsd的schema檔，手動體驗一下 xml 的format，基本上最簡單的的JUnit Report大概是這樣：</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;testsuites</span><span class="w"> </span><span class="na">xsi:noNamespaceSchemaLocation=</span><span class="s">"file:///D:/junit-4.xsd"</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;testsuite</span><span class="w"> </span><span class="na">name=</span><span class="s">"INSTALLATION RAT"</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;testcase</span><span class="w"> </span><span class="na">classname=</span><span class="s">"INS_RAT_0001"</span><span class="w"> </span><span class="na">name=</span><span class="s">"Test Case Title Sample 1"</span><span class="w"> </span><span class="na">time=</span><span class="s">"0.046"</span><span class="nt">&gt;</span>
+<span class="w">      </span><span class="nt">&lt;system-out&gt;&lt;/system-out&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/testcase&gt;</span>
+<span class="w">    </span><span class="nt">&lt;testcase</span><span class="w"> </span><span class="na">classname=</span><span class="s">"INS_RAT_0002"</span><span class="w"> </span><span class="na">name=</span><span class="s">"Test Case Title Sample 2"</span><span class="w"> </span><span class="na">time=</span><span class="s">"4.868"</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;failure</span><span class="w"> </span><span class="na">message=</span><span class="s">"case failed …</span></code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/python-generate-xunit-report-for-jenkins/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/how-cpu-works/">20分鐘了解 CPU 基本運作</a>
+      </h1>
+      <p class="meta"><time datetime="2013-06-02T00:00:00+08:00" pubdate>2013 June 02 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p>這兩天發現了一個不錯的教學影片，用二十分鐘左右的時間介紹CPU的基本運作原理，相當值得一看。</p>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/cNN_tTXABUA" frameborder="0" allowfullscreen></iframe>
+
+<p>這個影片主要是來自一本書<a href="http://www.amazon.com/But-How-Know-Principles-Computers/dp/0615303765/ref=sr_1_1?ie=UTF8&amp;qid=1370181735&amp;sr=8-1&amp;keywords=But+how+do+it+know">《But How Do It Know》</a>，天瓏這本代訂購一本賣 946，薄薄的一本，只有2百多頁。這本書虛構了一個Scott CPU來舉例，我看完教學影片做了一些筆記當參考:</p>
+<h1>Instruction Set</h1>
+<p>CPU 基於最基本的 Instruction Set 來達成複雜的工作。例如:</p>
+<ul>
+<li><strong>Load</strong> a number from RAM into the CPU</li>
+<li><strong>ADD</strong> two numbers toether</li>
+<li><strong>STORE</strong> a number from the CPU back out to RAM</li>
+<li><strong>COMPARE</strong> one number with another </li>
+<li><strong>JUMP IF</strong> <em>Condition</em> to another address in RAM</li>
+<li><strong>JUMP</strong> to another address in RAM </li>
+<li><strong>OUT</strong>put to a device such as a monitor </li>
+<li><strong>IN</strong>put to from a device such as a keyboard</li>
+</ul>
+<h1>基本元件</h1>
+<p>從這個影片中，整理一下一些元件的用途</p>
+<h2>Random access memory(RAM)</h2>
+<p>其 Random　之意就是代表可以隨意存取某個Addreess的資料。RAM主要分兩部份，Address 和 Data。CPU 可以要求從某個 …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/how-cpu-works/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/trend-mobile-is-eating-the-world/">Mobile is eating the world</a>
+      </h1>
+      <p class="meta"><time datetime="2013-06-01T00:00:00+08:00" pubdate>2013 June 01 Sat</time></p>
+</header>
+
+  <div class="entry-content"><p>這個投影片還蠻不錯的。用數字說明Mobile是如何正在主宰整個資訊產業</p>
+<iframe src="http://www.slideshare.net/slideshow/embed_code/21354744" width="597" height="486" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen> </iframe>
+<div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/bge20/2013-05-bea" title="2013 05 BEA - ’Mobile is eating the World’" target="_blank">2013 05 BEA - ’Mobile is eating the World’</a> </strong> from <strong><a href="http://www.slideshare.net/bge20" target="_blank">Benedict Evans</a></strong> </div>
+
+<h1>其中我看到的一些事實</h1>
+<ul>
+<li>Smart phone 和 tablets 從 2007 年開始僅花了四年的時間，從於2011年開始每年的銷售的裝置數已超越PC。</li>
+<li>PC平均每4～5年更換一次，Mobile device平均每2年更換一次</li>
+<li>Mobile相較於PC所擁有的一些優勢: <ul>
+<li>知道使用者的所在位置: location based service(LBS),</li>
+<li>Apps 之間常常有密切的整合服務: 地址用 Google Map開，影片用 Youtube開, 文章記錄到 Evernote中</li>
+<li>Prediction. 因為手機是使用者一天當中長時間持有，用取得使用者的資訊比較多，較容易做出一些預測服務(Ex: <a href="http://www.google.com/landing/now/">Google Now</a>)</li>
+<li>其它的像是 NFS, Image recognition 目前似乎還沒有看到什麼殺手級應用</li>
+</ul>
+</li>
+<li>自帶微軟系統的裝置數量直線下滑，微軟在資訊產業的影響力逐漸變小</li>
+<li>行動裝置由 Apple 和 Samsung 主導市場</li>
+<li>電子閱讀器市場平緩進步: Amazon 營收逐年增加，但淨利卻只有持平</li>
+<li>電子商務逐年增加，新創公司常常做商品導購的服務</li>
+<li>行動世界的四巨頭: Apple, Google, Facebook, Amazon</li>
+</ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/trend-mobile-is-eating-the-world/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+    <a class="prev" href="https://blog.codylab.com/index10.html">&larr; Older</a>
+
+    <a class="next" href="https://blog.codylab.com/index8.html">Newer &rarr;</a>
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

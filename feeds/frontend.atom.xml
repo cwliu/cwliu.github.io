@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - frontend</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/frontend.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>使用 Bower 來管理 web 函式庫套件</title><link href="https://blog.codylab.com/bower/" rel="alternate"></link><published>2015-11-08T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2015-11-08:/bower/</id><summary type="html">&lt;p&gt;&lt;img alt="bower" src="http://i.imgur.com/GFlma5U.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://bower.io/"&gt;Bower&lt;/a&gt; 是 frontend 常用來管理 package 的套件。比如說要使用 &lt;code&gt;jquery&lt;/code&gt;，就可以透過 bower，來安裝。&lt;/p&gt;
+&lt;h1&gt;安裝&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;npm&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;-g&lt;span class="w"&gt; &lt;/span&gt;bower
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;註: 如果權限不足的話，記得加上 sudo &lt;/p&gt;
+&lt;h1&gt;初始化&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;bower&lt;span class="w"&gt; &lt;/span&gt;init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;bower 是透過 bower.json 來管理 dependecy，所以一開始要先透過這個指令來新增 bower.json，過程會問一些問題，可以按 enter 直接用預設的即可。&lt;/p&gt;
+&lt;h1&gt;搜尋，以 jQuery 為例&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;bower&lt;span class="w"&gt; &lt;/span&gt;search&lt;span class="w"&gt; &lt;/span&gt;jquery
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;輸出: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Search results:
+
+    jQuery https://github.com/jquery/jquery.git
+    jquery https://github.com/jquery/jquery-dist.git
+    jquery.x https://github.com/jljLabs/jquery.x.git
+    jquery.Q https://github.com/jsbuzz/jQuery_Q.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;列出可以使用的 repository &lt;/p&gt;
+&lt;h1&gt;安裝，以 jQuery 為例&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;bower&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;jquery
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;安裝完之後，目錄會出現 bower_components 來存放 jquery 的檔案:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;.
+└── bower_components
+    └── jquery
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;安裝 jquery，並把 jquery 加到 bower …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="bower" src="http://i.imgur.com/GFlma5U.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://bower.io/"&gt;Bower&lt;/a&gt; 是 frontend 常用來管理 package 的套件。比如說要使用 &lt;code&gt;jquery&lt;/code&gt;，就可以透過 bower，來安裝。&lt;/p&gt;
+&lt;h1&gt;安裝&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;npm&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;-g&lt;span class="w"&gt; &lt;/span&gt;bower
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;註: 如果權限不足的話，記得加上 sudo &lt;/p&gt;
+&lt;h1&gt;初始化&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;bower&lt;span class="w"&gt; &lt;/span&gt;init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;bower 是透過 bower.json 來管理 dependecy，所以一開始要先透過這個指令來新增 bower.json，過程會問一些問題，可以按 enter 直接用預設的即可。&lt;/p&gt;
+&lt;h1&gt;搜尋，以 jQuery 為例&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;bower&lt;span class="w"&gt; &lt;/span&gt;search&lt;span class="w"&gt; &lt;/span&gt;jquery
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;輸出: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Search results:
+
+    jQuery https://github.com/jquery/jquery.git
+    jquery https://github.com/jquery/jquery-dist.git
+    jquery.x https://github.com/jljLabs/jquery.x.git
+    jquery.Q https://github.com/jsbuzz/jQuery_Q.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;列出可以使用的 repository &lt;/p&gt;
+&lt;h1&gt;安裝，以 jQuery 為例&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;bower&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;jquery
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;安裝完之後，目錄會出現 bower_components 來存放 jquery 的檔案:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;.
+└── bower_components
+    └── jquery
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;安裝 jquery，並把 jquery 加到 bower.json 中的 dependency(--save)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;bower&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;jquery&lt;span class="w"&gt; &lt;/span&gt;--save
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;可以看到  jquery 就會加到 bower.json 之中&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;less&lt;span class="w"&gt; &lt;/span&gt;bower.json&lt;span class="w"&gt; &lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;...
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;"dependencies"&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="s2"&gt;"jquery"&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"~2.1.4"&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;!--## .bowerrc 設定檔 
+- 參考網頁: [Configuration · Bower](http://bower.io/docs/config/)
+
+Ex 1: 修改 js 要放的目錄
+
+    {
+        "directory": "app/components/"
+    }
+
+## 進階用法 Bower plugin &amp; grunt 
+
+https://github.com/yatskevich/grunt-bower-task
+
+    {
+        "name": "simple-bower",
+        "version": "0.0.0",
+        "dependencies": {
+            "jquery": "~1.8.3",
+            "bootstrap-sass": "*",
+            "requirejs": "*"
+        },
+        "exportsOverride": {
+            "bootstrap-sass": {
+            "js": "js/*.js",
+            "scss": "lib/*.scss",
+            "img": "img/*.png"
+            },
+            "requirejs": {
+            "js": "require.js"
+            }
+        }
+    }
+--&gt;</content><category term="frontend"></category><category term="Frontend"></category></entry></feed>

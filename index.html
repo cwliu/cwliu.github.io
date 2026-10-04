@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cody Blog</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </h1>
+      <p class="meta"><time datetime="2026-10-04T00:00:00+08:00" pubdate>2026 October 04 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p>這是「圍棋 AI 學習筆記」系列的第一篇，從一個很老、但很直觀的問題開始：<strong>看著一盤棋，電腦要怎麼判斷哪裡是誰的地？</strong></p>
+<p>在 AlphaGo 用神經網路直接「看」出形勢之前，早期的圍棋程式多半靠手寫規則來估算勢力範圍。Bruno Bouzy 在 2003 年發表的 5/21 演算法<sup>[1]</sup>就是其中一個經典做法：借用影像處理的「數學形態學」，把每顆棋子的影響力向外擴散，再把邊緣不穩的部分削掉，剩下來的就是比較確定的地盤。它的膨脹步驟改自 Zobrist 在 1969 年提出的勢力模型<sup>[2]</sup>，Bouzy 再補上對應的侵蝕步驟；這個方法用在他自己的圍棋程式 Indigo 裡，後來也被 GNU Go 採用。</p>
+<h2>互動演示</h2>
+<p>下面的棋盤可以自己擺子，拉動步驟滑桿或按播放，看數值怎麼一步步變化。滑鼠移到格點上，會顯示那一步是怎麼算出來的。</p>
+<iframe src="https://blog.codylab.com/files/go/bouzy-5-21.html" title="Bouzy's 5/21 互動演示" width="100%" height="520" style="border:0;display:block" loading="lazy" onload="this.style.height = this.contentDocument.body.offsetHeight + 'px'"></iframe>
+
+<h2>演算法</h2>
+<p>整個過程只有三個階段，每一步都是<strong>同時</strong>更新所有格點（用上一步的值計算，不會邊算邊影響）。</p>
+<h3>1. 初始化</h3>
+<p>黑子設為 +64，白子設為 −64，空點設為 0，這是原論文<sup>[1]</sup>沿用 Zobrist 模型的設定。正值代表黑方的影響力，負值代表白方的。</p>
+<h3>2. 膨脹（Dilation）5 次</h3>
+<p>對每個格點：</p>
+<ul>
+<li>如果它 <strong>≥ 0</strong>，而且上下左右四鄰<strong>沒有負值</strong>，就加上四鄰中正值的個數。</li>
+<li>負值那一方對稱處理：如果它 <strong>≤ 0</strong>，而且四鄰<strong>沒有正值</strong>，就減去四鄰中負值的個數。</li>
+<li>四鄰正負都有的點不動，代表雙方勢力在這裡碰頭。</li>
+</ul>
+<p>膨脹讓影響力像水波一樣往外擴散，一次一格。5 次之後，單顆子的影響會涵蓋距離 5 以內的菱形範圍，越靠近棋子數值越大 …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/bouzy-5-21/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </h1>
+      <p class="meta"><time datetime="2017-07-05T00:00:00+08:00" pubdate>2017 July 05 Wed</time></p>
+</header>
+
+  <div class="entry-content"><p><img alt="start" src="http://i.imgur.com/Ax92g95.jpg"></p>
+<p>2017.7.2 黃金海岸馬拉松是我的第四馬，也是我海外的第二馬。2017年黃金海岸馬拉松全馬人數大約6千人，相比於我的上一場海外馬-東京馬的2萬多人，算是比較小型的賽事，不用人擠人又可以享受 IAAF Road Race 認證金牌規格賽事。這個賽事最大的特色就是全程 42 公里幾乎都是沿著海岸線跑，可以邊跑邊欣賞海岸線的美景。</p>
+<p><img alt="gold-coast" src="http://i.imgur.com/1b7MTEY.jpg"></p>
+<p>這次比賽前一個月的練習跑量大約是150公里。雖然不多，但我的目標就是希望比2014東京馬5:56記錄進步，然後不要受傷。賽前狀況都還不錯，沒有特別酸痛或是受傷的情況，我也臉書上面宣告我的目標成績為 5:30:
+<img alt="target-530" src="http://i.imgur.com/K2OTopl.jpg"></p>
+<p>黃金海岸馬拉松的賽道相當平坦，補給方面大約2.5公里就有一個水站或是水+運動飲料站，直到30公里才會有能量膠的補給。只是接近中午的時侯會有很大的太陽，氣溫偏熱。</p>
+<p><img alt="route" src="http://i.imgur.com/3gEqZmU.jpg"></p>
+<p><img alt="start" src="http://i.imgur.com/4sP8P6p.jpg">
+依照賽前填的預估時間，我被分配到最後一區 ZONE D</p>
+<p><img alt="start-2" src="http://i.imgur.com/o0cIqHJ.jpg">
+槍響之後沿著人群慢慢前進</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Ll3pYO8yc38" frameborder="0" allowfullscreen></iframe>
+
+<p><img alt="che-ming" src="http://i.imgur.com/dk2si4s.jpg">
+這次跟從凱恩斯來的新朋友哲明一起出發，這天也剛好是他的生日，他說他想要黃金海岸馬拉松來當成他的生日禮物，這是他的初馬。</p>
+<p><img alt="start" src="http://i.imgur.com/xks1dQR.jpg">
+我們一開始設定一公里7分鐘的速度前進，跑著跑著，看著5小時的紅色配速員的氣球連我們愈來愈近。我評估了一下自己的狀況，呼吸都還很輕鬆，於是我們開始跟著5小時晶片時間的配速姐。</p>
+<p><img alt="teresa-500" src="http://i.imgur.com/Ani87V9l.jpg"></p>
+<p>配速姐出發沿路都放著音樂，蠻有激勵人心的效果</p>
+<!--<iframe width="560" height="315" src="https://www.youtube.com/embed/hWPZmENwcBk" frameborder="0" allowfullscreen></iframe>-->
+
+<p><img alt="8k" src="http://i.imgur.com/yqmICv6l.jpg"></p>
+<p>第一個折返點</p>
+<p><img alt="start" src="http://i.imgur.com/wXXsHQq.jpg"></p>
+<p><img alt="turning-point" src="http://i.imgur.com/tdHEcwe.jpg"></p>
+<p>沿路幾乎沒有私人補給，跟台灣、東京馬的賽事不同。這就是馬拉松文化的差異，澳洲民眾會很熱心幫你吶喊加油，不過沒有食物補給的習慣。整路我只有看到在 Suffers Paradise 看到有女生拿可樂跟巧克力分送給跑者。不過因為我事前就知道會有這樣的情況，出發前就準備了6條GU能量膠帶在身上。</p>
+<p><img alt="marathon-man" src="http://i.imgur.com/CPpaLil.jpg">
+澳洲人的跑馬數量的記錄保持者<a href="http://www.marathonman.com.au/about-trent/results/">Trent Morrow</a>，這是他的第313馬，他曾在2013年，單年跑了161場全馬的驚人記錄。</p>
+<p><img alt="cheer-4" src="http://i.imgur.com/5diECRT.png"></p>
+<p>賽道旁邊有很多加油的名眾，因為號碼布上面有自己的名字，所以很多人會直接喊你的名字幫你加油。 像是 Cody!! Keep going !!</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/qFWu6-PJAy0" frameborder="0" allowfullscreen></iframe>
+
+<p><img alt="cheer-1" src="http://i.imgur.com/z4pBefC.jpg">
+<img alt="cheer-3" src="http://i.imgur.com/1ih1OWB.jpg"></p>
+<p><img alt="x" src="http://i.imgur.com/rxvpIOl.jpg"></p>
+<p>26 K 之後天氣愈來愈熱，</p>
+<p><img alt="justin" src="http://i.imgur.com/fzWu8wz.jpg"></p>
+<p>連配速哥都沒辦法維持均速停了下來。最後晶片時間的配速姐幫忙了槍聲時間的配速哥，幫忙他完成接下來的配速。</p>
+<p><img alt="img" src="http://i.imgur.com/LEOdLDi.jpg"></p>
+<p>而在這邊真的愈來愈難跑，因為我就把手機收了起來 …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/running-gold-coast-marathon.md/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </h1>
+      <p class="meta"><time datetime="2017-04-21T00:00:00+08:00" pubdate>2017 April 21 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>Source: <a href="https://goo.gl/5yQEGz">Data Sharing between Fragments and Activity in Android - Stack Overflow</a></p>
+<h2>Activity -&gt; Fragment [prefered]</h2>
+<p>In your activity : create a bundle and use:</p>
+<div class="highlight"><pre><span></span><code>fragment.setArguments(bundle)
+</code></pre></div>
+
+<p>In your fragment : use Bundle bundle:</p>
+<div class="highlight"><pre><span></span><code>getArguments()
+</code></pre></div>
+
+<h2>Activity -&gt; Fragment</h2>
+<p>In your fragment : create a public method</p>
+<div class="highlight"><pre><span></span><code>public void methodForActivity(...) {
+    ...
+}
+</code></pre></div>
+
+<p>In your activity : call an active fragment public method :</p>
+<div class="highlight"><pre><span></span><code>getSupportFragmentManager().findFragmentById(R.id.your_fragment).publicMethod(args)
+</code></pre></div>
+
+<h2>Fragment -&gt; Activity [prefered]</h2>
+<p>In your fragment, create an interface with getter and setter methods to hold the interface reference which will be implemented by the activity.</p>
+<p>In your activity, implement the interface, and using the setter method to pass self …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/activity-fragment-communication.md/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </h1>
+      <p class="meta"><time datetime="2017-04-21T00:00:00+08:00" pubdate>2017 April 21 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>The followings are notes from <a href="https://www.youtube.com/playlist?list=PLD6B222E02447DC07">BBC - The sounds of British English</a>. I listed all the example words so that we can reference it quickly if we have a doubt about the pronouciation.</p>
+<h2>Short Vowel</h2>
+<h3><a href="https://youtu.be/MAk-XtHsyzM">ɒ</a></h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MAk-XtHsyzM" frameborder="0" allowfullscreen></iframe>
+
+<p>lot, odd, wash</p>
+<h3><a href="https://youtu.be/TNFKG0yvDx4">ɪ</a></h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TNFKG0yvDx4" frameborder="0" allowfullscreen></iframe>
+
+<p>kit, bid, hymn, minute.</p>
+<h3><a href="https://youtu.be/eJ7dM_LU9t4">ʊ</a></h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eJ7dM_LU9t4" frameborder="0" allowfullscreen></iframe>
+
+<p>foot, put, good.</p>
+<h3><a href="https://youtu.be/PZwKFFp7V50">ʌ</a></h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/" frameborder="0" allowfullscreen></iframe>
+
+<p>strut, mud, love, blood <br>
+ʌ, æ: undle, ankle; bunk, bank; but, bat; cup, cap; swum, swam</p>
+<h3><a href="https://youtu.be/hLN1cdSTDo8">ɛ or e</a></h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/" frameborder="0" allowfullscreen></iframe>
+
+<p>dress, head, bed, many
+ɛ, ɪ: bed, bid; medal, middle, dead, did, fell, fill, pen, pin
+ɛ, eɪ: bed, bay</p>
+<h3><a href="https://youtu.be/qVhaIHk88a8">æ or a</a></h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/" frameborder="0" allowfullscreen></iframe>
+
+<p>trap, stamp, back, lap, dad</p>
+<h3><a href="https://youtu.be/wg0P0oYkniE">ə - schwa</a></h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/" frameborder="0" allowfullscreen></iframe>
+
+<p>a, the, of …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/english-british/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </h1>
+      <p class="meta"><time datetime="2017-04-09T00:00:00+08:00" pubdate>2017 April 09 Sun</time></p>
+</header>
+
+  <div class="entry-content"><p>Passing an object from between activities needs some extra efforts, there are at least three ways to archive this goal:</p>
+<ol>
+<li>Using a serializable interface</li>
+<li>Using a parcelable interface</li>
+<li>Using Google's Gson library to convert from an object to a JSON string</li>
+</ol>
+<h2>Scenario</h2>
+<p>For instance, passing two strings to another activity could be archived like this:</p>
+<div class="highlight"><pre><span></span><code>Intent intent = new Intent(context, SecondActivity.class);
+intent.putExtra(KEY_DOG_NAME, dogName);
+intent.putExtra(KEY_DOG_OWNER, dogOwnerName);
+</code></pre></div>
+
+<p>If there are too many parameters, we can encapsulate them into a dog object:</p>
+<div class="highlight"><pre><span></span><code>public class Dog {
+
+    private String mName;
+    private String mOwner;
+
+    public Dog(String name, String owner) {
+        this …</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/parcel-pass-object/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/android-json/">Parsing JSON string on Android</a>
+      </h1>
+      <p class="meta"><time datetime="2016-10-07T00:00:00+08:00" pubdate>2016 October 07 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>Given a json string, you could convert it to either <code>JSONObject(str)</code> or <code>JSONArray(str)</code>. For example, This json response is from weather forecaset server:</p>
+<div class="highlight"><pre><span></span><code>http://api.openweathermap.org/data/2.5/forecast/daily?zip=545%2Ctw&amp;mode=json&amp;units=metric&amp;cnt=7&amp;appid=aa032e548c67daa9cd1bc64eec737960
+</code></pre></div>
+
+<p>The response json format is like this:</p>
+<p><img alt="json" src="https://i.imgur.com/KFAewvX.png"></p>
+<p>If you want to get the first max temperature value: <code>17.06</code>:</p>
+<div class="highlight"><pre><span></span><code>    JSONObject weather = new JSONObject(weatherJsonStr);
+    JSONArray daysWeather = weather.getJSONArray("list");
+    JSONObject dayWeather = daysWeather.getJSONObject(0);
+    JSONObject dayTemperature = dayWeather.getJSONObject("temp");
+    int maxTemp = dayTemperature.getDouble("max");
+</code></pre></div>
+
+<p>Note that there may has a <code>JSONException</code> when the json tring …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/android-json/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/keep-api-secret/">How to storing api keys in Android</a>
+      </h1>
+      <p class="meta"><time datetime="2016-10-07T00:00:00+08:00" pubdate>2016 October 07 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>You SHALL not save api key into version control system, but how can you manage your API keys?</p>
+<p>There are some approaches had been discussed <a href="http://stackoverflow.com/questions/14570989/best-practice-for-storing-private-api-keys-in-android">here</a>. One is to saving the api key in <code>gradle.properties</code>.  Before add secret to this file. you need add <code>gradle.properties</code> to <code>.gitignore</code> file. If you already commited this file to your git. remove <code>gradle.properties</code> from git first by this command:</p>
+<div class="highlight"><pre><span></span><code>git rm --cache gradle.properties
+</code></pre></div>
+
+<p>Next, Open your gradle.properties and appmend a new line:</p>
+<div class="highlight"><pre><span></span><code>yourapikey="THIS IS API TOKEN"
+</code></pre></div>
+
+<p>Modify <code>build.gradle</code> and add <code>buildConfigField</code> for your api key </p>
+<div class="highlight"><pre><span></span><code>android {
+    compileSdkVersion …</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/keep-api-secret/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/permission-model/">Permission model in Android 6.0</a>
+      </h1>
+      <p class="meta"><time datetime="2016-10-07T00:00:00+08:00" pubdate>2016 October 07 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>在 Android 6.0 之後，有了新的 <a href="http://developer.android.com/intl/zh-tw/training/permissions/requesting.html">permission model</a>， 安裝 App 的權限可以不用在 Google Play 安裝的時侯就授權。而是等到使用者要使用這個功能的時侯，再詢問使用者。而權限分成兩種: <a href="https://goo.gl/wG4uwm">normal permission</a> 跟 dangerous permission 兩種。 normal permission 可以直接在 AndroidManifest.xml 直接定義，不會詢問使用者就可以直接取得權限，像是<code>android.permission.INTERNET</code>權限就屬於此類，主要是跟使用者的隱私比較無關的功能。如果想使用權限是屬於那一類的話，可以參考<a href="https://developer.android.com/reference/android/Manifest.permission.html?hl=zh-tw">這個清單</a>。</p>
+<h2>檢查權限</h2>
+<p>首先都要先檢查是否有這個權限:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">ContextCompat</span><span class="p">.</span><span class="nx">checkSelfPermission</span><span class="p">(</span><span class="nx">Context</span><span class="w"> </span><span class="nx">context</span><span class="p">,</span><span class="w"> </span><span class="nx">String</span><span class="w"> </span><span class="nx">permission</span><span class="p">)</span>
+</code></pre></div>
+
+<p>例如，檢查是否有寫入行事曆的權限</p>
+<div class="highlight"><pre><span></span><code><span class="nx">ContextCompat</span><span class="p">.</span><span class="nx">checkSelfPermission</span><span class="p">(</span><span class="nx">thisActivity</span><span class="p">,</span><span class="w"> </span><span class="nx">Manifest</span><span class="p">.</span><span class="nx">permission</span><span class="p">.</span><span class="nx">WRITE_CALENDAR</span><span class="p">);</span>
+</code></pre></div>
+
+<p>回傳值有兩種可能: <code>PERMISSION_GRANTED(0)</code> 和 <code>PERMISSION_DENIED(-1)</code></p>
+<h2>範例程式1: 請求單一權限</h2>
+<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">REQUEST_PERMISSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">checkPermission</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Build</span><span class="p">.</span><span class="na">VERSION</span><span class="p">.</span><span class="na">SDK_INT</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">Build</span><span class="p">.</span><span class="na">VERSION_CODES</span><span class="p">.</span><span class="na">M</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">permission</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manifest</span><span class="p">.</span><span class="na">permission</span><span class="p">.</span><span class="na">PERMISSION_YOU_WANT</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">checkSelfPermission</span><span class="p">(</span><span class="n">permission</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">PackageManager</span><span class="p">.</span><span class="na">PERMISSION_GRANTED</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">shouldShowRequestPermissionRationale</span><span class="p">(</span><span class="n">permission</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">AlertDialog</span><span class="p">.</span><span class="na">Builder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AlertDialog</span><span class="p">.</span><span class="na">Builder</span><span class="p">(</span><span class="k">this …</span></code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/permission-model/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/android-http-request/">Send HTTP Request in Android</a>
+      </h1>
+      <p class="meta"><time datetime="2016-10-06T00:00:00+08:00" pubdate>2016 October 06 Thu</time></p>
+</header>
+
+  <div class="entry-content"><p>In the most of time, you could just use HTTP library like <code>Volley</code> or <code>OkHTTP</code>. If you want to use native Android function call for some reasons, you should use <code>HttpURLConnection</code>. <code>HttpClient</code> has been deprecated since Android 6.0(sdk 23).</p>
+<p>For <a href="http://developer.android.com/reference/java/net/HttpURLConnection.html">HttpURLConnection</a>
+, there is an excellent code snippet on <a href="https://gist.github.com/udacityandroid/d6a7bb21904046a91695">here</a></p>
+<p>Note: Android don't allow network request happened on main UI thread. If you did this, a <code>android.os.NetworkOnMainThreadException</code> exception will be thrown out. Put them in AsyncTask or Service instead.</p>
+<p>Build Url:</p>
+<div class="highlight"><pre><span></span><code>Uri.Builder builder = Uri.parse(FORECAST_BASE_URL).buildUpon();
+urlBuilder.scheme("http");
+urlBuilder.authority("api.openweathermap.org");
+urlBuilder …</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/android-http-request/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/naganuma-learning-retro/">初級日文學習回顧</a>
+      </h1>
+      <p class="meta"><time datetime="2016-09-29T00:00:00+08:00" pubdate>2016 September 29 Thu</time></p>
+</header>
+
+  <div class="entry-content"><p><img alt="a-1" src="http://i.imgur.com/oBGfZR8.jpg"></p>
+<h2>學一個新的語言</h2>
+<p>今年7月到9月，我到了東京長沼日本語學校學習初級日文。除了上課的200個小時，加上課餘復習，這3個月的時間我至少投入了400小時在日文學習上。</p>
+<p>第一次到外國學語言，也是第一次我在國外住了3個月。語言學校學習的好處就基本上整天都是全日語的環境。因為我們是初級班，大家會的日文很有限，一開始的下課，大家還是都用英文來聊天，但隨著學習到的日文愈來愈多，也就發現大家慢慢可以用日文來溝通了。</p>
+<p>到語言學校學習可以很容易進入說日語的環境。學習新語言的過程其實就是要不斷的模仿、犯錯、修正。而語言學校則是一個安全、比較沒有壓力的環境，例如學到購物的日文時，就可以到學校的咖啡廳練習。在有系統的教學框架下按步就班學習，絕對會自己在學來得有效率。</p>
+<p>不過上語言學校最大的缺點就是很貴。但換個角度想，也是因為自己投入了這些金錢跟時間。代表自己有這個決心來學習一個新的語言。所以我的心態就是既然來了，就好好學習，不要浪費。一個月約2萬5台幣的學費，換算下來每一堂課大約是400台幣的學費。班上的部份同學會在課堂上睡覺、或者是翹課。我是覺得蠻可惜的，也可能是因為花的不是自己的錢，所以比較無所謂吧。最後3個月下來，我每堂課都有出席。</p>
+<p><img alt="record" src="https://i.imgur.com/ANlPLUN.png"></p>
+<p>最後學期成績順利過關(70分及格)</p>
+<p><img alt="成績" src="http://i.imgur.com/EhArh9Y.jpg"></p>
+<h2>到志工會話教室學日文</h2>
+<p><img alt="vulunteer" src="https://i.imgur.com/ILfi70o.png"></p>
+<p>除了語言學校，我也有到日文教室上課。日本各地有<a href="http://www.tnvn.jp/guide/">志工的日本語教室(ボランティア日本語教室)</a>可以參加。基本上都是免費，或是付場地費幾百塊日幣，就可以跟日本人會話交流，練習在語言學校學到的內容，也可以交到除了語言學校以外的朋友。我的小組是一位日本老師，跟一位日本女大學生的助教。學生則是有來自澳洲、印度等地的學生。</p>
+<p><img alt="vulunteer" src="http://i.imgur.com/cYW5Zlf.jpg"></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/naganuma-learning-retro/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+    <a class="prev" href="https://blog.codylab.com/index2.html">&larr; Older</a>
+
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

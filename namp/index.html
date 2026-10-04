@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>nmap 筆記</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">nmap 筆記</h1>
+      <p class="meta"><time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><p>NAMP 是一套網路掃描的工具</p>
+<h2>Nmap</h2>
+<div class="highlight"><pre><span></span><code><span class="n">$</span><span class="w"> </span><span class="n">nmap</span><span class="w"> </span><span class="n">ip</span>
+
+<span class="n">$</span><span class="w"> </span><span class="n">nmap</span><span class="w"> </span><span class="p">[</span><span class="n">ip1</span><span class="w"> </span><span class="n">ip2</span><span class="p">]</span>
+
+<span class="n">$</span><span class="w"> </span><span class="n">namp</span><span class="w"> </span><span class="mf">192.168.10.1</span><span class="o">/</span><span class="mi">24</span>
+</code></pre></div>
+
+<p>隨機掃描目標(慎用)</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>nmap<span class="w"> </span>-iR<span class="w"> </span><span class="m">3</span>
+</code></pre></div>
+
+<h2>Ping</h2>
+<p>$ nmap 172.16.21.134 172.16.21.135 -sP</p>
+<p>Starting Nmap 6.40 ( http://nmap.org ) at 2014-04-24 09:38 CST
+Nmap scan report for 172.16.21.134
+Host is up (0.00084s latency).
+Nmap done: 2 IP addresses (1 host up) scanned in 1.21 seconds</p>
+<h2>Traceroute</h2>
+<div class="highlight"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="nx">sudo</span><span class="w"> </span><span class="nx">nmap</span><span class="w"> </span><span class="m m-Double">8.8.8.8</span><span class="w"> </span><span class="o">--</span><span class="nx">traceroute</span>
+
+<span class="nx">Starting</span><span class="w"> </span><span class="nx">Nmap</span><span class="w"> </span><span class="m m-Double">6.40</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">http</span><span class="p">:</span><span class="c1">//nmap.org ) at 2014-04-24 09:39 CST</span>
+<span class="nx">Nmap</span><span class="w"> </span><span class="nx">scan</span><span class="w"> </span><span class="nx">report</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">google</span><span class="o">-</span><span class="nx">public</span><span class="o">-</span><span class="nx">dns</span><span class="o">-</span><span class="nx">a</span><span class="p">.</span><span class="nx">google</span><span class="p">.</span><span class="nx">com</span><span class="w"> </span><span class="p">(</span><span class="m m-Double">8.8.8.8</span><span class="p">)</span>
+<span class="nx">Host</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">up</span><span class="w"> </span><span class="p">(</span><span class="m m-Double">0.012</span><span class="nx">s</span><span class="w"> </span><span class="nx">latency</span><span class="p">).</span>
+<span class="nx">Not</span><span class="w"> </span><span class="nx">shown</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span><span class="w"> </span><span class="nx">filtered</span><span class="w"> </span><span class="nx">ports</span>
+<span class="nx">PORT</span><span class="w">   </span><span class="nx">STATE</span><span class="w"> </span><span class="nx">SERVICE</span>
+<span class="mi">53</span><span class="o">/</span><span class="nx">tcp</span><span class="w"> </span><span class="nx">open</span><span class="w">  </span><span class="nx">domain</span>
+
+<span class="nx">TRACEROUTE</span><span class="w"> </span><span class="p">(</span><span class="nx">using</span><span class="w"> </span><span class="nx">port</span><span class="w"> </span><span class="mi">53</span><span class="o">/</span><span class="nx">tcp</span><span class="p">)</span>
+<span class="nx">HOP</span><span class="w"> </span><span class="nx">RTT</span><span class="w">      </span><span class="nx">ADDRESS</span>
+<span class="mi">1</span><span class="w">   </span><span class="m m-Double">5.03</span><span class="w"> </span><span class="nx">ms</span><span class="w">  </span><span class="m m-Double">140.92.62.1</span>
+<span class="mi">2</span><span class="w">   </span><span class="m m-Double">2.25</span><span class="w"> </span><span class="nx">ms</span><span class="w">  </span><span class="m m-Double">140.92.12.22</span>
+<span class="mi">3</span><span class="w">   </span><span class="m m-Double">2.40</span><span class="w"> </span><span class="nx">ms</span><span class="w">  </span><span class="m m-Double">140.92.12.30</span>
+<span class="mi">4</span><span class="w">   </span><span class="m m-Double">3.07</span><span class="w"> </span><span class="nx">ms</span><span class="w">  </span><span class="nx">h254</span><span class="p">.</span><span class="nx">s98</span><span class="p">.</span><span class="nx">ts</span><span class="p">.</span><span class="nx">hinet</span><span class="p">.</span><span class="nx">net</span><span class="w"> </span><span class="p">(</span><span class="m m-Double">168.95.98.254</span><span class="p">)</span>
+<span class="mi">5</span><span class="w">   </span><span class="m m-Double">20.43</span><span class="w"> </span><span class="nx">ms</span><span class="w"> </span><span class="nx">h102</span><span class="p">.</span><span class="nx">s24</span><span class="p">.</span><span class="nx">ts</span><span class="p">.</span><span class="nx">hinet</span><span class="p">.</span><span class="nx">net</span><span class="w"> </span><span class="p">(</span><span class="m m-Double">168.95.24.102</span><span class="p">)</span>
+<span class="mi">6</span><span class="w">   </span><span class="m m-Double">9.05</span><span class="w"> </span><span class="nx">ms</span><span class="w">  </span><span class="nx">tpdt</span><span class="o">-</span><span class="mi">3011</span><span class="p">.</span><span class="nx">hinet</span><span class="p">.</span><span class="nx">net</span><span class="w"> </span><span class="p">(</span><span class="m m-Double">220.128.1.246</span><span class="p">)</span>
+<span class="mi">7</span><span class="w">   </span><span class="m m-Double">4.31</span><span class="w"> </span><span class="nx">ms</span><span class="w">  </span><span class="nx">tyfo</span><span class="o">-</span><span class="mi">3011</span><span class="p">.</span><span class="nx">hinet</span><span class="p">.</span><span class="nx">net</span><span class="w"> </span><span class="p">(</span><span class="m m-Double">220.128.8.81</span><span class="p">)</span>
+<span class="mi">8</span><span class="w">   </span><span class="m m-Double">3.45</span><span class="w"> </span><span class="nx">ms</span><span class="w">  </span><span class="nx">tyfo</span><span class="o">-</span><span class="mi">3301</span><span class="p">.</span><span class="nx">hinet</span><span class="p">.</span><span class="nx">net</span><span class="w"> </span><span class="p">(</span><span class="m m-Double">220.128.8.249</span><span class="p">)</span>
+<span class="mi">9</span><span class="w">   </span><span class="m m-Double">6.73</span><span class="w"> </span><span class="nx">ms</span><span class="w">  </span><span class="m m-Double">74.125.49.158</span>
+<span class="mi">10</span><span class="w">  </span><span class="m m-Double">12.86</span><span class="w"> </span><span class="nx">ms</span><span class="w"> </span><span class="m m-Double">209.85.243.30</span>
+<span class="mi">11</span><span class="w">  </span><span class="m m-Double">8.06</span><span class="w"> </span><span class="nx">ms</span><span class="w">  </span><span class="m m-Double">209.85.243.21</span>
+<span class="mi">12</span><span class="w">  </span><span class="o">...</span>
+<span class="mi">13</span><span class="w">  </span><span class="m m-Double">13.71</span><span class="w"> </span><span class="nx">ms</span><span class="w"> </span><span class="nx">google</span><span class="o">-</span><span class="nx">public</span><span class="o">-</span><span class="nx">dns</span><span class="o">-</span><span class="nx">a</span><span class="p">.</span><span class="nx">google</span><span class="p">.</span><span class="nx">com</span><span class="w"> </span><span class="p">(</span><span class="m m-Double">8.8.8.8</span><span class="p">)</span>
+
+<span class="nx">Nmap</span><span class="w"> </span><span class="nx">done</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="nx">IP</span><span class="w"> </span><span class="nx">address</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="nx">host</span><span class="w"> </span><span class="nx">up</span><span class="p">)</span><span class="w"> </span><span class="nx">scanned</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m m-Double">8.06</span><span class="w"> </span><span class="nx">seconds</span>
+</code></pre></div>
+
+<h2>TCP SYN Ping</h2>
+<p>當系統把 ICMP PING 關掉的時間可以改試 TCP SYN PING。 </p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>nmap<span class="w"> </span>-PS135<span class="w"> </span><span class="m">172</span>.16.21.131
+</code></pre></div>
+
+<h2>UDP Ping</h2>
+<div class="highlight"><pre><span></span><code># nmap -PU 172.16.21.131
+</code></pre></div>
+
+<h2>偵測作業系統</h2>
+<div class="highlight"><pre><span></span><code># mmap -O 172.16.21.134
+</code></pre></div>
+
+<p>結果不一定準確，實際測試 Windows 7:</p>
+<div class="highlight"><pre><span></span><code><span class="err">$</span> <span class="s s-Atom">sudo</span> <span class="s s-Atom">nmap</span> <span class="o">-</span><span class="nv">O</span> <span class="mf">172.16.21.131</span>
+
+<span class="nv">Starting</span> <span class="nv">Nmap</span> <span class="mf">6.40</span> <span class="p">(</span> <span class="s s-Atom">http</span><span class="p">:</span><span class="o">//</span><span class="s s-Atom">nmap</span><span class="p">.</span><span class="s s-Atom">org</span> <span class="p">)</span> <span class="s s-Atom">at</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">24</span> <span class="mi">09</span><span class="o">:</span><span class="mi">49</span> <span class="nv">CST</span>
+<span class="nv">Nmap</span> <span class="s s-Atom">scan</span> <span class="s s-Atom">report</span> <span class="s s-Atom">for</span> <span class="mf">172.16.21.131</span>
+<span class="nv">Host</span> <span class="o">is</span> <span class="nf">up</span> <span class="p">(</span><span class="mf">0.0012</span><span class="s s-Atom">s</span> <span class="s s-Atom">latency</span><span class="p">).</span>
+<span class="nv">Not</span> <span class="s s-Atom">shown</span><span class="p">:</span> <span class="mi">998</span> <span class="s s-Atom">filtered</span> <span class="s s-Atom">ports</span>
+<span class="nv">PORT</span>     <span class="nv">STATE</span> <span class="nv">SERVICE</span>
+<span class="mi">135</span><span class="o">/</span><span class="s s-Atom">tcp</span>  <span class="s s-Atom">open</span>  <span class="s s-Atom">msrpc</span>
+<span class="mi">3389</span><span class="o">/</span><span class="s s-Atom">tcp</span> <span class="s s-Atom">open</span>  <span class="s s-Atom">ms</span><span class="o">-</span><span class="s s-Atom">wbt</span><span class="o">-</span><span class="s s-Atom">server</span>
+<span class="nv">MAC</span> <span class="nv">Address</span><span class="o">:</span> <span class="mi">00</span><span class="o">:</span><span class="mi">0</span><span class="nv">C</span><span class="o">:</span><span class="mi">29</span><span class="o">:</span><span class="mi">53</span><span class="o">:</span><span class="mi">99</span><span class="o">:</span><span class="nv">FF</span> <span class="p">(</span><span class="nv">VMware</span><span class="p">)</span>
+<span class="nv">Warning</span><span class="o">:</span> <span class="nv">OSScan</span> <span class="s s-Atom">results</span> <span class="s s-Atom">may</span> <span class="s s-Atom">be</span> <span class="s s-Atom">unreliable</span> <span class="s s-Atom">because</span> <span class="s s-Atom">we</span> <span class="s s-Atom">could</span> <span class="o">not</span> <span class="s s-Atom">find</span> <span class="s s-Atom">at</span> <span class="s s-Atom">least</span> <span class="mi">1</span> <span class="s s-Atom">open</span> <span class="s s-Atom">and</span> <span class="mi">1</span> <span class="s s-Atom">closed</span> <span class="s s-Atom">port</span>
+<span class="nv">Device</span> <span class="s s-Atom">type</span><span class="p">:</span> <span class="s s-Atom">general</span> <span class="s s-Atom">purpose</span>
+<span class="nv">Running</span><span class="o">:</span> <span class="nv">Microsoft</span> <span class="nv">Windows</span> <span class="nv">Vista</span><span class="p">|</span><span class="mi">2008</span><span class="p">|</span><span class="mi">7</span>
+<span class="nv">OS</span> <span class="nv">CPE</span><span class="o">:</span> <span class="s s-Atom">cpe</span><span class="p">:</span><span class="o">/</span><span class="s s-Atom">o</span><span class="p">:</span><span class="s s-Atom">microsoft</span><span class="p">:</span><span class="s s-Atom">windows_vista</span><span class="o">::-</span> <span class="s s-Atom">cpe</span><span class="p">:</span><span class="o">/</span><span class="s s-Atom">o</span><span class="p">:</span><span class="s s-Atom">microsoft</span><span class="p">:</span><span class="s s-Atom">windows_vista</span><span class="o">::</span><span class="s s-Atom">sp1</span> <span class="s s-Atom">cpe</span><span class="p">:</span><span class="o">/</span><span class="s s-Atom">o</span><span class="p">:</span><span class="s s-Atom">microsoft</span><span class="p">:</span><span class="s s-Atom">windows_server_2008</span><span class="o">::</span><span class="s s-Atom">sp1</span> <span class="s s-Atom">cpe</span><span class="p">:</span><span class="o">/</span><span class="s s-Atom">o</span><span class="p">:</span><span class="s s-Atom">microsoft</span><span class="p">:</span><span class="s s-Atom">windows_7</span>
+<span class="nv">OS</span> <span class="s s-Atom">details</span><span class="p">:</span> <span class="nv">Microsoft</span> <span class="nv">Windows</span> <span class="nv">Vista</span> <span class="nv">SP0</span> <span class="s s-Atom">or</span> <span class="nv">SP1</span><span class="p">,</span> <span class="nv">Windows</span> <span class="nv">Server</span> <span class="mi">2008</span> <span class="nv">SP1</span><span class="p">,</span> <span class="s s-Atom">or</span> <span class="nv">Windows</span> <span class="mi">7</span><span class="p">,</span> <span class="nv">Microsoft</span> <span class="nv">Windows</span> <span class="nv">Vista</span> <span class="nv">SP2</span><span class="p">,</span> <span class="nv">Windows</span> <span class="mi">7</span> <span class="nv">SP1</span><span class="p">,</span> <span class="s s-Atom">or</span> <span class="nv">Windows</span> <span class="nv">Server</span> <span class="mi">2008</span>
+<span class="nv">Network</span> <span class="nv">Distance</span><span class="o">:</span> <span class="mi">1</span> <span class="s s-Atom">hop</span>
+
+<span class="nv">OS</span> <span class="s s-Atom">detection</span> <span class="s s-Atom">performed</span><span class="p">.</span> <span class="nv">Please</span> <span class="s s-Atom">report</span> <span class="s s-Atom">any</span> <span class="s s-Atom">incorrect</span> <span class="s s-Atom">results</span> <span class="s s-Atom">at</span> <span class="s s-Atom">http</span><span class="p">:</span><span class="o">//</span><span class="s s-Atom">nmap</span><span class="p">.</span><span class="s s-Atom">org</span><span class="o">/</span><span class="s s-Atom">submit</span><span class="o">/</span> <span class="p">.</span>
+<span class="nv">Nmap</span> <span class="s s-Atom">done</span><span class="p">:</span> <span class="mi">1</span> <span class="nv">IP</span> <span class="nf">address</span> <span class="p">(</span><span class="mi">1</span> <span class="s s-Atom">host</span> <span class="s s-Atom">up</span><span class="p">)</span> <span class="s s-Atom">scanned</span> <span class="s s-Atom">in</span> <span class="mf">7.06</span> <span class="s s-Atom">seconds</span>
+</code></pre></div>
+
+<p>以及 Ubuntu 13.10:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>nmap<span class="w"> </span>-O<span class="w"> </span><span class="m">172</span>.16.21.134
+
+Starting<span class="w"> </span>Nmap<span class="w"> </span><span class="m">6</span>.40<span class="w"> </span><span class="o">(</span><span class="w"> </span>http://nmap.org<span class="w"> </span><span class="o">)</span><span class="w"> </span>at<span class="w"> </span><span class="m">2014</span>-04-24<span class="w"> </span><span class="m">09</span>:53<span class="w"> </span>CST
+Nmap<span class="w"> </span>scan<span class="w"> </span>report<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="m">172</span>.16.21.134
+Host<span class="w"> </span>is<span class="w"> </span>up<span class="w"> </span><span class="o">(</span><span class="m">0</span>.00056s<span class="w"> </span>latency<span class="o">)</span>.
+Not<span class="w"> </span>shown:<span class="w"> </span><span class="m">996</span><span class="w"> </span>closed<span class="w"> </span>ports
+PORT<span class="w">     </span>STATE<span class="w"> </span>SERVICE
+<span class="m">22</span>/tcp<span class="w">   </span>open<span class="w">  </span>ssh
+<span class="m">80</span>/tcp<span class="w">   </span>open<span class="w">  </span>http
+<span class="m">3260</span>/tcp<span class="w"> </span>open<span class="w">  </span>iscsi
+<span class="m">3306</span>/tcp<span class="w"> </span>open<span class="w">  </span>mysql
+MAC<span class="w"> </span>Address:<span class="w"> </span><span class="m">00</span>:0C:29:2C:B2:55<span class="w"> </span><span class="o">(</span>VMware<span class="o">)</span>
+No<span class="w"> </span>exact<span class="w"> </span>OS<span class="w"> </span>matches<span class="w"> </span><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="o">(</span>If<span class="w"> </span>you<span class="w"> </span>know<span class="w"> </span>what<span class="w"> </span>OS<span class="w"> </span>is<span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span>it,<span class="w"> </span>see<span class="w"> </span>http://nmap.org/submit/<span class="w"> </span><span class="o">)</span>.
+TCP/IP<span class="w"> </span>fingerprint:
+OS:SCAN<span class="o">(</span><span class="nv">V</span><span class="o">=</span><span class="m">6</span>.40%E<span class="o">=</span><span class="m">4</span>%D<span class="o">=</span><span class="m">4</span>/24%OT<span class="o">=</span><span class="m">22</span>%CT<span class="o">=</span><span class="m">1</span>%CU<span class="o">=</span><span class="m">33986</span>%PV<span class="o">=</span>Y%DS<span class="o">=</span><span class="m">1</span>%DC<span class="o">=</span>D%G<span class="o">=</span>Y%M<span class="o">=</span>000C29%T
+OS:M<span class="o">=</span>53586E8E%P<span class="o">=</span>x86_64-unknown-linux-gnu<span class="o">)</span>SEQ<span class="o">(</span><span class="nv">SP</span><span class="o">=</span><span class="m">105</span>%GCD<span class="o">=</span><span class="m">1</span>%ISR<span class="o">=</span>10F%TI<span class="o">=</span>Z%CI<span class="o">=</span>I
+OS:%II<span class="o">=</span>I%TS<span class="o">=</span><span class="m">8</span><span class="o">)</span>OPS<span class="o">(</span><span class="nv">O1</span><span class="o">=</span>M5B4ST11NW7%O2<span class="o">=</span>M5B4ST11NW7%O3<span class="o">=</span>M5B4NNT11NW7%O4<span class="o">=</span>M5B4ST11
+OS:NW7%O5<span class="o">=</span>M5B4ST11NW7%O6<span class="o">=</span>M5B4ST11<span class="o">)</span>WIN<span class="o">(</span><span class="nv">W1</span><span class="o">=</span><span class="m">7120</span>%W2<span class="o">=</span><span class="m">7120</span>%W3<span class="o">=</span><span class="m">7120</span>%W4<span class="o">=</span><span class="m">7120</span>%W5<span class="o">=</span><span class="m">71</span>
+OS:20%W6<span class="o">=</span><span class="m">7120</span><span class="o">)</span>ECN<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>%W<span class="o">=</span><span class="m">7210</span>%O<span class="o">=</span>M5B4NNSNW7%CC<span class="o">=</span>Y%Q<span class="o">=)</span>T1<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">4</span>
+OS:0%S<span class="o">=</span>O%A<span class="o">=</span>S+%F<span class="o">=</span>AS%RD<span class="o">=</span><span class="m">0</span>%Q<span class="o">=)</span>T2<span class="o">(</span><span class="nv">R</span><span class="o">=</span>N<span class="o">)</span>T3<span class="o">(</span><span class="nv">R</span><span class="o">=</span>N<span class="o">)</span>T4<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>%W<span class="o">=</span><span class="m">0</span>%S<span class="o">=</span>A%A<span class="o">=</span>Z%F<span class="o">=</span>R%O
+OS:<span class="o">=</span>%RD<span class="o">=</span><span class="m">0</span>%Q<span class="o">=)</span>T5<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>%W<span class="o">=</span><span class="m">0</span>%S<span class="o">=</span>Z%A<span class="o">=</span>S+%F<span class="o">=</span>AR%O<span class="o">=</span>%RD<span class="o">=</span><span class="m">0</span>%Q<span class="o">=)</span>T6<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>
+OS:%W<span class="o">=</span><span class="m">0</span>%S<span class="o">=</span>A%A<span class="o">=</span>Z%F<span class="o">=</span>R%O<span class="o">=</span>%RD<span class="o">=</span><span class="m">0</span>%Q<span class="o">=)</span>T7<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>%W<span class="o">=</span><span class="m">0</span>%S<span class="o">=</span>Z%A<span class="o">=</span>S+%F<span class="o">=</span>AR%O<span class="o">=</span>%RD<span class="o">=</span><span class="m">0</span>%Q
+OS:<span class="o">=)</span>U1<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>N%T<span class="o">=</span><span class="m">40</span>%IPL<span class="o">=</span><span class="m">164</span>%UN<span class="o">=</span><span class="m">0</span>%RIPL<span class="o">=</span>G%RID<span class="o">=</span>G%RIPCK<span class="o">=</span>G%RUCK<span class="o">=</span>G%RUD<span class="o">=</span>G<span class="o">)</span>IE<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y
+OS:%DFI<span class="o">=</span>N%T<span class="o">=</span><span class="m">40</span>%CD<span class="o">=</span>S<span class="o">)</span>
+
+Network<span class="w"> </span>Distance:<span class="w"> </span><span class="m">1</span><span class="w"> </span>hop
+
+OS<span class="w"> </span>detection<span class="w"> </span>performed.<span class="w"> </span>Please<span class="w"> </span>report<span class="w"> </span>any<span class="w"> </span>incorrect<span class="w"> </span>results<span class="w"> </span>at<span class="w"> </span>http://nmap.org/submit/<span class="w"> </span>.
+Nmap<span class="w"> </span><span class="k">done</span>:<span class="w"> </span><span class="m">1</span><span class="w"> </span>IP<span class="w"> </span>address<span class="w"> </span><span class="o">(</span><span class="m">1</span><span class="w"> </span>host<span class="w"> </span>up<span class="o">)</span><span class="w"> </span>scanned<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">12</span>.22<span class="w"> </span>seconds
+</code></pre></div>
+
+<p>只有 Windows 7 可以被偵測出來，此時可以使用另一個選項 <code>--osscan-guess</code>，nmap會列出可能作業系統的機率</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>nmap<span class="w"> </span>-O<span class="w"> </span>--osscan-guess<span class="w"> </span>localhost
+
+Starting<span class="w"> </span>Nmap<span class="w"> </span><span class="m">6</span>.40<span class="w"> </span><span class="o">(</span><span class="w"> </span>http://nmap.org<span class="w"> </span><span class="o">)</span><span class="w"> </span>at<span class="w"> </span><span class="m">2014</span>-04-24<span class="w"> </span><span class="m">09</span>:56<span class="w"> </span>CST
+Nmap<span class="w"> </span>scan<span class="w"> </span>report<span class="w"> </span><span class="k">for</span><span class="w"> </span>localhost<span class="w"> </span><span class="o">(</span><span class="m">127</span>.0.0.1<span class="o">)</span>
+Host<span class="w"> </span>is<span class="w"> </span>up<span class="w"> </span><span class="o">(</span><span class="m">0</span>.000070s<span class="w"> </span>latency<span class="o">)</span>.
+Not<span class="w"> </span>shown:<span class="w"> </span><span class="m">997</span><span class="w"> </span>closed<span class="w"> </span>ports
+PORT<span class="w">     </span>STATE<span class="w"> </span>SERVICE
+<span class="m">631</span>/tcp<span class="w">  </span>open<span class="w">  </span>ipp
+<span class="m">902</span>/tcp<span class="w">  </span>open<span class="w">  </span>iss-realsecure
+<span class="m">4242</span>/tcp<span class="w"> </span>open<span class="w">  </span>vrml-multi-use
+Aggressive<span class="w"> </span>OS<span class="w"> </span>guesses:<span class="w"> </span>Linux<span class="w"> </span><span class="m">3</span>.7<span class="w"> </span>-<span class="w"> </span><span class="m">3</span>.9<span class="w"> </span><span class="o">(</span><span class="m">98</span>%<span class="o">)</span>,<span class="w"> </span>Netgear<span class="w"> </span>DG834G<span class="w"> </span>WAP<span class="w"> </span>or<span class="w"> </span>Western<span class="w"> </span>Digital<span class="w"> </span>WD<span class="w"> </span>TV<span class="w"> </span>media<span class="w"> </span>player<span class="w"> </span><span class="o">(</span><span class="m">96</span>%<span class="o">)</span>,<span class="w"> </span>Linux<span class="w"> </span><span class="m">3</span>.8<span class="w"> </span><span class="o">(</span><span class="m">95</span>%<span class="o">)</span>,<span class="w"> </span>Linux<span class="w"> </span><span class="m">3</span>.1<span class="w"> </span><span class="o">(</span><span class="m">93</span>%<span class="o">)</span>,<span class="w"> </span>Linux<span class="w"> </span><span class="m">3</span>.2<span class="w"> </span><span class="o">(</span><span class="m">93</span>%<span class="o">)</span>,<span class="w"> </span>AXIS<span class="w"> </span>210A<span class="w"> </span>or<span class="w"> </span><span class="m">211</span><span class="w"> </span>Network<span class="w"> </span>Camera<span class="w"> </span><span class="o">(</span>Linux<span class="w"> </span><span class="m">2</span>.6<span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="m">92</span>%<span class="o">)</span>,<span class="w"> </span>Linux<span class="w"> </span><span class="m">3</span>.7<span class="w"> </span><span class="o">(</span><span class="m">92</span>%<span class="o">)</span>,<span class="w"> </span>Linux<span class="w"> </span><span class="m">3</span>.9<span class="w"> </span><span class="o">(</span><span class="m">91</span>%<span class="o">)</span>,<span class="w"> </span>Crestron<span class="w"> </span>XPanel<span class="w"> </span>control<span class="w"> </span>system<span class="w"> </span><span class="o">(</span><span class="m">91</span>%<span class="o">)</span>,<span class="w"> </span>Linux<span class="w"> </span><span class="m">2</span>.4.26<span class="w"> </span><span class="o">(</span>Slackware<span class="w"> </span><span class="m">10</span>.0.0<span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="m">91</span>%<span class="o">)</span>
+No<span class="w"> </span>exact<span class="w"> </span>OS<span class="w"> </span>matches<span class="w"> </span><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="o">(</span>If<span class="w"> </span>you<span class="w"> </span>know<span class="w"> </span>what<span class="w"> </span>OS<span class="w"> </span>is<span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span>it,<span class="w"> </span>see<span class="w"> </span>http://nmap.org/submit/<span class="w"> </span><span class="o">)</span>.
+TCP/IP<span class="w"> </span>fingerprint:
+OS:SCAN<span class="o">(</span><span class="nv">V</span><span class="o">=</span><span class="m">6</span>.40%E<span class="o">=</span><span class="m">4</span>%D<span class="o">=</span><span class="m">4</span>/24%OT<span class="o">=</span><span class="m">631</span>%CT<span class="o">=</span><span class="m">1</span>%CU<span class="o">=</span><span class="m">44228</span>%PV<span class="o">=</span>N%DS<span class="o">=</span><span class="m">0</span>%DC<span class="o">=</span>L%G<span class="o">=</span>Y%TM<span class="o">=</span>53586F
+OS:70%P<span class="o">=</span>x86_64-unknown-linux-gnu<span class="o">)</span>SEQ<span class="o">(</span><span class="nv">SP</span><span class="o">=</span><span class="m">105</span>%GCD<span class="o">=</span><span class="m">1</span>%ISR<span class="o">=</span>10D%TI<span class="o">=</span>Z%CI<span class="o">=</span>I%II<span class="o">=</span>I%TS
+OS:<span class="o">=</span><span class="m">8</span><span class="o">)</span>OPS<span class="o">(</span><span class="nv">O1</span><span class="o">=</span>MFFD7ST11NW7%O2<span class="o">=</span>MFFD7ST11NW7%O3<span class="o">=</span>MFFD7NNT11NW7%O4<span class="o">=</span>MFFD7ST11NW7%
+OS:O5<span class="o">=</span>MFFD7ST11NW7%O6<span class="o">=</span>MFFD7ST11<span class="o">)</span>WIN<span class="o">(</span><span class="nv">W1</span><span class="o">=</span>AAAA%W2<span class="o">=</span>AAAA%W3<span class="o">=</span>AAAA%W4<span class="o">=</span>AAAA%W5<span class="o">=</span>AAAA
+OS:%W6<span class="o">=</span>AAAA<span class="o">)</span>ECN<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>%W<span class="o">=</span>AAAA%O<span class="o">=</span>MFFD7NNSNW7%CC<span class="o">=</span>Y%Q<span class="o">=)</span>T1<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>
+OS:%S<span class="o">=</span>O%A<span class="o">=</span>S+%F<span class="o">=</span>AS%RD<span class="o">=</span><span class="m">0</span>%Q<span class="o">=)</span>T2<span class="o">(</span><span class="nv">R</span><span class="o">=</span>N<span class="o">)</span>T3<span class="o">(</span><span class="nv">R</span><span class="o">=</span>N<span class="o">)</span>T4<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>%W<span class="o">=</span><span class="m">0</span>%S<span class="o">=</span>A%A<span class="o">=</span>Z%F<span class="o">=</span>R%O<span class="o">=</span>
+OS:%RD<span class="o">=</span><span class="m">0</span>%Q<span class="o">=)</span>T5<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>%W<span class="o">=</span><span class="m">0</span>%S<span class="o">=</span>Z%A<span class="o">=</span>S+%F<span class="o">=</span>AR%O<span class="o">=</span>%RD<span class="o">=</span><span class="m">0</span>%Q<span class="o">=)</span>T6<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>%
+OS:W<span class="o">=</span><span class="m">0</span>%S<span class="o">=</span>A%A<span class="o">=</span>Z%F<span class="o">=</span>R%O<span class="o">=</span>%RD<span class="o">=</span><span class="m">0</span>%Q<span class="o">=)</span>T7<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>Y%T<span class="o">=</span><span class="m">40</span>%W<span class="o">=</span><span class="m">0</span>%S<span class="o">=</span>Z%A<span class="o">=</span>S+%F<span class="o">=</span>AR%O<span class="o">=</span>%RD<span class="o">=</span><span class="m">0</span>%Q<span class="o">=</span>
+OS:<span class="o">)</span>U1<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%DF<span class="o">=</span>N%T<span class="o">=</span><span class="m">40</span>%IPL<span class="o">=</span><span class="m">164</span>%UN<span class="o">=</span><span class="m">0</span>%RIPL<span class="o">=</span>G%RID<span class="o">=</span>G%RIPCK<span class="o">=</span>G%RUCK<span class="o">=</span>G%RUD<span class="o">=</span>G<span class="o">)</span>IE<span class="o">(</span><span class="nv">R</span><span class="o">=</span>Y%
+OS:DFI<span class="o">=</span>N%T<span class="o">=</span><span class="m">40</span>%CD<span class="o">=</span>S<span class="o">)</span>
+
+Network<span class="w"> </span>Distance:<span class="w"> </span><span class="m">0</span><span class="w"> </span>hops
+
+OS<span class="w"> </span>detection<span class="w"> </span>performed.<span class="w"> </span>Please<span class="w"> </span>report<span class="w"> </span>any<span class="w"> </span>incorrect<span class="w"> </span>results<span class="w"> </span>at<span class="w"> </span>http://nmap.org/submit/<span class="w"> </span>.
+Nmap<span class="w"> </span><span class="k">done</span>:<span class="w"> </span><span class="m">1</span><span class="w"> </span>IP<span class="w"> </span>address<span class="w"> </span><span class="o">(</span><span class="m">1</span><span class="w"> </span>host<span class="w"> </span>up<span class="o">)</span><span class="w"> </span>scanned<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">11</span>.96<span class="w"> </span>seconds
+</code></pre></div>
+
+<h2>zenmap</h2>
+<p>GUI 介面的 zenmap</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2014-01-01T00:00:00+08:00" pubdate>2014 January 01 Wed</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+  <section>
+    <h1>Related Posts</h1>
+    <ul>
+      <li><a href="https://blog.codylab.com/angryip/">Angry IP Scaner</a></li>
+      <li><a href="https://blog.codylab.com/bug-report/">如何寫 Bug Report</a></li>
+      <li><a href="https://blog.codylab.com/sikuli/">Execute Sikuli Script at Jython level on Windows 7</a></li>
+      <li><a href="https://blog.codylab.com/install-testlink-on-centos/">Install testlink on CentOS</a></li>
+      <li><a href="https://blog.codylab.com/install-jenkins-on-centos-6/">Install Jenkins on CentOS 6.3</a></li>
+    </ul>
+  <section>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/namp/';
+          var disqus_url = 'https://blog.codylab.com/namp/';
+          var disqus_title = 'nmap 筆記';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

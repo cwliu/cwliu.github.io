@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - Python</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/python.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>Python generate xUnit report for Jenkins</title><link href="https://blog.codylab.com/python-generate-xunit-report-for-jenkins/" rel="alternate"></link><published>2013-07-18T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2013-07-18:/python-generate-xunit-report-for-jenkins/</id><summary type="html">&lt;p&gt;在日常使用的Test Framework所產出的Test Report並不是標準的 JUnit 格式。所以這使得想要回傳Test Result到Jenkins的時侯，沒辦法把 Test Result 顯示在Jenkins的Build的結果上面。然而產生JUnit report的功能在一般的Test Framework像是nose跟py.test都有，像是nose就有一個plugins是專門在處理這個問題，或者是py.test可以直接使用&lt;code&gt;py.test --junitxml=path&lt;/code&gt;來產生。可惜我的工具沒有。所以只好自己弄一個了。在此記錄要如何完成這個任務。&lt;/p&gt;
+&lt;p&gt;上網 Google了一下有關JUnit XML format到底長怎樣，找到Stackoverflow&lt;a href="http://stackoverflow.com/questions/4922867/junit-xml-format-specification-that-hudson-supports"&gt;這篇&lt;/a&gt;有討論，基本上可以解決90%的疑問。有關XML的定義可以從.xsd檔中找到，而JUnit的.xsd檔，&lt;a href="https://svn.jenkins-ci.org/trunk/hudson/dtkit/dtkit-format/dtkit-junit-model/src/main/resources/com/thalesgroup/dtkit/junit/model/xsd/junit-4.xsd"&gt;這邊&lt;/a&gt;可以下載。我使用&lt;a href="http://www.wmhelp.com/xmlpad3.htm"&gt;XMLPad&lt;/a&gt;來打開，再掛載xsd的schema檔，手動體驗一下 xml 的format，基本上最簡單的的JUnit Report大概是這樣：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;testsuites&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;xsi:noNamespaceSchemaLocation=&lt;/span&gt;&lt;span class="s"&gt;"file:///D:/junit-4.xsd"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;xmlns:xsi=&lt;/span&gt;&lt;span class="s"&gt;"http://www.w3.org/2001/XMLSchema-instance"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;testsuite&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"INSTALLATION RAT"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;testcase&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;classname=&lt;/span&gt;&lt;span class="s"&gt;"INS_RAT_0001"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"Test Case Title Sample 1"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;time=&lt;/span&gt;&lt;span class="s"&gt;"0.046"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;system-out&amp;gt;&amp;lt;/system-out&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/testcase&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;testcase&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;classname=&lt;/span&gt;&lt;span class="s"&gt;"INS_RAT_0002"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"Test Case Title Sample 2"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;time=&lt;/span&gt;&lt;span class="s"&gt;"4.868"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;failure&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;message=&lt;/span&gt;&lt;span class="s"&gt;"case failed …&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;在日常使用的Test Framework所產出的Test Report並不是標準的 JUnit 格式。所以這使得想要回傳Test Result到Jenkins的時侯，沒辦法把 Test Result 顯示在Jenkins的Build的結果上面。然而產生JUnit report的功能在一般的Test Framework像是nose跟py.test都有，像是nose就有一個plugins是專門在處理這個問題，或者是py.test可以直接使用&lt;code&gt;py.test --junitxml=path&lt;/code&gt;來產生。可惜我的工具沒有。所以只好自己弄一個了。在此記錄要如何完成這個任務。&lt;/p&gt;
+&lt;p&gt;上網 Google了一下有關JUnit XML format到底長怎樣，找到Stackoverflow&lt;a href="http://stackoverflow.com/questions/4922867/junit-xml-format-specification-that-hudson-supports"&gt;這篇&lt;/a&gt;有討論，基本上可以解決90%的疑問。有關XML的定義可以從.xsd檔中找到，而JUnit的.xsd檔，&lt;a href="https://svn.jenkins-ci.org/trunk/hudson/dtkit/dtkit-format/dtkit-junit-model/src/main/resources/com/thalesgroup/dtkit/junit/model/xsd/junit-4.xsd"&gt;這邊&lt;/a&gt;可以下載。我使用&lt;a href="http://www.wmhelp.com/xmlpad3.htm"&gt;XMLPad&lt;/a&gt;來打開，再掛載xsd的schema檔，手動體驗一下 xml 的format，基本上最簡單的的JUnit Report大概是這樣：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;testsuites&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;xsi:noNamespaceSchemaLocation=&lt;/span&gt;&lt;span class="s"&gt;"file:///D:/junit-4.xsd"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;xmlns:xsi=&lt;/span&gt;&lt;span class="s"&gt;"http://www.w3.org/2001/XMLSchema-instance"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;testsuite&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"INSTALLATION RAT"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;testcase&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;classname=&lt;/span&gt;&lt;span class="s"&gt;"INS_RAT_0001"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"Test Case Title Sample 1"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;time=&lt;/span&gt;&lt;span class="s"&gt;"0.046"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;system-out&amp;gt;&amp;lt;/system-out&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/testcase&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;testcase&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;classname=&lt;/span&gt;&lt;span class="s"&gt;"INS_RAT_0002"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;"Test Case Title Sample 2"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;time=&lt;/span&gt;&lt;span class="s"&gt;"4.868"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;failure&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;message=&lt;/span&gt;&lt;span class="s"&gt;"case failed"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;"failure"&lt;/span&gt;&lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;system-out&amp;gt;&amp;lt;/system-out&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;system-err&amp;gt;&amp;lt;/system-err&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/testcase&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/testsuite&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/testsuites&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;有關一些測試數量，成功數量，失敗數量，我都省略不寫上去，因為我發現Jenkins會自動幫我們算。再來，下面是一小段產生XML Report 的 Sample Code:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;createXUnitReport&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;testResult&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;lstSuites&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;testResult&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getTestsuiteList&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;eleTestsuites&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Element&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'testsuites'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;strSuiteName&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;lstSuites&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;eleTestsuite&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SubElement&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;eleTestsuites&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'testsuite'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;strSuiteName&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;strTestCaseName&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dicResult&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;testResult&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_dicSuites&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;strSuiteName&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s1"&gt;'testcases'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;                    
+            &lt;span class="n"&gt;eleTestcase&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SubElement&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;eleTestsuite&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'testcase'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;classname&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;strTestCaseName&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dicResult&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'title'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tmstafTimeToSeconds&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_getStrTime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dicResult&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'elapsedTime'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s2"&gt;"00:00:00"&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;dicResult&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'fails'&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+                &lt;span class="n"&gt;SubElement&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;eleTestcase&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'failure'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"failure"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"case failed"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;dicResult&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'crashes'&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+                &lt;span class="n"&gt;SubElement&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;eleTestcase&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'error'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"crash"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"case crash"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="c1"&gt;#@todo: add system-out / system-err message                &lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tostring&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;eleTestsuites&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_strDestDir&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strJUnitXml&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s1"&gt;'wb'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;當把產生這份Report功能完成之後。我在 Jenkins 驅動遠端測試機器執行測試，跑完之後使用STAF的FS Command把Test Report收回來放在jenkins的workspace中。這樣我就可以有一個最簡單來反應Build的Test Result了。&lt;/p&gt;
+&lt;p&gt;PS:在JUnit中，Testcase 的結果 Failure 跟 Error 有何不同？ Failure 是指因為 assertion 所造成的 Fail，可以當成是寫Tester預期中的Fail，代表待測物行為跟我們預期的結果不行。而Error則是Exception產成的Error，可以當成是&lt;strong&gt;非預期&lt;/strong&gt;的錯誤，像是程式噴Exception或是Crash等等。&lt;/p&gt;
+&lt;h3&gt;Reference :&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Apache Ant JUnit XML Schema : &lt;a href="http://goo.gl/EkSeL"&gt;http://goo.gl/EkSeL&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://stackoverflow.com/questions/4922867/junit-xml-format-specification-that-hudson-supports"&gt;JUnit XML Format Specification that Hudson supports - Stack Overflow&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://pypi.python.org/pypi/unittest-xml-reporting"&gt;http://pypi.python.org/pypi/unittest-xml-reporting&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.doughellmann.com/PyMOTW/xml/etree/ElementTree/create.html"&gt;http://www.doughellmann.com/PyMOTW/xml/etree/ElementTree/create.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Python"></category><category term="automation"></category><category term="jenkins"></category></entry><entry><title>在Python中如何Async的方式呼叫外部程式</title><link href="https://blog.codylab.com/python-creationflags/" rel="alternate"></link><published>2012-07-20T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2012-07-20:/python-creationflags/</id><content type="html">&lt;p&gt;最近有個需求：使用Python呼叫外部程式，外部程式屬於背景程式類型。也就是我希望python程式結束時不需要等待外部程式結束。Google了一下，找到Stack Overview的&lt;a href="http://stackoverflow.com/questions/3516007/run-process-and-dont-wait"&gt;解答&lt;/a&gt;，關鍵就是在 subprocess.popen() 使用 creationflags 這個參數，這個方法只有在Windows試驗過，其它的平台就不確定了。比如說我想呼叫notepad：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;subprocess&lt;/span&gt;
+&lt;span class="n"&gt;DETACHED_PROCESS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mh"&gt;0x00000008&lt;/span&gt;
+&lt;span class="n"&gt;subprocess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Popen&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s2"&gt;"notepad"&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;shell&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;close_fds&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;creationflags&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;DETACHED_PROCESS&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;這樣這支python程式就會自行結束，而不會等notepad了。&lt;/p&gt;
+&lt;h3&gt;Reference :&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://stackoverflow.com/questions/905189/why-does-sys-exit-not-exit-when-called-inside-a-thread-in-python"&gt;http://stackoverflow.com/questions/905189/why-does-sys-exit-not-exit-when-called-inside-a-thread-in-python&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://stackoverflow.com/questions/3516007/run-process-and-dont-wait"&gt;python - Run Process and Don't Wait - Stack Overflow&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Python"></category><category term="python"></category></entry><entry><title>[Python] Class Private 跟 Module Private 的差別</title><link href="https://blog.codylab.com/python-class-private-module-private-different/" rel="alternate"></link><published>2012-03-31T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2012-03-31:/python-class-private-module-private-different/</id><summary type="html">&lt;p&gt;在Python中雖然有Private variable，但是不像一般程式語言一樣具有強制的效力，如果外界執意要使用還是可以呼叫的到。在&lt;a href="http://stackoverflow.com/questions/1547145/defining-private-module-functions-in-python"&gt;這篇&lt;/a&gt;StackOverflow有很清楚的解釋其中的差別。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Module private&lt;/strong&gt; 是指是以一個下底線 &lt;strong&gt;_&lt;/strong&gt; 開頭的變數，例如&lt;strong&gt; _number 或 _getNumber() &lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Class Private &lt;/strong&gt;基本上是以二個下底線 __ 開頭，而且不超過一個下底線 _ 結尾的的變數名稱，例如 &lt;strong&gt;__number 或 __getNumber()&lt;/strong&gt;，但是&lt;strong&gt;&lt;strong&gt;init&lt;/strong&gt; &lt;/strong&gt;就不是 class private，但這種兩個下底線開頭和結尾叫&lt;a href="http://farmdev.com/src/secrets/magicmethod/index.html"&gt; Magic methods&lt;/a&gt;有其特別的用途，但這個不在本文討論範圍。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;&lt;strong&gt;Module Private&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# moduleA.py&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;_foo&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s1"&gt;'hi'&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;moduleA&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="n"&gt;_foo&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;以此例子來說，我們在 moduleA.py裡面定義了一個 Module private _foo()，因為Python有個規定是在Import的時侯會略過所有以underscore開頭的成員，所以_foo()會被忽略，在執行 print _foo() 的時侯就會發生 Exception：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Traceback (most recent call last):
+File "D:\priavte\__init__.py", line 4, in &amp;lt;module&amp;gt;
+NameError: name '_foo' is not defined
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;但是如果執意要用還是可以透過Import __foo，得到想要的結果&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;moduleA&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;_foo&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="n"&gt;_foo&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Class Private&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Foo&lt;/span&gt;():
+    &lt;span class="n"&gt;__aoo …&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;在Python中雖然有Private variable，但是不像一般程式語言一樣具有強制的效力，如果外界執意要使用還是可以呼叫的到。在&lt;a href="http://stackoverflow.com/questions/1547145/defining-private-module-functions-in-python"&gt;這篇&lt;/a&gt;StackOverflow有很清楚的解釋其中的差別。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Module private&lt;/strong&gt; 是指是以一個下底線 &lt;strong&gt;_&lt;/strong&gt; 開頭的變數，例如&lt;strong&gt; _number 或 _getNumber() &lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Class Private &lt;/strong&gt;基本上是以二個下底線 __ 開頭，而且不超過一個下底線 _ 結尾的的變數名稱，例如 &lt;strong&gt;__number 或 __getNumber()&lt;/strong&gt;，但是&lt;strong&gt;&lt;strong&gt;init&lt;/strong&gt; &lt;/strong&gt;就不是 class private，但這種兩個下底線開頭和結尾叫&lt;a href="http://farmdev.com/src/secrets/magicmethod/index.html"&gt; Magic methods&lt;/a&gt;有其特別的用途，但這個不在本文討論範圍。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;&lt;strong&gt;Module Private&lt;/strong&gt;&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# moduleA.py&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;_foo&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s1"&gt;'hi'&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;moduleA&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="n"&gt;_foo&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;以此例子來說，我們在 moduleA.py裡面定義了一個 Module private _foo()，因為Python有個規定是在Import的時侯會略過所有以underscore開頭的成員，所以_foo()會被忽略，在執行 print _foo() 的時侯就會發生 Exception：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Traceback (most recent call last):
+File "D:\priavte\__init__.py", line 4, in &amp;lt;module&amp;gt;
+NameError: name '_foo' is not defined
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;但是如果執意要用還是可以透過Import __foo，得到想要的結果&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;moduleA&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;_foo&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="n"&gt;_foo&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Class Private&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Foo&lt;/span&gt;():
+    &lt;span class="n"&gt;__aoo&lt;/span&gt; = &lt;span class="mi"&gt;123&lt;/span&gt;
+    &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;__boo&lt;/span&gt;(&lt;span class="nb"&gt;self&lt;/span&gt;):
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;123&lt;/span&gt;
+    &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;coo&lt;/span&gt;(&lt;span class="nb"&gt;self&lt;/span&gt;):
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;456&lt;/span&gt;
+    &lt;span class="nb"&gt;f&lt;/span&gt; = &lt;span class="n"&gt;Foo&lt;/span&gt;()
+
+&lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="nb"&gt;dir&lt;/span&gt;(&lt;span class="nb"&gt;f&lt;/span&gt;)
+&lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="nb"&gt;f&lt;/span&gt;.&lt;span class="n"&gt;_Foo__boo&lt;/span&gt;()
+&lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="nb"&gt;f&lt;/span&gt;.&lt;span class="n"&gt;__boo&lt;/span&gt;()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;可以觀察一下這三個 print 執行的結果，會發現 dir(f)是輸出：
+&lt;code&gt;&amp;gt; ['_Foo__aoo', '_Foo__boo', '__doc__', '__module__', 'coo']&lt;/code&gt;
+_boo被加上_Foo_的Prefix，這種行為稱做 &lt;a href="http://en.wikipedia.org/wiki/Name_mangling#Name_mangling_in_Python"&gt;Name Mangling&lt;/a&gt;，多加上Class Name在前面。所以透過 f.__boo()就沒辦法直接呼叫，但是透過加上Class Name的Prefix就可以了，例如 print f._Foo__boo()&lt;/p&gt;
+&lt;h3&gt;總結&lt;/h3&gt;
+&lt;h5&gt;Module private : _number&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;達到 Private 的效果：Import 除非明確把 name 打出來，不然 from A import * 時會自動略過所有以一個下底線 _ 開頭的變數&lt;/li&gt;
+&lt;li&gt;使用時機：在 Module level 下，告知外界，這些變數/函式是Private性質的，不建議外界直接存取&lt;/li&gt;
+&lt;li&gt;強制使用方式： 直接Import即可，例如： from A import _Number&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5&gt;Class Private : __number&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;達到 Private 的效果：Class 物件被建立的時侯，所有 __XXX 會被 name mangling成 __ClassName__XXX&lt;/li&gt;
+&lt;li&gt;使用時機：跟 Module private 一樣，就是表現出這些成員是內部使用的，不建議外界直接存取&lt;/li&gt;
+&lt;li&gt;強制使用方式： 使用的時侯，加上 Class name 的的 prefix&lt;/li&gt;
+&lt;li&gt;繼承的時侯，這些被 name mangled 的成員也會被繼承，但是是使用Parent的ClassName的Prefix，要注意一下。
+在Python的世界中，Private Variable沒辦法強制讓外界無法使用，透過Naming可以讓別人知道這些Private Variable不應該直接被存取，避免誤用的Bug發生。但是如果執意要呼叫，都還是有方法的。&lt;/li&gt;
+&lt;/ol&gt;</content><category term="Python"></category><category term="python"></category></entry><entry><title>Django 修改 Model 之後要如何更新到 Database</title><link href="https://blog.codylab.com/django-update-model/" rel="alternate"></link><published>2012-03-29T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2012-03-29:/django-update-model/</id><content type="html">&lt;p&gt;Django 如果 Model裡面的欄位有更動時，即使執行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage&lt;span class="w"&gt; &lt;/span&gt;syncdb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;是不會更動已經存在的 database 的 Table。 &lt;/p&gt;
+&lt;p&gt;在這&lt;a href="http://stackoverflow.com/questions/1985383/update-django-database-to-reflect-changes-in-existing-models"&gt;StackOverflow&lt;/a&gt;討論串有提到像是用 &lt;a href="http://south.aeracode.org/"&gt;South&lt;/a&gt;等Migration Tool，但如果Model只是新增一些Optional的欄位時，這真的是用牛刀了。裡面有提到另一個方法，我覺得還不錯簡單，在此記錄一下：&lt;/p&gt;
+&lt;p&gt;先用 &lt;code&gt;dumpdata&lt;/code&gt; 這個指令把DB的資料先輸出成 .json 的格式。要注意的事，這時侯 model.py 必需是舊的 schema&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;dumpdata&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;APP_NAME&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;/tmp/old_data.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;然後先把資料清掉&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;sqlclear&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;APP_NAME&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;dbshell
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;此時就可以修改 models.py 修改欄位，執行 syncdb&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;python&lt;span class="w"&gt; &lt;/span&gt;manage.py&lt;span class="w"&gt; &lt;/span&gt;syncdb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;最後再把 json 格式的 data 載入回來即可&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;manage&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;loaddata&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;temp_data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="Python"></category><category term="django"></category><category term="database"></category></entry><entry><title>Process handle is invalid in Python</title><link href="https://blog.codylab.com/python-handle-is-invalid/" rel="alternate"></link><published>2012-03-22T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2012-03-22:/python-handle-is-invalid/</id><content type="html">&lt;h3&gt;Error&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Tool.py", line 97, in __funcExecCmd
+
+    intResult = subprocess.call(strCmd, stdout=output, stderr=output)
+
+  File "C:\Python26\lib\subprocess.py", line 470, in call
+
+    return Popen(*popenargs, **kwargs).wait()
+
+  File "C:\Python26\lib\subprocess.py", line 616, in __init__
+
+    errread, errwrite) = self._get_handles(stdin, stdout, stderr)
+
+  File "C:\Python26\lib\subprocess.py", line 724, in _get_handles
+
+    p2cread = self._make_inheritable(p2cread)
+
+  File "C:\Python26\lib\subprocess.py", line 763, in _make_inheritable
+
+    _subprocess.DUPLICATE_SAME_ACCESS)
+
+WindowsError: [Error 6] The handle is invalid
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Solution&lt;/h3&gt;
+&lt;p&gt;Add &lt;code&gt;stdin = subprocess.PIPE&lt;/code&gt; in &lt;code&gt;subprocess.call()&lt;/code&gt;&lt;/p&gt;</content><category term="Python"></category><category term="windows"></category></entry><entry><title>Python 多種 Print 函式的用法</title><link href="https://blog.codylab.com/python-print-usage/" rel="alternate"></link><published>2012-03-16T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2012-03-16:/python-print-usage/</id><content type="html">&lt;p&gt;最簡單的用法：把想Print的內容放在 print 後面&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;print 'Hello'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;輸出結果&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Hello
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;另一個方便的用法，可以把不同資料型態的變數不經過轉型就直接一起print出來：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;print 'Hello',2012
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;也就是可以省下把其它變數都轉成string的麻煩&lt;/p&gt;
+&lt;p&gt;輸出結果&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Hello 2012
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;想把多個 print 合併在同一行輸出，而不要一個print就斷行一次，就在最後面加上一個逗號: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;print 'Execution Result:',
+print runSomeThing()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;輸出結果：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Execution Result: PASS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;另外低階的sys.stdout.write在特定需求也可以使用，比如說我想輸出兩個字串，但是中間不要像 print 函式一樣加一個空白的話，就可以使用這個方法：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Hello"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"2012"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;輸出結果：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Hello2012
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="Python"></category><category term="Python"></category></entry></feed>

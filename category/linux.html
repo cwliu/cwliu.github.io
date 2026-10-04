@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cody Blog - Linux category</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/ubuntu-pidgin-ms-office-communicator/">Using Microsoft communicator in Ubuntu with pidgin-sipe plugin</a>
+      </h1>
+      <p class="meta"><time datetime="2014-01-21T00:00:00+08:00" pubdate>2014 January 21 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p>We can install <code>pidgin-sipe</code> to use Microsoft communicator in Ubuntu. Here are the steps:</p>
+<ol>
+<li>Install sipe plugin</li>
+</ol>
+<p>sudo apt-get install pidgin-sipe</p>
+<ol>
+<li>Add account with the new "Office Communicator" type</li>
+</ol>
+<!--
+- How to Disable Pidgin Notifications in Ubuntu - How-To Geek - http://goo.gl/ffZFN
+- How to Enable Tray Icon : unity - How do I enable the pidgin system tray icon? - Ask Ubuntu - http://goo.gl/YCwDe
+--></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/ubuntu-pidgin-ms-office-communicator/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/m2crypto-build/">How to build M2Crypto to support AES 256 in CTR mode</a>
+      </h1>
+      <p class="meta"><time datetime="2013-12-13T00:00:00+08:00" pubdate>2013 December 13 Fri</time></p>
+</header>
+
+  <div class="entry-content"><p>M2Cryto library is out of date. The latest version was released on 2011, so there are some new features provided by OpenSSL are missing. For example, If you want to support AES 256 CTR, you need to build M2Crypto by yourself.</p>
+<h2>Download M2Crypto source code</h2>
+<p>Download the M2Crypto 0.21.1 from <a href="https://pypi.python.org/pypi/M2Crypto">here</a></p>
+<h2>Install necessary packages</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>python-dev<span class="w"> </span>swig<span class="w"> </span>libssl-dev
+</code></pre></div>
+
+<h2>Modify M2Crypto-0.21.1/SWIG/_evp.i</h2>
+<p>Near:</p>
+<div class="highlight"><pre><span></span><code><span class="nf">%rename</span><span class="p">(</span><span class="n">aes_256_ofb</span><span class="p">)</span><span class="w"> </span><span class="n">EVP_aes_256_ofb</span><span class="p">;</span>
+<span class="k">extern</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">EVP_CIPHER</span><span class="w"> </span><span class="o">*</span><span class="nf">EVP_aes_256_ofb</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</code></pre></div>
+
+<p>Add these two lines:</p>
+<div class="highlight"><pre><span></span><code><span class="nf">%rename</span><span class="p">(</span><span class="n">aes_256_ctr</span><span class="p">)</span><span class="w"> </span><span class="n">EVP_aes_256_ctr</span><span class="p">;</span>
+<span class="k">extern</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">EVP_CIPHER</span><span class="w"> </span><span class="o">*</span><span class="nf">EVP_aes_256_ctr</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</code></pre></div>
+
+<h2>Modify M2Crypto-0.21.1/SWIG/_ssl.i</h2>
+<p>Remove these …</p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/m2crypto-build/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/thinkpad-thinkfan/">安裝ThinkFan風扇控制軟體</a>
+      </h1>
+      <p class="meta"><time datetime="2013-12-05T00:00:00+08:00" pubdate>2013 December 05 Thu</time></p>
+</header>
+
+  <div class="entry-content"><h2>安裝 Thinkfan</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>thinkfan
+</code></pre></div>
+
+<h2>開啟風扇控制權</h2>
+<p>系統預設並不容許直接控制風扇速度，所以需要特別設定<code>thinkpad-acpi</code>的config值: </p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"options thinkpad_acpi fan_control=1"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/modprobe.d/thinkpad_acpi.conf
+</code></pre></div>
+
+<p>重新載入<code>thinkpad_acpi</code> driver 套用新的設定值</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>modprobe<span class="w"> </span>-rv<span class="w"> </span>thinkpad_acpi
+$<span class="w"> </span>sudo<span class="w"> </span>modprobe<span class="w"> </span>-v<span class="w"> </span>thinkpad_acpi
+</code></pre></div>
+
+<h2>修改 thinkfan 設定檔</h2>
+<p>thinkfan 設定檔在 <code>/etc/thinkfan.conf</code>，主要可以設定的要用那些sensor以及設定溫度與轉速的規則。首先先找到溫度量測的檔案:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>find<span class="w"> </span>/sys/devices<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">"temp*_input"</span>
+</code></pre></div>
+
+<p>以x220為例，一共找到四個檔:</p>
+<div class="highlight"><pre><span></span><code>/sys/devices/virtual/hwmon/hwmon0/temp1_input
+/sys/devices/platform/coretemp.0/temp3_input
+/sys/devices/platform/coretemp.0/temp1_input
+/sys/devices/platform/coretemp.0/temp2_input
+</code></pre></div>
+
+<p>把這四行寫入到 <code>/etc/thinkfan.conf</code></p>
+<div class="highlight"><pre><span></span><code>sensor /sys/devices/virtual/hwmon/hwmon0/temp1_input
+sensor /sys/devices/platform/coretemp.0/temp3_input
+sensor /sys …</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/thinkpad-thinkfan/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/vim-man-viewer/">Using vim as a man-page viewer under Linux</a>
+      </h1>
+      <p class="meta"><time datetime="2013-12-03T08:25:59+08:00" pubdate>2013 December 03 Tue</time></p>
+</header>
+
+  <div class="entry-content"><p>If you use bash, just add the following script in your <code>~/.bashrc</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">PAGER</span><span class="o">=</span><span class="s2">"/bin/sh -c </span><span class="se">\"</span><span class="s2">unset PAGER;col -b -x | </span><span class="se">\</span>
+<span class="s2">    vim -R -c 'set ft=man nomod nolist' -c 'map q :q&lt;CR&gt;' </span><span class="se">\</span>
+<span class="s2">    -c 'map &lt;SPACE&gt; &lt;C-D&gt;' -c 'map b &lt;C-U&gt;' </span><span class="se">\</span>
+<span class="s2">    -c 'nmap K :Man &lt;C-R&gt;=expand(</span><span class="se">\\\"</span><span class="s2">&lt;cword&gt;</span><span class="se">\\\"</span><span class="s2">)&lt;CR&gt;&lt;CR&gt;' -</span><span class="se">\"</span><span class="s2">"</span>
+</code></pre></div>
+
+<p>Compare with the original <code>Main</code></p>
+<p><img alt="Main" src="https://lh6.googleusercontent.com/-awZYEgbmllOy78HxlrJZW9bEOn2tWHCHodmYq_2hdGC=w995-h551-no"></p>
+<p><code>Main</code> in VIM has good looking with syntaxheight.</p>
+<p><img alt="Man in VIM" src="https://lh5.googleusercontent.com/-gsOASyvKbp8/Up1EIBUmSoI/AAAAAAAFGjI/rmvTKeyt59I/w928-h566-no/man-vim.png"></p>
+<h2>Reference:</h2>
+<ul>
+<li><a href="http://vim.wikia.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix">Using vim as a man-page viewer under Unix - Vim Tips Wiki</a></li>
+</ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/vim-man-viewer/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/linux-powersaving-run-script/">Linux在充放電切換時執行特定指令</a>
+      </h1>
+      <p class="meta"><time datetime="2013-12-02T08:18:24+08:00" pubdate>2013 December 02 Mon</time></p>
+</header>
+
+  <div class="entry-content"><p>Linux筆電在充放電的時侯可以執行特定指令。例如我們想增加電池的使用時間，可以在電池放電的時侯，把一些較消耗資源的背景程式先暫時暫停，等插回AC電源的時侯再重新開始。這邊以暫停<a href="https://www.insynchq.com/">Insync</a>為例:</p>
+<h2>方法一 /etc/pm/power.d</h2>
+<p>我們可以放script放到<code>/etc/pm/power.d</code>來達成，當進入電池模式的時侯會帶<code>true</code>參數，而離開電池模式的時侯會帶<code>false</code>參數，只要新增一個檔案，例如<code>/etc/pm/power.d/00-powersaving</code>加入以下內容，實際指令就依照自己的需求修改:</p>
+<div class="highlight"><pre><span></span><code>case $1 in
+    true)
+        echo "Enable screen power saving"
+        sudo -u cody insync pause_syncing
+    ;;
+    false)
+        echo "Disable screen power saving"
+        sudo -u cody insync pause_syncing
+    ;;
+esac
+</code></pre></div>
+
+<p>最後記得再加上執行權限<code>sudo chmod +x /etc/pm/power.d/00-powersaving</code></p>
+<h2>方法二 /etc/acpi/power.sh</h2>
+<p>Linux 有一個指令 <code>on_ac_power</code>，如果回傳<code>0</code>代表是AC，如果是用電池的話，則回傳<code>1</code>，例如：</p>
+<p><strong>On AC Power</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>on_ac_power<span class="w"> </span>
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+<span class="m">0</span>
+</code></pre></div>
+
+<p><strong>On Battery</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>on_ac_power<span class="w"> </span>
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+<span class="m">1</span>
+</code></pre></div>
+
+<p>所以透過這個指令，我們就可以修改<code>/etc/acpi/power …</code></p></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/linux-powersaving-run-script/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/thinkpad-bios/">Update ThinkPad BIOS in Linux with a USB disk</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-30T23:27:26+08:00" pubdate>2013 November 30 Sat</time></p>
+</header>
+
+  <div class="entry-content"><p>In this post, I recorded my ThinkPad x220 BIOS update steps. In Windows, we can use <a href="http://support.lenovo.com/en_US/detail.page?LegacyDocID=MIGR-77150">BIOS Update Utility</a> provided by Lenovo, but it's only available in Windows platformas. For Ubuntu user like me, we can still update BIOS with a USB disk.</p>
+<h3>Download BIOS Update Bootable CD</h3>
+<p>The latest version is 1.39(2013/11), Go to lenovo support site:<a href="http://support.lenovo.com/en_US/downloads/detail.page?&amp;LegacyDocID=MIGR-77151">BIOS Update Bootable CD for Windows 8 (32-bit, 64-bit), 7 (32-bit, 64-bit), Vista (32-bit, 64-bit), XP - ThinkPad X220, X220i, X220 Tablet, X220i Tablet</a>, download 8duj25us.iso(31.6 MB)    </p>
+<h3>Download <code>geteltorito.pl﻿</code> to generate boot image</h3>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>wget<span class="w"> </span><span class="s1">'﻿﻿http://www …</span></code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/thinkpad-bios/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/bash-shell-shortcut/">Bash Shell 快速鍵 (emacs-style)</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-30T10:57:25+08:00" pubdate>2013 November 30 Sat</time></p>
+</header>
+
+  <div class="entry-content"><h2>執行/中斷/輸入</h2>
+<ul>
+<li>Ctrl-C: 終止正在執行的程式</li>
+<li>Ctrl-L: 清除Terminal畫面，同clear指令</li>
+<li>Ctrl-Z: 將該工作放到背景中<code>暫停</code>, 使用<code>jobs</code>看工作號碼(job number), <code>fg</code><number> 取回</li>
+<li>Ctrl-J: Enter，不用離開鍵盤，還不錯</li>
+</ul>
+<p>進階</p>
+<ul>
+<li>Ctrl-D: 離開 Shell</li>
+<li>Ctrl-x, Ctrl-e 開啟vim，可一起執行多個指令</li>
+<li>Ctrl-V TAB: 輸入 TAB，而不是命令列擴展</li>
+<li>Ctrl-V: 加上要輸入特殊字元, ex: Ctrl-V Ctrl-D 會出現 ^D</li>
+</ul>
+<h2>移動</h2>
+<ul>
+<li>Ctrl-A: 回到此行最前面(同<code>Home</code>鍵)</li>
+<li>Ctrl-E: 到此行的最後面(同<code>End</code>鍵)</li>
+<li>Ctrl-F: 游標向後移動一格(不想要用arrow key時可多加利用)</li>
+<li>Ctrl-B: 游標向前移動一個(不想要用arrow key時可多加利用)</li>
+<li>Alt-B: Back(left) one word</li>
+<li>Alt-F: Forward(right) one word</li>
+</ul>
+<h2>查找</h2>
+<ul>
+<li>Ctrl-N: 找下個指令(同下箭頭)</li>
+<li>Ctrl-P: 找上個指令(同上箭頭)</li>
+<li>TAB: 擴展要輸入的檔案到命令列上(上/下箭頭: 開始搜尋過去的命令)</li>
+<li>Ctrl-R: 打關鍵字搜尋過去的命令, 搭配 Ctrl-r/Ctrl+Shift+r，可來回尋找</li>
+</ul>
+<p>進階</p>
+<ul>
+<li>Ctrl-I: 同 Tab</li>
+<li>Ctrl-S: 暫停輸出到畫面上，讓stdout定格(搭配Ctrl-Q使用)</li>
+<li>Ctrl-Q …</li></ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/bash-shell-shortcut/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/cmd-hwclock.md/">Set hardware clock time</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-26T00:00:00+08:00" pubdate>2013 November 26 Tue</time></p>
+</header>
+
+  <div class="entry-content"><h2>Display hardware clock time</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>hwclock
+</code></pre></div>
+
+<h2>Set hardware clock to current time</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>hwclock<span class="w"> </span>-w
+</code></pre></div>
+
+<h2>Set the System Time from the Hardware Clock.</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>hwclock<span class="w"> </span>-s
+</code></pre></div>
+
+<ul>
+<li><a href="http://www.thegeekstuff.com/2013/08/hwclock-examples/">7 Linux hwclock Command Examples to Set Hardware Clock Date Time</a></li>
+</ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/cmd-hwclock.md/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/thinkpad-ubuntu-hdaps/">Install IBM Active Protection System Linux Driver (HDAPS)</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-25T00:00:00+08:00" pubdate>2013 November 25 Mon</time></p>
+</header>
+
+  <div class="entry-content"><h2>Installation</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>tp-smapi-dkms<span class="w"> </span>hdapsd
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">'tp_smapi'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/modules
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">'hdapsd'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/modules
+$<span class="w"> </span>sudo<span class="w"> </span>modprobe<span class="w"> </span>tp_smapi
+$<span class="w"> </span>sudo<span class="w"> </span>/etc/init.d/hdapsd<span class="w"> </span>restart
+</code></pre></div>
+
+<h2>Verify if it works</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>hdapsd
+</code></pre></div>
+
+<p>it should display "parking" on console if you move your laptop </p>
+<h2>Modify config: /etc/default/hdapsd</h2>
+<ul>
+<li>sensitivity: default is 15. higher value means less sensitive.</li>
+<li>disk: the disk that hdapsd should monitor</li>
+</ul>
+<h2>Reference :</h2>
+<ul>
+<li><a href="http://samiux.blogspot.tw/2011/07/howto-lenovo-active-protection-system.html">Samiux's Blog: HOWTO : Lenovo Active Protection System (HDAPS) on Ubuntu 11.04</a></li>
+<li><a href="http://www.thinkwiki.org/wiki/HDAPS">HDAPS - ThinkWiki</a></li>
+</ul></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/thinkpad-ubuntu-hdaps/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://blog.codylab.com/openssl-upgrade/">Upgrade openssl from source code on Ubuntu</a>
+      </h1>
+      <p class="meta"><time datetime="2013-11-08T00:00:00+08:00" pubdate>2013 November 08 Fri</time></p>
+</header>
+
+  <div class="entry-content"><h2>Remove previous openssl installation</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>remove<span class="w"> </span>openssl<span class="w"> </span>libssl-dev
+</code></pre></div>
+
+<h2>Install openssl 1.0.1c from source</h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>tar<span class="w"> </span>-xvf<span class="w"> </span>openssl-w.x.yz.tar.gz
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>openssl-w.x.yz
+$<span class="w"> </span>./config<span class="w"> </span>--prefix<span class="o">=</span>/usr
+$<span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
+</code></pre></div></div>
+  <footer>
+    <a rel="full-article" href="https://blog.codylab.com/openssl-upgrade/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+    <a class="prev" href="https://blog.codylab.com/category/linux2.html">&larr; Older</a>
+
+  <br />
+</div></div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/ubuntu-pidgin-ms-office-communicator/">Using Microsoft communicator in Ubuntu with pidgin-sipe plugin</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/m2crypto-build/">How to build M2Crypto to support AES 256 in CTR mode</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/thinkpad-thinkfan/">安裝ThinkFan風扇控制軟體</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/vim-man-viewer/">Using vim as a man-page viewer under Linux</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/linux-powersaving-run-script/">Linux在充放電切換時執行特定指令</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

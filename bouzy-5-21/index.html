@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</h1>
+      <p class="meta"><time datetime="2026-10-04T00:00:00+08:00" pubdate>2026 October 04 Sun</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><p>這是「圍棋 AI 學習筆記」系列的第一篇，從一個很老、但很直觀的問題開始：<strong>看著一盤棋，電腦要怎麼判斷哪裡是誰的地？</strong></p>
+<p>在 AlphaGo 用神經網路直接「看」出形勢之前，早期的圍棋程式多半靠手寫規則來估算勢力範圍。Bruno Bouzy 在 2003 年發表的 5/21 演算法<sup>[1]</sup>就是其中一個經典做法：借用影像處理的「數學形態學」，把每顆棋子的影響力向外擴散，再把邊緣不穩的部分削掉，剩下來的就是比較確定的地盤。它的膨脹步驟改自 Zobrist 在 1969 年提出的勢力模型<sup>[2]</sup>，Bouzy 再補上對應的侵蝕步驟；這個方法用在他自己的圍棋程式 Indigo 裡，後來也被 GNU Go 採用。</p>
+<h2>互動演示</h2>
+<p>下面的棋盤可以自己擺子，拉動步驟滑桿或按播放，看數值怎麼一步步變化。滑鼠移到格點上，會顯示那一步是怎麼算出來的。</p>
+<iframe src="https://blog.codylab.com/files/go/bouzy-5-21.html" title="Bouzy's 5/21 互動演示" width="100%" height="520" style="border:0;display:block" loading="lazy" onload="this.style.height = this.contentDocument.body.offsetHeight + 'px'"></iframe>
+
+<h2>演算法</h2>
+<p>整個過程只有三個階段，每一步都是<strong>同時</strong>更新所有格點（用上一步的值計算，不會邊算邊影響）。</p>
+<h3>1. 初始化</h3>
+<p>黑子設為 +64，白子設為 −64，空點設為 0，這是原論文<sup>[1]</sup>沿用 Zobrist 模型的設定。正值代表黑方的影響力，負值代表白方的。</p>
+<h3>2. 膨脹（Dilation）5 次</h3>
+<p>對每個格點：</p>
+<ul>
+<li>如果它 <strong>≥ 0</strong>，而且上下左右四鄰<strong>沒有負值</strong>，就加上四鄰中正值的個數。</li>
+<li>負值那一方對稱處理：如果它 <strong>≤ 0</strong>，而且四鄰<strong>沒有正值</strong>，就減去四鄰中負值的個數。</li>
+<li>四鄰正負都有的點不動，代表雙方勢力在這裡碰頭。</li>
+</ul>
+<p>膨脹讓影響力像水波一樣往外擴散，一次一格。5 次之後，單顆子的影響會涵蓋距離 5 以內的菱形範圍，越靠近棋子數值越大。</p>
+<h3>3. 侵蝕（Erosion）21 次</h3>
+<p>對每個格點：</p>
+<ul>
+<li>如果它是<strong>正值</strong>，就減去四鄰中 <strong>≤ 0</strong> 的個數，最多減到 0。</li>
+<li>負值那一方對稱處理：加上四鄰中 <strong>≥ 0</strong> 的個數，最多加到 0。</li>
+</ul>
+<p>侵蝕從勢力範圍的邊緣往內削。邊緣的點跟 0 或對方相鄰，會一直被扣分；被自己人包圍的點則不受影響。</p>
+<h3>結果</h3>
+<p>做完 26 步之後，<strong>正值的空點算黑地，負值的空點算白地</strong>。</p>
+<h2>為什麼是 5 和 21？</h2>
+<p>21 不是隨便挑的。Bouzy 在論文<sup>[1]</sup>裡讓侵蝕次數 E 和膨脹次數 D 滿足：</p>
+<p style="text-align:center">E = D × (D − 1) + 1</p>
+
+<p>D = 5 時剛好是 21（論文也提到 Indigo 依對局階段使用 4/13 或 5/21）。這個關係的效果是：<strong>一顆孤零零的子，侵蝕會剛好把膨脹出來的範圍全部削掉</strong>，不會憑空生出地來。在上面的演示選「單顆子」播放到最後就能看到：5 次膨脹後擴散出一大片，21 次侵蝕後所有空點都回到 0。</p>
+<p>換句話說，單顆子只有「影響力」、沒有「地」；要有好幾顆子互相支援、把一塊區域圍起來，那塊區域裡的點才撐得過侵蝕。這很符合下棋的直覺。</p>
+<h2>可以觀察的幾件事</h2>
+<ul>
+<li><strong>兩子對峙</strong>：兩顆子中間那一列在整個過程中都是 0。膨脹時雙方在這裡碰頭，誰也進不去，就成了分界線。</li>
+<li><strong>角落小盤面</strong>：試著把一方的子往邊角靠，或在對方勢力裡多放一顆，看最後的地盤怎麼變。棋盤邊線不算鄰居，所以邊角的點比中央更不容易被侵蝕。</li>
+<li><strong>打開「顯示數字」</strong>：膨脹階段數值增加得很快，侵蝕階段每一步只扣個位數。可以把滑鼠移到勢力邊緣的點，看它是被哪些鄰居扣分的。</li>
+</ul>
+<h2>侷限</h2>
+<p>5/21 只看棋子的位置，不懂死活：一顆被包圍、其實已經死掉的子，還是會被當成有影響力的子。它也不分辨誰下一手，以及哪裡還有劫或打入的餘地。所以它比較適合當「大致的形勢判斷」，而不是精確的終局數地。後面的筆記會再看更進一步的方法怎麼處理這些問題。</p>
+<h2>參考資料</h2>
+<ol>
+<li>Bruno Bouzy (2003). "Mathematical morphology applied to computer Go." <em>International Journal of Pattern Recognition and Artificial Intelligence</em>, 17(2), 257–268. <a href="https://helios2.mi.parisdescartes.fr/~bouzy/publications/Bouzy-IJPRAI.pdf">PDF</a></li>
+<li>Albert L. Zobrist (1969). "A model of visual organization for the game of Go." <em>Proceedings of the AFIPS Spring Joint Computer Conference</em>, 103–111.</li>
+</ol></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2026-10-04T00:00:00+08:00" pubdate>2026 October 04 Sun</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/go.html">Go</a>
+    <a class="category" href="https://blog.codylab.com/tag/ai.html">AI</a>
+    <a class="category" href="https://blog.codylab.com/tag/algorithm.html">Algorithm</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/bouzy-5-21/';
+          var disqus_url = 'https://blog.codylab.com/bouzy-5-21/';
+          var disqus_title = '圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

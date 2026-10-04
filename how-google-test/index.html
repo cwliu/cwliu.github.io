@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How Google Tests Software ?</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">How Google Tests Software ?</h1>
+      <p class="meta"><time datetime="2012-08-22T22:14:00+08:00" pubdate>2012 August 22 Wed</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><p>這本書的作者是在軟體測試界很有名的 James Whittaker，以 How to break xxx 系列跟 Exploratory Testing 聞名。這本是他在Google期間完成的著作。可惜他己經在2012年３月左右離開了Google，發表了一篇<a href="http://blogs.msdn.com/b/jw_on_tech/archive/2012/03/13/why-i-left-google.aspx">Why I left google</a>/<a href="http://www.csdn.net/article/2012-03-14/313106">中文翻譯</a>。從微軟到Google，最後又回鍋到微軟了。文中大體的原因就是Google把創新精神丟掉，而只專注在廣告上，不再是一家是以技術優先導向的公司。但是這些還是毫不影響Google在軟體界的王者地位。</p>
+<p>Google跟微軟在軟體測試上的策略很不一樣。傳統上，微軟的開發與測試人員比例大概是１：１左右。小弟的公司也是如此。但是Google專職在測試的人員，就明顯少得很多。我想從本書找到，如果專職測試人員少的話，那麼整個軟體開發流程會變的如何？其實，微軟在2008年也有出一本拿自己公司名稱當招牌的測試書 <a href="http://www.amazon.com/How-We-Test-Software-Microsoft/dp/0735624259">How We Test Software at Microsoft</a>，這本有點厚，之後找個機會來看。以目前軟體公司的發展看來，也許之後就會看到一本以 Facebook 為主角的測試書了。</p>
+<h3>Ch1. Introduction to Google Software Testing</h3>
+<ul>
+<li>
+<p>在 Google，測試工作是由一個中央的組職稱為 Engineering Productivity 來負責。包含 Developer 跟 Tester tool chain, Release engineer 。從 Unit test 包到 Exploratory testing。</p>
+</li>
+<li>
+<p>Google 在2001年時，約有200位開發工程師，但是只有<em>3</em>位測試工程師，那時開發工程師就必需為自己寫的程試的品質負責。那時TDD跟JUnit才準備流行，所以測試主要以 ad-hoc 為主。</p>
+</li>
+<li>
+<p>James 常給人的忠告︰「不要顧用太多測試員工」，Larry Page︰「Scarcity brings clarity (意指︰在缺乏資源的情況時，會有清楚的目標；銀彈不足，才會想辦法彈無虛發)」</p>
+</li>
+<li>
+<p>Everyone who writes code is tester </p>
+</li>
+</ul>
+<p>問題︰但是人少，所扮演的角色是？ </p>
+<ul>
+<li>
+<p>Quality != Test , 不要視測試跟開發為兩個獨立流程。測試應該當成開發流程中的一部份。當測試跟開發完美混合區分不時出來的時侯，Quality的目標就達成了。也就是你不能單單只做開發或是測試。而完全不管另一方。</p>
+</li>
+<li>
+<p>當產品掛掉的時侯，第一個苦主會是找誰寫這個開發者。而不是那個沒抓到Bug的測試者。</p>
+</li>
+<li>
+<p>Quality is more an act of <strong>prevention</strong> than it is <strong>detection</strong> ; Quality is a development issue, not a testing issue.</p>
+</li>
+</ul>
+<p>心得︰大多軟體公司，在找測試人員時，開發能力通常遠不及開發人員。所以常常是自成一國，有自己的Process，跟Schedule，而大體上是用重要的Milesone來跟Developement Prcoess來對齊。所以Testers完全無法融入開發流程的一員。這是團隊人員組成，跟能力配制的問題。如果Developer本身就可以扛下測試的責任時。也許就並不需要那麼多測試人員的。但是這需要Developer本身要有自我的認知，測試的主要責任在自己身上。</p>
+<ul>
+<li>
+<p><strong>Testing must be an unavoidable aspect of development</strong>, and the marriage of development and testing is where quality is achieved</p>
+</li>
+<li>
+<p>Tester in Google, are responsible for making other engineers <strong>more productive and more quality-minded</strong></p>
+</li>
+<li>
+<p>測試者的主要任務是讓開發者更有<strong>效率</strong>的去測試他們自己的產物</p>
+</li>
+<li>角色1 - Software Engineer (SWE): </li>
+<li>Implement functional code</li>
+<li>Write design document </li>
+<li>Write Test code , 包含 TDD, unit test, <strong>建構與參與大中小的測試 </strong></li>
+</ul>
+<p>心得: 當公司有花錢找一堆不參與Functional開發的測試人員時，SWE就不可能會花時間寫足夠的測試，因為這些測試是交由測試人員來負責的。所以常常傳統上的共識就變成是 developer  測 unit test，而 tester 測 functional level以上的測試，包含 system testing 跟 integration testing 等等。而 Google 的做法就是讓 Developer 自己來搞，也正好呼應了前面所說的 Scarcity brings clarity。</p>
+<ul>
+<li>角色2－Software engineer in test (SET):</li>
+<li>Focus on <strong>testability</strong> and <strong>general test infrastructure</strong> </li>
+<li>Review designs, codes and risk</li>
+<li><strong> Refactor </strong> code to make it more testable  </li>
+<li>Write unit testing <strong>frameworks</strong> and automation.</li>
+</ul>
+<p>心得︰工作二年來，直到看到這本書我才了解，內心一直想做的事其實就是書中寫的SET。但是現有的Process並沒有定義這樣的Role，這衝突、矛盾的結果，就讓我感覺我想做的事，跟我做的事，很多都是在做白工。因為團隊沒有共識有SET這個Role。我感受到，團隊陣容跟員工能力如果都是Waterfall的思維構成。那麼不管灌入再潮的Mindset，Methodology，再多Agile的行為，CI的規劃。終究會因為這群人是用Wafterwall運作下的所需能力找來的人。他們只能習慣Waterfall的Process，這是他們最舒服的運作模式。所以，不管換什麼工作模式，終究會被打回原形。成功的 Software Process，或許該從找對人來組成適合該Process的團隊組職開始。那群人就應該會很理所當然的以“舒服”的方法運作下去，一切就會很自然吧。</p>
+<ul>
+<li>角色3-Test Engineer (TE):</li>
+<li>Put testing on behalf of the user first</li>
+<li>Organize the overall quality practices </li>
+<li>interpret test result </li>
+<li>drive test execution and build end-to-end test automation </li>
+<li>Test Engineer是動態指派到Product Team，跟據需求。</li>
+<li>
+<p>TE，在Proudct Team，工作約１８個月之後，可以自由地轉去其它的Product Team。對於Product短期而言，似乎是損失，因為少了一個熟悉產品的人。但對於TE有正面影響，可以擁用不同產品的測試經驗 (心得︰對於TE有較長遠規劃)。長遠看來，對於Product，也可以擁有不同產品測試經驗的人才。</p>
+</li>
+<li>
+<p>心得︰</p>
+<ol>
+<li>T公司的QA        = 20% SWE + 10% SET + 100% TE</li>
+<li>T公司的Developer = 70% SWE + 30% SET + 10% TE</li>
+</ol>
+</li>
+</ul>
+<p>比較交集的結果，缺少人專注在SET的任務上。我覺得這就是大部份的Product Automation 弄不起來最主要原因。主要是任務TE的QA們，需要花很多額外的時間，而且使用不同的Codebase (Deverloper 使用 C/C++，QA使用Python)來克服 Testability不好，而需要寫很多跟Product功能相同，但是codebase不同的code。跟一堆 working environment問題。這些問題的正解是SWE跟SET需要擁用相同 Codebase，目標一致，方可有效率地完成任務。而跟本的差界就是在T公司，寫Automation Test主要是QA(其實是TE)的責任。而在Google，這其實主要是Code authors的責任。在Google，專職的Tester，被交附不同的任務，而任務是幫助讓SWE測試更好做，寫出好的<strong>Test code</strong>，讓SWE可以專注在開發 <strong>Feature code</strong> 上面。</p>
+<ul>
+<li>Build 的種類，依穩定性區分︰</li>
+<li>Canary Channel : daily builds, build fails is a chaotic sign , for enginners and managers</li>
+<li>Dev    Channel : weekly builds, shall passed some set of tests ,for developers day-to-day work</li>
+<li>Test   Channel : month builds, passes the most sustained testing, for internal dogfood users(狗食這邊是軟體業的黑話，是指用公司最好用自家產品，像是微軟用outlook，Google用Gmail等等)  </li>
+<li>Beta(Release) Channel : stable test channel builds, pass every <strong> quality bar</strong> the team sets  </li>
+</ul>
+<p>心得︰以測試的角度，我們應該要測<strong>最新</strong>的Build，但是一個不穩定的Build，會讓我們的測試工作受阻，稱為testing blocked，所以我們要有能力知道該拿什麼樣的Build，來做目前測試的目的。理論上，照這種邏輯，我們應該隨時可以拿到這五種Channel的Build。</p>
+<ul>
+<li>
+<p>Crawl, Walk, Run: 先推出 "Minimum useful product" as an initial version，然後再依Feedback來決定下一步要做什麼。其實就是Agile精神。</p>
+</li>
+<li>
+<p>測試的種類，依自動化難度區分，以 small test scope 最小，最容易自動化: </p>
+</li>
+<li>
+<p>small test: </p>
+<ul>
+<li>moftly by SWE, less often by an SET, hardly ever by TEs </li>
+<li>small 會需要很多 mock , fake, stubs。</li>
+<li>TEs 有時會執行 small 來幫助 dianose 某個 failure</li>
+<li><strong>目的</strong>︰是測試一小段code是不是如預期的行為</li>
+</ul>
+</li>
+<li>
+<p>medium test: 大部份是自動化，會有多個 features 交互作用</p>
+<ul>
+<li>nearest neighbor functions : 彼此有關系的 functions，一次只專注部份一組的 functions 上</li>
+<li><strong>目的</strong> 這個 a set of nearest neighbor functions 彼此交互作用是否如預期？</li>
+</ul>
+</li>
+<li>
+<p>large test: usually user scenarios, real user data</p>
+<ul>
+<li>測試執行時間比較久，以使用者為出發點的測試</li>
+<li>整體功能面的整合測試</li>
+<li>檢驗是否實滿足客戶的需求(Validation)</li>
+</ul>
+</li>
+<li>
+<p>三種測試都可能是自動化或是手動，取決的點︰</p>
+</li>
+<li>自動化︰不需要人類的才智，直覺，判斷，那麼這些就應該自動化</li>
+<li>
+<p>手動  ︰需要人的評斷，像是UI好不好看，Privacy issue, usability test等等，就應該留在手動測試的領域，Google有做很多手動測試，不管是Script或是Exploratory式的。Recoding technology converts manual tests to automated tests。(一般認為Recoding是過時的技術，沒想到Google還是覺得有他的重要性，可以用來減少 regression test</p>
+</li>
+<li>
+<p>把自動化測試的失敗，跟Bug tracking system 結合。比如在之前的測試成功，但是這次測試失敗，自動Fire bug Tracker，留下記錄，<strong>把Automation fail直接當成Product Defect</strong>，讓Automation bug也視為是Product的Bug。把記錄Email給作者， 知道這次的change是什麼，即早發現 Bug，讓苦主可以盡快休復。</p>
+</li>
+</ul></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2012-08-22T22:14:00+08:00" pubdate>2012 August 22 Wed</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/google.html">google</a>
+    <a class="category" href="https://blog.codylab.com/tag/agile.html">agile</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+  <section>
+    <h1>Related Posts</h1>
+    <ul>
+      <li><a href="https://blog.codylab.com/attributes-components-capabilities-acc/">使用 Attributes-Components-Capabilities(ACC) 來制定敏捷測試計劃</a></li>
+      <li><a href="https://blog.codylab.com/continuous-delivery/">Continuous Delivery 持續交付 @ Agile Taichung 2015/9</a></li>
+      <li><a href="https://blog.codylab.com/automation-pyramid/">自動化軟體測試的金字塔</a></li>
+      <li><a href="https://blog.codylab.com/pretotype/">Pretotype - 把事情做對之前， 確保做了對的事</a></li>
+      <li><a href="https://blog.codylab.com/install-jenkins-on-centos-6/">Install Jenkins on CentOS 6.3</a></li>
+    </ul>
+  <section>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/how-google-test/';
+          var disqus_url = 'https://blog.codylab.com/how-google-test/';
+          var disqus_title = 'How Google Tests Software ?';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

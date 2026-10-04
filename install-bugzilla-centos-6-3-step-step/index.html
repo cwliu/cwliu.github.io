@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Install Bugzilla on CentOS 6.3 step by step</title>
+  <meta name="author" content="Cody Liu">
+
+  <link href="https://blog.codylab.com/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Cody Blog Atom Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://blog.codylab.com/favicon.png" rel="icon">
+  <link href="https://blog.codylab.com/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="https://blog.codylab.com/theme/js/modernizr-2.0.js"></script>
+  <script src="https://blog.codylab.com/theme/js/ender.js"></script>
+  <script src="https://blog.codylab.com/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="https://blog.codylab.com/">Cody Blog</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="https://blog.codylab.com/feeds/atom.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="blog.codylab.com">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="/archives.html">Archive</a></li>
+      <li><a href="https://blog.codylab.com/pages/about.html">About</a></li>
+      <li><a href="https://blog.codylab.com/pages/projects.html">Projects</a></li>
+    <!-- TODO: add categories here? -->
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Install Bugzilla on CentOS 6.3 step by step</h1>
+      <p class="meta"><time datetime="2012-08-18T00:00:00+08:00" pubdate>2012 August 18 Sat</time></p>
+</header>
+
+  <div style="margin-bottom:15px;">
+  </div>
+  <div class="entry-content"><h3>Install required packages</h3>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>yum<span class="w"> </span>install<span class="w"> </span>perl*<span class="w"> </span>httpd*<span class="w"> </span>mysql-server*<span class="w"> </span>mod_perl-devel<span class="w"> </span>-y
+</code></pre></div>
+
+<p><strong>Download the <a href="http://www.bugzilla.org/download/">latest bugzilla</a> 4.2.2 (2012/8)</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/var/www/html
+$<span class="w"> </span>wget<span class="w"> </span>http://ftp.mozilla.org/pub/mozilla.org/webtools/bugzilla-4.2.2.tar.gz
+$<span class="w"> </span>tar<span class="w"> </span>zxvf<span class="w"> </span>bugzilla-4.2.2.tar.gz
+$<span class="w"> </span>mv<span class="w"> </span>bugzilla-4.2.2<span class="w"> </span>bugzilla
+</code></pre></div>
+
+<h3>Start mysql server</h3>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>service<span class="w"> </span>mysqld<span class="w"> </span>start
+</code></pre></div>
+
+<h3>Set mysql root password via <em>mysql_secure_installation</em>**</h3>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>/usr/bin/mysql_secure_installation
+</code></pre></div>
+
+<p><strong>Create a DB for bugzilla </strong> mysql login with root</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p
+
+&gt;<span class="w"> </span>CREATE<span class="w"> </span>DATABASE<span class="w"> </span>bugs<span class="w"> </span><span class="p">;</span>
+&gt;<span class="w"> </span><span class="nb">exit</span>
+</code></pre></div>
+
+<h3>Run checksetup script to find needed modules</h3>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>./checksetup.pl
+</code></pre></div>
+
+<p><strong>Install required modules </strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w">  </span>/usr/bin/perl<span class="w"> </span>install-module.pl<span class="w"> </span><span class="p">&amp;</span>ndash<span class="p">;&amp;</span>ndash<span class="p">;</span>all
+</code></pre></div>
+
+<h3>Run checksetup script again to generate localconfig file</h3>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>./checksetup.pl
+</code></pre></div>
+
+<p><strong>Modify localconfig  for  $db_name, $db_user and $db_pass based on previous settings</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vi<span class="w"> </span>./localconfig
+</code></pre></div>
+
+<p><strong>Run checksetup script to set initial configuration</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>./checksetup.pl
+</code></pre></div>
+
+<p><strong>Apache setup, modify httpd.conf, append the following config :</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>vi<span class="w"> </span>/etc/httpd/conf/httpd.conf
+
+
+<span class="nt">&lt;Directory</span><span class="w"> </span><span class="err">/var/www/html/bugzilla</span><span class="nt">&gt;</span>
+
+AddHandler<span class="w"> </span>cgi-script<span class="w"> </span>.cgi
+
+Options<span class="w"> </span>+Indexes<span class="w"> </span>+ExecCGI
+
+DirectoryIndex<span class="w"> </span>index.cgi
+
+AllowOverride<span class="w"> </span>Limit<span class="w"> </span>FileInfo<span class="w"> </span>Indexes
+
+<span class="nt">&lt;/Directory&gt;</span>
+</code></pre></div>
+
+<p><strong>Restart Apache </strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>service<span class="w"> </span>httpd<span class="w"> </span>restart
+</code></pre></div>
+
+<p><strong>Chkconfig httpd and mysql </strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>chkconfig<span class="w"> </span>httpd<span class="w"> </span>on<span class="w"> </span>
+$<span class="w"> </span>chkconfig<span class="w"> </span>mysqld<span class="w"> </span>on
+</code></pre></div>
+
+<p><strong>Set iptables for httpd </strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>iptables<span class="w"> </span>-I<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span><span class="p">&amp;</span>ndash<span class="p">;&amp;</span>ndash<span class="p">;</span>dport<span class="w"> </span><span class="m">80</span><span class="w"> </span>-j<span class="w"> </span>ACCEPT
+</code></pre></div>
+
+<p>That’s it, Open http://localhost/bugzilla and enjoy it.</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Cody Liu</span>
+  </span>
+<time datetime="2012-08-18T00:00:00+08:00" pubdate>2012 August 18 Sat</time>  <span class="categories">
+    <a class="category" href="https://blog.codylab.com/tag/bugzilla.html">bugzilla</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+  </section>
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Tags</h1>
+    <ul class="tagcloud">
+      <a class="tag-1" href="https://blog.codylab.com/tag/agile.html">Agile</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/android.html">android</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/aws.html">AWS</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/azure.html">Azure</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/blog.html">Blog</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/command.html">Command</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/devops.html">DevOps</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/django.html">Django</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/dog.html">Dog</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/english.html">English</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/gtd.html">GTD</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/ios.html">iOS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/jenkins.html">jenkins</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/language.html">Language</a>
+      <a class="tag-3" href="https://blog.codylab.com/tag/life.html">Life</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/linux.html">Linux</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/marathon.html">Marathon</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/o2o.html">O2O</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/os.html">OS</a>
+      <a class="tag-2" href="https://blog.codylab.com/tag/python.html">Python</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/running.html">Running</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/testing.html">Testing</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/thinkpad.html">Thinkpad</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/travel.html">Travel</a>
+      <a class="tag-1" href="https://blog.codylab.com/tag/ubuntu.html">Ubuntu</a>
+    </ul>
+  </section>
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="https://blog.codylab.com/bouzy-5-21/">圍棋 AI 學習筆記（一）：Bouzy's 5/21 估算地盤</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/running-gold-coast-marathon.md/">2017 黃金海岸馬拉松</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/activity-fragment-communication.md/">Data Sharing between Fragments and Activity</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/english-british/">British English Pronounciation Notes</a>
+      </li>
+      <li class="post">
+          <a href="https://blog.codylab.com/parcel-pass-object/">Pass an object between activities on Android</a>
+      </li>
+    </ul>
+  </section>
+
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0;padding-right:10px;vertical-align:text-top;" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+  <br /><span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+	<script type="text/javascript">
+	  var disqus_shortname = 'codynotes';
+          var disqus_identifier = '/install-bugzilla-centos-6-3-step-step/';
+          var disqus_url = 'https://blog.codylab.com/install-bugzilla-centos-6-3-step-step/';
+          var disqus_title = 'Install Bugzilla on CentOS 6.3 step by step';
+	  (function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	   })();
+	</script>
+</body>
+</html>

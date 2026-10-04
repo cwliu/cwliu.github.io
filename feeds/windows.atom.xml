@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Cody Blog - Windows</title><link href="https://blog.codylab.com/" rel="alternate"></link><link href="https://blog.codylab.com/feeds/windows.atom.xml" rel="self"></link><id>https://blog.codylab.com/</id><updated>2023-08-05T23:57:14+08:00</updated><subtitle></subtitle><subtitle></subtitle><entry><title>Notepad++ 縮排從Tab改成4個Space</title><link href="https://blog.codylab.com/notepad_tab_to_space/" rel="alternate"></link><published>2012-03-15T00:00:00+08:00</published><updated>2023-08-05T23:57:14+08:00</updated><author><name>Cody Liu</name></author><id>tag:blog.codylab.com,2012-03-15:/notepad_tab_to_space/</id><content type="html">&lt;p&gt;用 Notepad++ 開 Python 的 .py 檔案預設是用 tab 來當縮排符號的，與一般程式語言常使用的 space 空白縮排慣例不同。可以從&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Settings &amp;gt; Preferences &amp;gt; Language Menu / Tab Settings
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;調整，把 &lt;code&gt;Replace by space&lt;/code&gt; 打勾即可&lt;/p&gt;</content><category term="Windows"></category><category term="Tips"></category></entry></feed>
